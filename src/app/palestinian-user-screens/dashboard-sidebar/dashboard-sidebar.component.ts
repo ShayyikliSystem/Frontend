@@ -15,26 +15,26 @@ export class DashboardSidebarComponent {
   userRole: string = '';
 
   menuItems = [
-    { name: 'Dashboard', route: 'dashboard', icon: 'dashboard.png' },
+    { name: 'Dashboard', route: 'dashboard', icon: 'dashboard1.png' },
     {
       name: 'Check Management',
       route: 'check-management',
-      icon: 'check-management.png',
+      icon: 'check-management1.png',
     },
     {
       name: 'Endorsement (JIRO)',
       route: 'endorsement',
-      icon: 'endorsement.png',
+      icon: 'endorsment1.png',
     },
     {
       name: 'Classification & Settlement',
       route: 'classification',
-      icon: 'classification.png',
+      icon: 'classification1.png',
     },
-    { name: 'Transaction', route: 'transaction', icon: 'transaction.png' },
-    { name: 'Security & Alerts', route: 'security', icon: 'security.png' },
-    { name: 'Settings', route: 'settings', icon: 'settings.png' },
-    { name: 'logout', route: 'login', icon: 'logout.png' },
+    { name: 'Transaction', route: 'transaction', icon: 'transaction1.png' },
+    { name: 'Security & Alerts', route: 'security', icon: 'security1.png' },
+    { name: 'Settings', route: 'settings', icon: 'settings1.png' },
+    { name: 'logout', route: 'login', icon: 'logout1.png' },
   ];
 
   constructor(private router: Router, private authService: AuthService) {
