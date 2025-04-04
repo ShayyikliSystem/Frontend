@@ -1,0 +1,160 @@
+* {
+  box-sizing: border-box;
+  font-family: Georgia, serif;
+}
+
+mat-expansion-panel {
+  width: 230%;
+}
+
+.security-header {
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 14px;
+}
+
+.user {
+  margin-bottom: -10px;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  background-color: #eee;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  background-color: #ffffff;
+}
+
+mat-paginator {
+  border-top: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+table .success {
+  color: green;
+}
+
+table .failed {
+  color: red;
+}
+
+table td img {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.warning-alert {
+  display: flex;
+  align-items: center;
+  background-color: #fff4e5;
+  border: 1px solid #f0ad4e;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.warning-icon {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+}
+
+.warning-text {
+  font-size: 14px;
+  color: #8a6d3b;
+}
+.reset-password {
+  margin-top: 10px;
+}
+
+.btn-secondary {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: #2e3648;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-reset-filters {
+  padding: 10px 12px;
+  border-radius: 4px;
+  background-color: #2e3648;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background-color: #0a354f;
+}
+
+.note-label {
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: #8a6d3b;
+  display: block;
+}
+
+button[mat-icon-button] {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  transition: color 0.3s ease;
+  margin-right: 10px;
+}
+
+button[mat-icon-button] i {
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+
+button[mat-icon-button]:hover {
+  color: #201e43;
+}
+
+.table-container {
+  max-height: 330px;
+  overflow-y: auto;
+}
+
+.scroll-hint {
+  font-size: 0.8em;
+  color: #006a67;
+  margin-top: 5px;
+}

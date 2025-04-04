@@ -1,0 +1,195 @@
+<div class="signup-container">
+  <div class="grid-container">
+    <div class="grid-column">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+    </div>
+
+    <div class="grid-column">
+      <a routerLink="/home" class="back-link">&lt;&lt; Back to Home</a>
+      <h1>Sign up</h1>
+      <p>
+        Join Shayyikli today and unlock seamless, secure, and smart digital
+        transactions.
+      </p>
+      <form (ngSubmit)="onCreateAccount(signupForm)" #signupForm="ngForm">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="custom-form-field">
+            <mat-label>First Name</mat-label>
+            <input
+              matInput
+              type="text"
+              id="firstName"
+              name="firstName"
+              required
+              maxlength="50"
+              [(ngModel)]="signupData.firstName"
+              #firstNameField="ngModel"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="custom-form-field">
+            <mat-label>Last Name</mat-label>
+            <input
+              matInput
+              type="text"
+              id="lastName"
+              name="lastName"
+              required
+              maxlength="50"
+              [(ngModel)]="signupData.lastName"
+              #lastNameField="ngModel"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="custom-form-field">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              type="email"
+              id="email"
+              name="email"
+              required
+              maxlength="50"
+              email
+              [(ngModel)]="signupData.email"
+              #emailField="ngModel"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="custom-form-field">
+            <mat-label>Phone Number</mat-label>
+            <span matPrefix style="display: flex; align-items: center">
+              <img
+                src="assets/palestine-flag.png"
+                alt="Palestine"
+                style="
+                  height: 1rem;
+                  width: 1.6rem;
+                  margin-right: 0.5rem;
+                  margin-left: 0.7rem;
+                "
+              />
+              +970&nbsp;
+            </span>
+            <input
+              matInput
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              required
+              pattern="^\d{9}$"
+              maxlength="9"
+              [(ngModel)]="signupData.phoneNumber"
+              #phoneField="ngModel"
+              inputmode="numeric"
+              (keypress)="allowOnlyNumbers($event)"
+              placeholder=""
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="custom-form-field">
+            <mat-label>ID Number</mat-label>
+            <input
+              matInput
+              type="text"
+              id="idNumber"
+              name="idNumber"
+              required
+              pattern="^\d{9}$"
+              [(ngModel)]="signupData.idNumber"
+              #idNumberField="ngModel"
+              inputmode="numeric"
+              (keypress)="allowOnlyNumbers($event)"
+              placeholder=""
+              maxlength="9"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="custom-form-field">
+            <mat-label>Card Number</mat-label>
+            <input
+              matInput
+              type="text"
+              id="cardNumber"
+              name="cardNumber"
+              required
+              maxlength="19"
+              [(ngModel)]="signupData.cardNumber"
+              #cardField="ngModel"
+              inputmode="numeric"
+              (keypress)="allowOnlyNumbers($event)"
+              (input)="formatCardNumber($event)"
+              placeholder=""
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="custom-form-field">
+            <mat-label>Expiry Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="dp"
+              [formControl]="date"
+              required
+              placeholder="MM/YY"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="dp"
+            ></mat-datepicker-toggle>
+            <mat-datepicker
+              #dp
+              startView="multi-year"
+              (monthSelected)="setMonthAndYear($event, dp)"
+              panelClass="example-month-picker"
+            >
+            </mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="custom-form-field">
+            <mat-label>Security Code</mat-label>
+            <input
+              matInput
+              type="text"
+              id="securityCode"
+              name="securityCode"
+              required
+              pattern="^\d{3}$"
+              [(ngModel)]="signupData.securityCode"
+              #securityField="ngModel"
+              inputmode="numeric"
+              (keypress)="allowOnlyNumbers($event)"
+              placeholder=""
+              maxlength="3"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="condition-form-group">
+          <mat-checkbox
+            name="terms"
+            [(ngModel)]="signupData.agreedToTerms"
+            required
+            #termsField="ngModel"
+          >
+            I agree to the <a routerLink="/terms">Terms</a> and
+            <a routerLink="/privacy">Privacy Policies</a>.
+          </mat-checkbox>
+        </div>
+        <button type="submit" class="btn-primary">Create account</button>
+
+        <div *ngIf="signupError" class="error">
+          {{ signupError }}
+        </div>
+      </form>
+
+      <div class="signup-link">
+        Already have an account?
+        <a routerLink="/login" class="login-link">Log In</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+* {
+  box-sizing: border-box;
+}
+
+.contact-form {
+  padding: 20px;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.contact-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.contact-form button {
+  width: 100%;
+  background-color: #141d33;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.contact-form button:hover {
+  background-color: #0a354f;
+}
+
+@media (max-width: 768px) {
+  .contact-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.phone-input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.phone-prefix {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 0.5rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.phone-prefix img {
+  height: 1rem;
+  width: 1.6rem;
+  margin-right: 0.5rem;
+}
+
+.phone-input {
+  display: block;
+  padding: 0.625rem;
+  width: 100%;
+  font-size: 0.875rem;
+  color: #1a202c;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}

@@ -1,0 +1,21 @@
+<div class="email-sent-container">
+  <div class="grid-container">
+    <div class="grid-column">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+    </div>
+
+    <div class="grid-column">
+      <h1>Sign-Up Successful</h1>
+      <p>Welcome! Your Account Details Have Been Sent.</p>
+      <p>
+        We’ve sent an email to {{ signupEmail }} containing your account number
+        and password.
+      </p>
+      <p>
+        Please check your email to access your account details. If you don’t see
+        the email, be sure to check your spam or junk folder.
+      </p>
+      <button class="btn-primary" (click)="backToLogin()">Back to login</button>
+    </div>
+  </div>
+</div>

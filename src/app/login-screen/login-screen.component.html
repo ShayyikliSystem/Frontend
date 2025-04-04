@@ -1,0 +1,117 @@
+<div class="login-container">
+  <div class="grid-container">
+    <div class="grid-column">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+    </div>
+    <div class="grid-column">
+      <a routerLink="/home" class="back-link">&lt;&lt; Back to Home</a>
+      <h1>Log In</h1>
+      <p>
+        Unlock the power of Shayyikli – take control of your digital
+        transactions.
+      </p>
+      <form
+        (ngSubmit)="onSubmit(loginForm)"
+        #loginForm="ngForm"
+        class="login-form"
+      >
+        <mat-form-field appearance="outline" class="custom-form-field">
+          <mat-label>Role</mat-label>
+          <mat-select
+            [(ngModel)]="loginData.role"
+            name="role"
+            required
+            (selectionChange)="resetAccountField(loginForm)"
+          >
+            <mat-option value="user">Palestinian</mat-option>
+            <mat-option value="admin">Admin</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <br />
+
+        <ng-container [ngSwitch]="loginData.role">
+          <ng-container *ngSwitchCase="'admin'">
+            <mat-form-field appearance="outline" class="custom-form-field">
+              <mat-label>Email</mat-label>
+              <input
+                matInput
+                type="email"
+                id="email"
+                name="email"
+                [(ngModel)]="loginData.shayyikliAccountNumberOrUsername"
+                required
+              />
+            </mat-form-field>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <mat-form-field appearance="outline" class="custom-form-field">
+              <mat-label>Shayyikli Number</mat-label>
+              <input
+                matInput
+                type="tel"
+                id="shayyikliNumber"
+                name="shayyikliNumber"
+                [(ngModel)]="loginData.shayyikliAccountNumberOrUsername"
+                inputmode="numeric"
+                (keypress)="allowOnlyNumbers($event)"
+                maxlength="6"
+                required
+              />
+            </mat-form-field>
+          </ng-container>
+        </ng-container>
+
+        <br />
+
+        <mat-form-field appearance="outline" class="custom-form-field">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="isPasswordVisible ? 'text' : 'password'"
+            id="password"
+            name="password"
+            [(ngModel)]="loginData.password"
+            required
+            #password="ngModel"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+          >
+            <i
+              class="bi"
+              [class.bi-eye-slash]="!isPasswordVisible"
+              [class.bi-eye]="isPasswordVisible"
+              (click)="togglePasswordVisibility()"
+            ></i>
+          </button>
+        </mat-form-field>
+
+        <a routerLink="/forgot-password" class="forgot-password"
+          >Forgot Password?</a
+        >
+
+        <button type="submit" class="btn-primary">Log In</button>
+
+        <div *ngIf="incompleteFormError" class="error" style="margin-top: 20px">
+          {{ incompleteFormError }}
+        </div>
+        <div
+          *ngIf="!incompleteFormError && loginError"
+          class="error"
+          style="margin-top: 20px"
+        >
+          {{ loginError }}
+        </div>
+      </form>
+
+      <div class="signup-link">
+        Don’t have an account?
+        <a routerLink="/signup" class="sign-up">Sign up</a>
+      </div>
+    </div>
+  </div>
+</div>

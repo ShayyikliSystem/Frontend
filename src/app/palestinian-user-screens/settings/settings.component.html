@@ -1,0 +1,91 @@
+<app-alert
+  *ngIf="alertMessage"
+  [message]="alertMessage"
+  [type]="alertType"
+></app-alert>
+<h3>Settings</h3>
+
+<mat-expansion-panel
+  style="margin-top: 10px; margin-bottom: 10px; width: 900px"
+  expanded="true"
+>
+  <mat-expansion-panel-header style="margin-top: 10px; margin-bottom: 10px">
+    <div class="security-header" style="margin-top: 10px">
+      <img
+        src="assets/user.png"
+        alt="user"
+        class="user"
+        style="display: inline-block"
+      />
+      <p style="display: inline; margin-left: 5px">Your Profile</p>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div class="setting">
+    <form (ngSubmit)="onSaveSettings()" class="settings-form">
+      <div class="error-padding">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="settingsData.email"
+            (input)="validateEmail(); checkFormChanges()"
+            required
+          />
+        </div>
+        <small *ngIf="emailError" class="error">{{ emailError }}</small>
+      </div>
+
+      <hr class="separator" />
+      <div class="error-padding">
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <div class="phone-input-group">
+            <span class="phone-prefix">
+              <img src="assets/palestine-flag.png" alt="Palestine" />
+              +970 </span
+            ><input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              pattern="\\d{9}"
+              maxlength="9"
+              [(ngModel)]="settingsData.phoneNumber"
+              (input)="validatePhoneNumber(); checkFormChanges()"
+              required
+            />
+          </div>
+        </div>
+
+        <small *ngIf="phoneError" class="error">{{ phoneError }}</small>
+      </div>
+
+      <hr class="separator" />
+
+      <div class="reset-password">
+        <label class="note-label"
+          >Want to change your password? Click here</label
+        >
+        <button type="button" class="btn-secondary" (click)="onResetPassword()">
+          Reset Password
+        </button>
+      </div>
+
+      <hr class="separator" />
+
+      <div class="button-group">
+        <button type="submit" class="btn-primary" [disabled]="!isFormChanged">
+          Save Settings
+        </button>
+      </div>
+    </form>
+  </div>
+</mat-expansion-panel>
+
+<app-confirm-reset
+  *ngIf="showResetPassword"
+  (confirmReset)="confirmResetPassword()"
+  (cancelReset)="cancelResetPassword()"
+></app-confirm-reset>

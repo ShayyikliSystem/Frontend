@@ -1,0 +1,159 @@
+* {
+  box-sizing: border-box;
+  font-family: Georgia, serif;
+}
+
+.login-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 100px;
+  max-width: 900px;
+  width: 100%;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.grid-column img.logo {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.grid-column {
+  text-align: left;
+}
+
+.back-link {
+  text-decoration: none;
+  font-size: 0.9em;
+  color: #006a67;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.custom-form-field {
+  width: 100%;
+  font-size: 1em;
+}
+
+.form-group:has(input.invalid) label,
+.form-group:has(textarea.invalid) label {
+  margin-top: -10px;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.forgot-password {
+  text-decoration: none;
+  display: block;
+  color: #006a67;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  text-align: right;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.btn-primary {
+  width: 100%;
+  background-color: #141d33;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.signup-link {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.signup-link .sign-up {
+  color: #006a67;
+  text-decoration: none;
+}
+
+.signup-link .sign-up:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .grid-column img.logo {
+    margin-bottom: 20px;
+  }
+}
+
+.password-group {
+  position: relative;
+}
+
+.password-group i {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #aaa;
+  font-size: 1.2em;
+}
+
+.password-group i:hover {
+  color: #141d33;
+}
+
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .grid-column img.logo {
+    margin-bottom: 20px;
+  }
+}
+
+.btn-primary:hover {
+  background-color: #0a354f;
+}

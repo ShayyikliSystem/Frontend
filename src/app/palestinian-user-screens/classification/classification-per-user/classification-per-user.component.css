@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+  font-family: Georgia, serif;
+}
+
+.classification-container {
+  height: fit-content;
+  margin-top: 30px;
+  padding: 20px;
+  border-radius: 10px;
+  border-right: 2px;
+  border-bottom: 2px;
+  box-shadow: 5px 5px 10px #cdcdcd;
+}
+
+.classification-container.full-width {
+  width: 120%;
+}
+
+.classification-container.expanded {
+  width: 230%;
+}
+
+.classification-header {
+  align-items: center;
+}
+
+h3 {
+  font-size: 2em;
+}
+
+p {
+  font-size: 14px;
+}
+
+.user {
+  margin-bottom: -10px;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  background-color: #eee;
+  padding: 8px;
+  border-radius: 8px;
+}

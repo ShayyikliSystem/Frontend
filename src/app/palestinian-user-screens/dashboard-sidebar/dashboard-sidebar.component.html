@@ -1,0 +1,18 @@
+<aside class="dashboard-sidebar">
+  <div class="logo" (click)="goToDashboard()">
+    <img src="assets/logo.png" alt="Logo" />
+  </div>
+  <nav>
+    <ul>
+      <li *ngFor="let item of menuItems">
+        <button
+          (click)="navigateTo(item.route)"
+          [ngClass]="{ 'active-link': activeRoute === item.route }"
+        >
+          <img [src]="'assets/' + item.icon" [alt]="item.name" />
+          <span>{{ item.name }}</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</aside>

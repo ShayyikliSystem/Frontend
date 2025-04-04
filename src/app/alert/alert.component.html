@@ -1,0 +1,4 @@
+<div *ngIf="show" class="alert-box" [ngClass]="type">
+  <span class="alert-message">{{ message }}</span>
+  <button class="close-btn" (click)="closeAlert()">✕</button>
+</div>
