@@ -18,7 +18,7 @@ import { LoadingService } from '../../services/loading.service';
     MatExpansionModule,
   ],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.css',
+  styleUrl: './settings.component.scss',
 })
 export class SettingsComponent {
   settingsData = {

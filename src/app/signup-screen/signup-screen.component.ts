@@ -48,7 +48,7 @@ import { LoadingService } from '../services/loading.service';
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
   templateUrl: './signup-screen.component.html',
-  styleUrl: './signup-screen.component.css',
+  styleUrl: './signup-screen.component.scss',
 })
 export class SignupScreenComponent {
   submitted: boolean = false;

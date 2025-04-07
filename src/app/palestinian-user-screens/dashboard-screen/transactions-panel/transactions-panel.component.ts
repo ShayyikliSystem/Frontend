@@ -36,7 +36,7 @@ import { UserService } from '../../../services/user.service';
     MatTooltipModule,
   ],
   templateUrl: './transactions-panel.component.html',
-  styleUrl: './transactions-panel.component.css',
+  styleUrl: './transactions-panel.component.scss',
 })
 export class TransactionsPanelComponent implements OnInit, AfterViewInit {
   transactionFilterStatus: string = '';

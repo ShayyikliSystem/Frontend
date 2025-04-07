@@ -10,7 +10,7 @@ import { AlertComponent } from '../alert/alert.component';
   standalone: true,
   imports: [CommonModule, RouterModule, ContactFormComponent, AlertComponent],
   templateUrl: './home-screen.component.html',
-  styleUrl: './home-screen.component.css',
+  styleUrl: './home-screen.component.scss',
 })
 export class HomeScreenComponent {
   alertMessage: string = '';

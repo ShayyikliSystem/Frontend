@@ -16,7 +16,7 @@ import { GeneralInfoPanelComponent } from './general-info-panel/general-info-pan
     GeneralInfoPanelComponent,
   ],
   templateUrl: './dashboard-screen.component.html',
-  styleUrl: './dashboard-screen.component.css',
+  styleUrl: './dashboard-screen.component.scss',
 })
 export class DashboardScreenComponent {
   userFullName: string = 'N/A';

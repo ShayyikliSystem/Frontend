@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './alert.component.html',
-  styleUrl: './alert.component.css',
+  styleUrl: './alert.component.scss',
 })
 export class AlertComponent {
   @Input() message: string = '';

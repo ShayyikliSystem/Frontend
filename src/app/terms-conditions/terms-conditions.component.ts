@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [],
   templateUrl: './terms-conditions.component.html',
-  styleUrl: './terms-conditions.component.css',
+  styleUrl: './terms-conditions.component.scss',
 })
 export class TermsConditionsComponent implements AfterViewInit {
   constructor(private router: Router) {}

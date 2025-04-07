@@ -37,7 +37,7 @@ export interface User {
     MatAutocompleteModule,
   ],
   templateUrl: './transaction-filter.component.html',
-  styleUrl: './transaction-filter.component.css',
+  styleUrl: './transaction-filter.component.scss',
 })
 export class TransactionFilterComponent implements OnInit {
   @Input() currentFilter: any = {

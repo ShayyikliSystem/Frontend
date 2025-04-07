@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard-sidebar.component.html',
-  styleUrl: './dashboard-sidebar.component.css',
+  styleUrl: './dashboard-sidebar.component.scss',
 })
 export class DashboardSidebarComponent {
   activeRoute: string = '';

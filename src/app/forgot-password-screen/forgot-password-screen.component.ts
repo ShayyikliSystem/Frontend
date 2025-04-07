@@ -18,7 +18,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
   ],
   templateUrl: './forgot-password-screen.component.html',
-  styleUrl: './forgot-password-screen.component.css',
+  styleUrl: './forgot-password-screen.component.scss',
 })
 export class ForgotPasswordScreenComponent {
   email: string = '';

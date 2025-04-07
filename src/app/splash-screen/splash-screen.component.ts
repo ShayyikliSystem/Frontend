@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [],
   templateUrl: './splash-screen.component.html',
-  styleUrl: './splash-screen.component.css',
+  styleUrl: './splash-screen.component.scss',
 })
 export class SplashScreenComponent implements OnInit {
   constructor(private router: Router) {}

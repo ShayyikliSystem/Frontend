@@ -32,7 +32,7 @@ import { LoadingService } from '../../../services/loading.service';
     MatTooltipModule,
   ],
   templateUrl: './checkbook-history-panel.component.html',
-  styleUrl: './checkbook-history-panel.component.css',
+  styleUrl: './checkbook-history-panel.component.scss',
 })
 export class CheckbookHistoryPanelComponent implements OnInit, AfterViewInit {
   checkbookDisplayedColumns: string[] = [

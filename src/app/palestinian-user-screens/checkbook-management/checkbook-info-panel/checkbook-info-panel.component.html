@@ -1,8 +1,5 @@
-<mat-expansion-panel
-  style="margin-top: 30px; margin-bottom: 20px; width: 1000px"
-  expanded="true"
->
-  <mat-expansion-panel-header style="margin-top: 10px; margin-bottom: 20px">
+<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+  <mat-expansion-panel-header>
     <div class="security-header" style="margin-top: 10px">
       <img
         src="assets/cheque.png"
@@ -14,75 +11,77 @@
     </div>
   </mat-expansion-panel-header>
 
-  @if(classification == 'A' || classification == 'B' ) {
-  @if(hasActiveCheckbook){
-  <div class="checkbook-info">
-    <div class="container" style="width: 25%; height: 15vh">
-      <div class="header">
-        <img src="assets/number.png" alt="number" class="number" />
-        <p>
-          Checkbook ID : <br /><strong>{{ checkbookId }}</strong>
-        </p>
+  <div style="margin-top: 10px">
+    @if(classification == 'A' || classification == 'B' ) {
+    @if(hasActiveCheckbook){
+    <div class="checkbook-info">
+      <div class="container" style="width: 25%; height: 15vh">
+        <div class="header">
+          <img src="assets/number.png" alt="number" class="number" />
+          <p>
+            Checkbook ID : <br /><strong>{{ checkbookId }}</strong>
+          </p>
+        </div>
+      </div>
+      <div class="container" style="width: 25%; height: 15vh">
+        <div class="header">
+          <img src="assets/score.png" alt="score" class="score" />
+          <p>
+            Total Checks: <strong>{{ totalChecks }}</strong>
+          </p>
+        </div>
+      </div>
+      <div class="container" style="width: 25%; height: 15vh">
+        <div class="header">
+          <img
+            src="assets/return-on-investment.png"
+            alt="return-on-investment"
+            class="return-on-investment"
+          />
+          <p>
+            Returned Checks: <strong>{{ returnedchecks }}</strong>
+          </p>
+        </div>
+      </div>
+      <div class="container" style="width: 25%; height: 15vh">
+        <div class="header">
+          <img src="assets/remain.png" alt="remain" class="remain" />
+          <p>
+            Remaining Checks: <strong>{{ ramainingChecks }}</strong>
+          </p>
+        </div>
       </div>
     </div>
-    <div class="container" style="width: 25%; height: 15vh">
-      <div class="header">
-        <img src="assets/score.png" alt="score" class="score" />
-        <p>
-          Total Checks: <strong>{{ totalChecks }}</strong>
-        </p>
-      </div>
+    } @else{
+    <div class="limited-info">
+      <h3>No Checkbook Available</h3>
+      <p>You currently do not have an active checkbook.</p>
+      <p>
+        If you need one, you can request a new checkbook by clicking the button
+        below.
+      </p>
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="openRequestCheckbook()"
+      >
+        Request Checkbook
+      </button>
     </div>
-    <div class="container" style="width: 25%; height: 15vh">
-      <div class="header">
-        <img
-          src="assets/return-on-investment.png"
-          alt="return-on-investment"
-          class="return-on-investment"
-        />
-        <p>
-          Returned Checks: <strong>{{ returnedchecks }}</strong>
-        </p>
-      </div>
+    } } @else{
+    <div class="limited-info">
+      <h3>Unable to Manage Checks</h3>
+      <p>
+        Your current classification level does not allow you to manage checks in
+        this section.
+      </p>
+      <p>
+        Please navigate to ‘Classification & Settlement’ in the sidebar to
+        review your classification status and take necessary actions.
+      </p>
     </div>
-    <div class="container" style="width: 25%; height: 15vh">
-      <div class="header">
-        <img src="assets/remain.png" alt="remain" class="remain" />
-        <p>
-          Remaining Checks: <strong>{{ ramainingChecks }}</strong>
-        </p>
-      </div>
-    </div>
+    }
   </div>
-  } @else{
-  <div class="limited-info">
-    <h3>No Checkbook Available</h3>
-    <p>You currently do not have an active checkbook.</p>
-    <p>
-      If you need one, you can request a new checkbook by clicking the button
-      below.
-    </p>
-    <button
-      type="button"
-      class="btn-secondary"
-      (click)="openRequestCheckbook()"
-    >
-      Request Checkbook
-    </button>
-  </div>
-  } } @else{
-  <div class="limited-info">
-    <h3>Unable to Manage Checks</h3>
-    <p>
-      Your current classification level does not allow you to manage checks in
-      this section.
-    </p>
-    <p>
-      Please navigate to ‘Classification & Settlement’ in the sidebar to review
-      your classification status and take necessary actions.
-    </p>
-  </div>
-  }
 </mat-expansion-panel>
 
 @if(showRequestCheckbookOverlay){

@@ -8,7 +8,7 @@ import { DashboardSidebarComponent } from '../dashboard-sidebar/dashboard-sideba
   standalone: true,
   imports: [DashboardSidebarComponent, RouterModule],
   templateUrl: './user-layout.component.html',
-  styleUrl: './user-layout.component.css',
+  styleUrl: './user-layout.component.scss',
 })
 export class UserLayoutComponent {
   constructor(private authService: AuthService, private router: Router) {}

@@ -1,3 +1,13 @@
+@use "@angular/material" as mat;
+
+.signup-container {
+  @include mat.checkbox-overrides(
+    (
+      unselected-icon-color: red,
+    )
+  );
+}
+
 * {
   box-sizing: border-box;
   font-family: Georgia, serif;
@@ -159,4 +169,8 @@ mat-form-field {
 a:hover {
   color: #0a354f;
   text-decoration: underline;
+}
+
+::ng-deep unselected-icon-color {
+  border-color: red !important;
 }

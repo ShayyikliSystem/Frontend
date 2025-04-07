@@ -31,7 +31,7 @@ import { UserService } from '../../services/user.service';
     MatExpansionModule,
   ],
   templateUrl: './classification.component.html',
-  styleUrl: './classification.component.css',
+  styleUrl: './classification.component.scss',
 })
 export class ClassificationComponent {
   balance: any = 'N/A';

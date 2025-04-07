@@ -25,7 +25,7 @@ import { LoadingService } from '../services/loading.service';
     MatSelectModule,
   ],
   templateUrl: './login-screen.component.html',
-  styleUrl: './login-screen.component.css',
+  styleUrl: './login-screen.component.scss',
 })
 export class LoginScreenComponent {
   isPasswordVisible: boolean = false;

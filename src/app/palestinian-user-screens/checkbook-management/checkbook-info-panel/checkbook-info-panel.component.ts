@@ -31,7 +31,7 @@ import { LoadingService } from '../../../services/loading.service';
     RequestCheckbookComponent,
   ],
   templateUrl: './checkbook-info-panel.component.html',
-  styleUrl: './checkbook-info-panel.component.css',
+  styleUrl: './checkbook-info-panel.component.scss',
 })
 export class CheckbookInfoPanelComponent implements OnInit {
   returnedchecks: any = 'N/A';

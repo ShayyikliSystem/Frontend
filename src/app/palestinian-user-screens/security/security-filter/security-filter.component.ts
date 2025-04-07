@@ -29,7 +29,7 @@ import { MatTableModule } from '@angular/material/table';
     MatAutocompleteModule,
   ],
   templateUrl: './security-filter.component.html',
-  styleUrl: './security-filter.component.css',
+  styleUrl: './security-filter.component.scss',
 })
 export class SecurityFilterComponent {
   @Input() filterStatus: string = '';

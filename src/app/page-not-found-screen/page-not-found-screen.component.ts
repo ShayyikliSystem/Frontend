@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service';
   standalone: true,
   imports: [RouterModule],
   templateUrl: './page-not-found-screen.component.html',
-  styleUrl: './page-not-found-screen.component.css',
+  styleUrl: './page-not-found-screen.component.scss',
 })
 export class PageNotFoundScreenComponent {
   constructor(private authService: AuthService, private router: Router) {}

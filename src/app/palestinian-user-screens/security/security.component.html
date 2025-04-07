@@ -6,11 +6,11 @@
 <h3>Security & Alerts</h3>
 
 <mat-expansion-panel
-  [ngStyle]="{ width: showWarning ? '100%' : '900px' }"
-  style="margin-top: 10px; margin-bottom: 10px"
+  [ngStyle]="{ width: showWarning ? '100%' : '1000px' }"
+  style="width: 1000px; margin-bottom: 20px"
   expanded="true"
 >
-  <mat-expansion-panel-header style="margin-top: 10px; margin-bottom: 20px">
+  <mat-expansion-panel-header>
     <div class="security-header" style="margin-top: 10px">
       <img
         src="assets/history.png"
@@ -22,132 +22,136 @@
     </div>
   </mat-expansion-panel-header>
 
-  <div *ngIf="showWarning" class="warning-alert">
-    <img
-      src="assets/exclamation circle copy.png"
-      alt="Warning"
-      class="warning-icon"
-    />
-    <div class="warning-text">
-      <strong>Warning Message</strong>
-      <p>
-        Suspicious Attempts - There are many failed registration attempts.
-        Protect your account by resetting your password now.
-      </p>
+  <div style="margin-top: 10px">
+    <div *ngIf="showWarning" class="warning-alert">
+      <img
+        src="assets/exclamation circle copy.png"
+        alt="Warning"
+        class="warning-icon"
+      />
+      <div class="warning-text">
+        <strong>Warning Message</strong>
+        <p>
+          Suspicious Attempts - There are many failed registration attempts.
+          Protect your account by resetting your password now.
+        </p>
 
-      <button type="button" class="btn-secondary" (click)="onResetPassword()">
-        Reset Password
-      </button>
+        <button type="button" class="btn-secondary" (click)="onResetPassword()">
+          Reset Password
+        </button>
+      </div>
     </div>
-  </div>
 
-  <div class="filter-buttons" style="margin-bottom: 10px">
-    <button
-      mat-button
-      (click)="openFilter()"
-      matTooltip="Click to apply filters and update the table"
-    >
-      <i class="bi bi-filter" style="color: white"></i> Add Filter
-    </button>
-    <span
-      matTooltip="Disabled because there is no filter applied"
-      [matTooltipDisabled]="hasActiveFilter()"
-    >
+    <div class="filter-buttons" style="margin-bottom: 10px">
       <button
         mat-button
-        (click)="clearFilter()"
-        [disabled]="!hasActiveFilter()"
-        [ngStyle]="{ 'background-color': !hasActiveFilter() ? 'grey' : '' }"
+        (click)="openFilter()"
+        matTooltip="Click to apply filters and update the table"
       >
-        Clear Filter
+        <i class="bi bi-filter" style="color: white"></i> Add Filter
       </button>
-    </span>
-  </div>
-
-  <!-- Filter Component -->
-  <app-security-filter
-    *ngIf="showFilter"
-    [filterStatus]="filterStatus"
-    [filterDate]="filterDate"
-    (cancelFilterEvent)="closeFilter()"
-    (applyFilterEvent)="onFilterApply($event)"
-  ></app-security-filter>
-
-  <div
-    *ngIf="
-      dataSource.filteredData && dataSource.filteredData.length > 0;
-      else noFilterLogs
-    "
-  >
-    <div class="table-container">
-      <table
-        mat-table
-        [dataSource]="dataSource"
-        matSort
-        class="mat-elevation-z8"
+      <span
+        matTooltip="Disabled because there is no filter applied"
+        [matTooltipDisabled]="hasActiveFilter()"
       >
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-          <td mat-cell *matCellDef="let log">
-            <span
-              [ngClass]="{
-                success: log.status === 'success',
-                failed: log.status === 'failed'
-              }"
-            >
-              <img
-                *ngIf="log.status === 'success'"
-                src="assets/check circle.png"
-                alt="Success"
-                width="20"
-                height="20"
-              />
-              <p *ngIf="log.status === 'success'" style="display: inline">
-                Success
-              </p>
-              <img
-                *ngIf="log.status === 'failed'"
-                src="assets/exclamation circle.png"
-                alt="Failed"
-                width="20"
-                height="20"
-              />
-              <p *ngIf="log.status === 'failed'" style="display: inline">
-                Failed
-              </p>
-            </span>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-          <td mat-cell *matCellDef="let log">{{ log.date }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="ip_address">
-          <th mat-header-cell *matHeaderCellDef>IP Address</th>
-          <td mat-cell *matCellDef="let log">{{ log.ip_address }}</td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+        <button
+          mat-button
+          (click)="clearFilter()"
+          [disabled]="!hasActiveFilter()"
+          [ngStyle]="{ 'background-color': !hasActiveFilter() ? 'grey' : '' }"
+        >
+          Clear Filter
+        </button>
+      </span>
     </div>
-    <mat-paginator
-      [pageSizeOptions]="dynamicPageSizeOptions"
-      showFirstLastButtons
-    ></mat-paginator>
-    <p class="scroll-hint">
-      If there are more rows than displayed, scroll within the table to view
-      them.
-    </p>
+
+    <!-- Filter Component -->
+    <app-security-filter
+      *ngIf="showFilter"
+      [filterStatus]="filterStatus"
+      [filterDate]="filterDate"
+      (cancelFilterEvent)="closeFilter()"
+      (applyFilterEvent)="onFilterApply($event)"
+    ></app-security-filter>
+
+    <div
+      *ngIf="
+        dataSource.filteredData && dataSource.filteredData.length > 0;
+        else noFilterLogs
+      "
+    >
+      <div class="table-container">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          class="mat-elevation-z8"
+        >
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let log">
+              <span
+                [ngClass]="{
+                  success: log.status === 'success',
+                  failed: log.status === 'failed'
+                }"
+              >
+                <img
+                  *ngIf="log.status === 'success'"
+                  src="assets/check circle.png"
+                  alt="Success"
+                  width="20"
+                  height="20"
+                />
+                <p *ngIf="log.status === 'success'" style="display: inline">
+                  Success
+                </p>
+                <img
+                  *ngIf="log.status === 'failed'"
+                  src="assets/exclamation circle.png"
+                  alt="Failed"
+                  width="20"
+                  height="20"
+                />
+                <p *ngIf="log.status === 'failed'" style="display: inline">
+                  Failed
+                </p>
+              </span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+            <td mat-cell *matCellDef="let log">{{ log.date }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="ip_address">
+            <th mat-header-cell *matHeaderCellDef>IP Address</th>
+            <td mat-cell *matCellDef="let log">{{ log.ip_address }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+      <mat-paginator
+        [pageSizeOptions]="dynamicPageSizeOptions"
+        showFirstLastButtons
+      ></mat-paginator>
+      <p class="scroll-hint">
+        If there are more rows than displayed, scroll within the table to view
+        them.
+      </p>
+    </div>
+    <ng-template #noFilterLogs>
+      <div class="limited-info" style="text-align: center">
+        <h3>No Login Attempts Match Your Filter</h3>
+        <p>
+          The filter criteria you applied did not return any login attempts.
+        </p>
+        <p>Please adjust your filter settings or try a different criteria.</p>
+      </div>
+    </ng-template>
   </div>
-  <ng-template #noFilterLogs>
-    <div class="limited-info" style="text-align: center">
-      <h3>No Login Attempts Match Your Filter</h3>
-      <p>The filter criteria you applied did not return any login attempts.</p>
-      <p>Please adjust your filter settings or try a different criteria.</p>
-    </div>
-  </ng-template>
 </mat-expansion-panel>
 
 @if(showResetPassword){

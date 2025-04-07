@@ -5,7 +5,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './confirm-reset.component.html',
-  styleUrl: './confirm-reset.component.css',
+  styleUrl: './confirm-reset.component.scss',
 })
 export class ConfirmResetComponent {
   @Output() confirmReset = new EventEmitter<void>();

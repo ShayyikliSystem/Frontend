@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './endorsement.component.html',
-  styleUrl: './endorsement.component.css',
+  styleUrl: './endorsement.component.scss',
 })
 export class EndorsementComponent {}

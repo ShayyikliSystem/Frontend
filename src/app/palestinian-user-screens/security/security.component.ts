@@ -42,7 +42,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
   ],
   templateUrl: './security.component.html',
-  styleUrl: './security.component.css',
+  styleUrl: './security.component.scss',
 })
 export class SecurityComponent implements OnInit, AfterViewInit {
   alertMessage = '';

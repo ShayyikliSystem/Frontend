@@ -7,6 +7,6 @@ import { CheckbookInfoPanelComponent } from './checkbook-info-panel/checkbook-in
   standalone: true,
   imports: [CheckbookInfoPanelComponent, CheckbookHistoryPanelComponent],
   templateUrl: './checkbook-management.component.html',
-  styleUrl: './checkbook-management.component.css',
+  styleUrl: './checkbook-management.component.scss',
 })
 export class CheckbookManagementComponent {}

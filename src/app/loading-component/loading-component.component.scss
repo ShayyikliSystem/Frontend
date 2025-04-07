@@ -1,3 +1,13 @@
+@use "@angular/material" as mat;
+
+mat-spinner {
+  @include mat.progress-spinner-overrides(
+    (
+      active-indicator-color: #201e43,
+    )
+  );
+}
+
 .spinner-container {
   position: fixed;
   height: 100%;

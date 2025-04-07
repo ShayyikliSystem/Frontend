@@ -5,7 +5,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './request-checkbook.component.html',
-  styleUrl: './request-checkbook.component.css',
+  styleUrl: './request-checkbook.component.scss',
 })
 export class RequestCheckbookComponent {
   @Output() confirmRequest = new EventEmitter<void>();

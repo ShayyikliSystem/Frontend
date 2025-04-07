@@ -30,7 +30,7 @@ import { MatTableModule } from '@angular/material/table';
     MatAutocompleteModule,
   ],
   templateUrl: './general-info-panel.component.html',
-  styleUrl: './general-info-panel.component.css',
+  styleUrl: './general-info-panel.component.scss',
 })
 export class GeneralInfoPanelComponent {
   balance: any = 'N/A';

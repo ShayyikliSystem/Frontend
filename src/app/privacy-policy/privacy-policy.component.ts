@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [],
   templateUrl: './privacy-policy.component.html',
-  styleUrl: './privacy-policy.component.css',
+  styleUrl: './privacy-policy.component.scss',
 })
 export class PrivacyPolicyComponent {
   constructor(private router: Router) {}

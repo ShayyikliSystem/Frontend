@@ -12,7 +12,7 @@ import { debounceTime } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, MatProgressSpinnerModule],
   templateUrl: './loading-component.component.html',
-  styleUrl: './loading-component.component.css',
+  styleUrl: './loading-component.component.scss',
 })
 export class LoadingComponentComponent implements OnInit, OnDestroy {
   loading$!: Observable<boolean>;

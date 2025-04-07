@@ -5,11 +5,8 @@
 ></app-alert>
 <h3>Settings</h3>
 
-<mat-expansion-panel
-  style="margin-top: 10px; margin-bottom: 10px; width: 1000px"
-  expanded="true"
->
-  <mat-expansion-panel-header style="margin-top: 10px; margin-bottom: 20px">
+<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+  <mat-expansion-panel-header>
     <div class="security-header" style="margin-top: 10px">
       <img
         src="assets/user.png"
@@ -21,7 +18,7 @@
     </div>
   </mat-expansion-panel-header>
 
-  <div class="setting">
+  <div class="setting" style="margin-top: 10px">
     <form (ngSubmit)="onSaveSettings()" class="settings-form">
       <div class="error-padding">
         <div class="form-group">

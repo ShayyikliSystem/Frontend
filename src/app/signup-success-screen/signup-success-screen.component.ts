@@ -6,7 +6,7 @@ import { Router, RouterModule } from '@angular/router';
   standalone: true,
   imports: [RouterModule],
   templateUrl: './signup-success-screen.component.html',
-  styleUrl: './signup-success-screen.component.css',
+  styleUrl: './signup-success-screen.component.scss',
 })
 export class SignupSuccessScreenComponent {
   signupEmail: string = '';

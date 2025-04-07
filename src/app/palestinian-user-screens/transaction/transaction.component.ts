@@ -36,7 +36,7 @@ import { TransactionFilterComponent } from '../dashboard-screen/transaction-filt
     MatTooltipModule,
   ],
   templateUrl: './transaction.component.html',
-  styleUrl: './transaction.component.css',
+  styleUrl: './transaction.component.scss',
 })
 export class TransactionComponent implements OnInit, AfterViewInit {
   transactionFilterStatus: string = '';

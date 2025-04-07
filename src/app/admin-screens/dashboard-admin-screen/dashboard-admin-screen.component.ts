@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [],
   templateUrl: './dashboard-admin-screen.component.html',
-  styleUrl: './dashboard-admin-screen.component.css',
+  styleUrl: './dashboard-admin-screen.component.scss',
 })
 export class DashboardAdminScreenComponent {
   constructor(private authService: AuthService, private router: Router) {}

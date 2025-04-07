@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [RouterModule],
   templateUrl: './email-sent-screen.component.html',
-  styleUrl: './email-sent-screen.component.css',
+  styleUrl: './email-sent-screen.component.scss',
 })
 export class EmailSentScreenComponent {
   resetEmail: string = '';

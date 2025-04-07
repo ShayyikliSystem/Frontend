@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service';
   standalone: true,
   imports: [RouterModule],
   templateUrl: './authorization-failed-screen.component.html',
-  styleUrl: './authorization-failed-screen.component.css',
+  styleUrl: './authorization-failed-screen.component.scss',
 })
 export class AuthorizationFailedScreenComponent {
   constructor(private authService: AuthService, private router: Router) {}

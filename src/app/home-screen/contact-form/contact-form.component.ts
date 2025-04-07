@@ -21,7 +21,7 @@ import { LoadingService } from '../../services/loading.service';
     MatInputModule,
   ],
   templateUrl: './contact-form.component.html',
-  styleUrl: './contact-form.component.css',
+  styleUrl: './contact-form.component.scss',
 })
 export class ContactFormComponent {
   submitted: boolean = false;
