@@ -41,7 +41,6 @@
         </span>
       </div>
 
-      <!-- Include the filter component as an overlay -->
       <app-issued-check-filter
         *ngIf="showFilter"
         [currentFilter]="{}"
@@ -64,26 +63,22 @@
             matSort
             class="mat-elevation-z8"
           >
-            <!-- Check ID Column -->
             <ng-container matColumnDef="checkId">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 Check ID
               </th>
               <td mat-cell *matCellDef="let tx">{{ tx.checkId }}</td>
             </ng-container>
-            <!-- Issuer Column -->
             <ng-container matColumnDef="issuerName">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Issuer</th>
               <td mat-cell *matCellDef="let tx">{{ tx.issuerName }}</td>
             </ng-container>
-            <!-- Beneficiary Column -->
             <ng-container matColumnDef="beneficiaryName">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 Beneficiary
               </th>
               <td mat-cell *matCellDef="let tx">{{ tx.beneficiaryName }}</td>
             </ng-container>
-            <!-- Amount Column with conditional styling -->
             <ng-container matColumnDef="amount">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
               <td mat-cell *matCellDef="let tx">
@@ -113,12 +108,10 @@
                 </span>
               </td>
             </ng-container>
-            <!-- Status Column -->
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
               <td mat-cell *matCellDef="let tx">{{ tx.status }}</td>
             </ng-container>
-            <!-- Transfer Date Column -->
             <ng-container matColumnDef="transferDate">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 Transfer Date
@@ -150,9 +143,8 @@
         <div class="limited-info" style="text-align: center">
           <h3>No Issued Checks Match Your Filter</h3>
           <p>
-            The filter criteria you applied did not return any IssuedChecks.
+            The filter criteria you applied did not return any issued checks.
           </p>
-          <p>Please adjust your filter settings or try a different criteria.</p>
         </div>
       </ng-template>
     </div>
@@ -160,11 +152,7 @@
     <ng-template #noIssuedChecks>
       <div class="limited-info" style="text-align: center">
         <h3>No Issued Checks Found</h3>
-        <p>It looks like you haven't made / received any issued checks yet.</p>
-        <p>
-          To start making issued checks, please visit the Check Management
-          section.
-        </p>
+        <p>It looks like you haven't made any digital checks yet.</p>
       </div>
     </ng-template>
   </div>

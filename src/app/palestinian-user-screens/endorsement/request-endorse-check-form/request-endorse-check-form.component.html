@@ -1,7 +1,7 @@
 <form #form="ngForm" (ngSubmit)="onSubmit(form)">
   <div class="filter-overlay">
     <div class="filter-box">
-      <h3>Issue New Check</h3>
+      <h3>Endorse Check</h3>
       <div class="form-field-group">
         <mat-form-field appearance="outline" class="custom-form-field">
           <mat-label>Check Number</mat-label>
@@ -11,7 +11,7 @@
             id="shayyikliNumber"
             name="shayyikliNumber"
             inputmode="numeric"
-            [value]="checkNumber"
+            [value]="endorseCheck?.checkId"
             disabled
             maxlength="12"
             required
@@ -68,6 +68,8 @@
             class="example-right-align"
             name="amount"
             [(ngModel)]="amount"
+            [value]="endorseCheck?.amount"
+            disabled
             #amountField="ngModel"
             required
           />
@@ -90,6 +92,8 @@
             [(ngModel)]="transferDate"
             #transferDateField="ngModel"
             required
+            [value]="endorseCheck?.transferDate"
+            disabled
           />
           <mat-datepicker-toggle
             matSuffix

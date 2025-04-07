@@ -13,6 +13,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CheckbookService } from '../../../services/checkbook.service';
 import { LoadingService } from '../../../services/loading.service';
+import { CheckRefreshService } from '../../../services/check-refresh.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-checkbook-history-panel',
@@ -45,17 +47,66 @@ export class CheckbookHistoryPanelComponent implements OnInit, AfterViewInit {
   ];
   checkbookDataSource = new MatTableDataSource<any>();
   dynamicPageSizeOptions: number[] = [5, 10, 15];
+  classification: any = 'N/A';
+  hasActiveCheckbook: boolean = false;
 
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) set sort(ms: MatSort) {
+    this.checkbookDataSource.sort = ms;
+    if (this.checkbookDataSource.paginator) {
+      this.checkbookDataSource.paginator.firstPage();
+    }
+  }
+
+  @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this.checkbookDataSource.paginator = mp;
+  }
 
   constructor(
     private checkbookService: CheckbookService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private checkRefreshService: CheckRefreshService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
     this.fetchCheckbookHistory();
+    this.loadUserData();
+
+    this.checkRefreshService.refresh$.subscribe(() => {
+      this.fetchCheckbookHistory();
+    });
+
+    this.loadingService.loadingOn();
+    this.checkbookService.hasActiveCheckbook().subscribe({
+      next: (data) => {
+        this.hasActiveCheckbook = data;
+      },
+      error: (err) => {
+        console.error('Error fetching active checkbook status', err);
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
+      },
+    });
+  }
+
+  loadUserData(): void {
+    this.loadingService.loadingOn();
+
+    this.userService.getUserClassification().subscribe({
+      next: (data) => {
+        this.classification = data;
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
+      },
+      error: (err) => {
+        console.error('Error fetching classification', err);
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
+      },
+    });
   }
 
   ngAfterViewInit(): void {
@@ -67,9 +118,7 @@ export class CheckbookHistoryPanelComponent implements OnInit, AfterViewInit {
     this.loadingService.loadingOn();
     this.checkbookService.getCheckbookHistory().subscribe({
       next: (data) => {
-        // If the API returns a nested array (e.g., [[ {...} ]]), flatten it.
         const checkbooks = Array.isArray(data[0]) ? data[0] : data;
-        // Optional: sort by issuedAt descending.
         checkbooks.sort(
           (a: any, b: any) =>
             new Date(b.issuedAt).getTime() - new Date(a.issuedAt).getTime()

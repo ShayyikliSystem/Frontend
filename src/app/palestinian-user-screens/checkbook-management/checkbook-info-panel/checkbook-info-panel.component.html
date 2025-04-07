@@ -25,9 +25,13 @@
       </div>
       <div class="container" style="width: 25%; height: 15vh">
         <div class="header">
-          <img src="assets/score.png" alt="score" class="score" />
+          <img
+            src="assets/quality-check.png"
+            alt="quality-check"
+            class="quality-check"
+          />
           <p>
-            Total Checks: <strong>{{ totalChecks }}</strong>
+            Issued Checks: <strong>{{ totalChecks }}</strong>
           </p>
         </div>
       </div>
@@ -86,7 +90,7 @@
 
 @if(showRequestCheckbookOverlay){
 <app-request-checkbook
-  (confirmRequest)="handleRequestCheckbook()"
+  (requestCompleted)="onRequestCompleted()"
   (cancelRequest)="cancelRequestCheckbook()"
-></app-request-checkbook>
-}
+></app-request-checkbook
+>§ }

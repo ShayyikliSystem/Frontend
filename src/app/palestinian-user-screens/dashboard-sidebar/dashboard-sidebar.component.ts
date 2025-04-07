@@ -20,13 +20,14 @@ export class DashboardSidebarComponent {
       name: 'Checkbook Management',
       route: 'checkbook-management',
       icon: 'cheque.png',
-    },{
+    },
+    {
       name: 'Check Management',
       route: 'check-management',
       icon: 'check-management1.png',
     },
     {
-      name: 'Endorsement (JIRO)',
+      name: 'Endorsement Management',
       route: 'endorsement',
       icon: 'endorsment1.png',
     },

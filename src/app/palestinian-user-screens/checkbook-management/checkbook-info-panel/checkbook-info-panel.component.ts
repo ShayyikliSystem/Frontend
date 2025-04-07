@@ -119,59 +119,8 @@ export class CheckbookInfoPanelComponent implements OnInit {
     this.showRequestCheckbookOverlay = false;
   }
 
-  handleRequestCheckbook(): void {
-    this.loadingService.loadingOn();
-
-    this.checkbookService.requestCheckbook().subscribe({
-      next: (response) => {
-        this.showRequestCheckbookOverlay = false;
-
-        this.loadingService.loadingOn();
-        this.checkbookService.getCheckbookForCurrentUser().subscribe({
-          next: (data) => {
-            this.checkbookId = data.id;
-            setTimeout(() => {
-              this.loadingService.loadingOff();
-            }, 400);
-          },
-          error: (err) => {
-            console.error('Error updating checkbook info', err);
-            setTimeout(() => {
-              this.loadingService.loadingOff();
-            }, 400);
-          },
-        });
-
-        this.loadingService.loadingOn();
-        this.checkbookService.hasActiveCheckbook().subscribe({
-          next: (data) => {
-            this.hasActiveCheckbook = data;
-            setTimeout(() => {
-              this.loadingService.loadingOff();
-            }, 400);
-          },
-          error: (err) => {
-            console.error('Error updating active checkbook status', err);
-            setTimeout(() => {
-              this.loadingService.loadingOff();
-            }, 400);
-          },
-        });
-
-        this.loadCheckbookData();
-
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
-      error: (error) => {
-        console.error('Error requesting checkbook', error);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
-    });
-
+  onRequestCompleted(): void {
+    this.showRequestCheckbookOverlay = false;
     this.loadCheckbookData();
   }
 }

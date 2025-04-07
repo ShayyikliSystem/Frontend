@@ -1,28 +1,29 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  DigitalCheckExtended,
+  DigitalCheck,
+} from '../../../models/digital.model';
+import { CheckRefreshService } from '../../../services/check-refresh.service';
+import { DigitalCheckService } from '../../../services/digital-check.service';
+import { LoadingService } from '../../../services/loading.service';
+import { UserService } from '../../../services/user.service';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSortModule, MatSort } from '@angular/material/sort';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  DigitalCheck,
-  DigitalCheckExtended,
-} from '../../../models/digital.model';
-import { DigitalCheckService } from '../../../services/digital-check.service';
-import { LoadingService } from '../../../services/loading.service';
-import { UserService } from '../../../services/user.service';
-import { CheckRefreshService } from '../../../services/check-refresh.service';
-import { ReceivedChecksFilterComponent } from '../received-checks-filter/received-checks-filter.component';
+import { ReceivedChecksFilterComponent } from '../../check-management/received-checks-filter/received-checks-filter.component';
+import { RequestEndorseCheckFormComponent } from '../request-endorse-check-form/request-endorse-check-form.component';
 
 @Component({
-  selector: 'app-received-checks-panel',
+  selector: 'app-received-checks-for-endorsements-checks-panel',
   standalone: true,
   imports: [
     CommonModule,
@@ -38,11 +39,14 @@ import { ReceivedChecksFilterComponent } from '../received-checks-filter/receive
     MatAutocompleteModule,
     ReceivedChecksFilterComponent,
     MatTooltipModule,
+    RequestEndorseCheckFormComponent,
   ],
-  templateUrl: './received-checks-panel.component.html',
-  styleUrl: './received-checks-panel.component.scss',
+  templateUrl: './received-checks-for-endorsements-checks-panel.component.html',
+  styleUrl: './received-checks-for-endorsements-checks-panel.component.scss',
 })
-export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
+export class ReceivedChecksForEndorsementsChecksPanelComponent
+  implements OnInit, AfterViewInit
+{
   receivedCheckFilterStatus: string = '';
   receivedCheckFilterAmount: number | null = null;
   receivedCheckFilterIssuer: string = '';
@@ -50,6 +54,8 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
   userFullName: string = 'N/A';
 
   showFilter: boolean = false;
+
+  selectedCheckId: string | null = null;
 
   constructor(
     private userService: UserService,
@@ -200,6 +206,7 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
     'amount',
     'status',
     'transferDate',
+    'endorse',
   ];
   receivedCheckDataSource = new MatTableDataSource<DigitalCheckExtended>();
 
@@ -226,7 +233,7 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
 
   fetchReceivedChecks(): void {
     this.loadingService.loadingOn();
-    this.digitalCheckService.getReceivedChecksForUser().subscribe({
+    this.digitalCheckService.getChecksToEndorseForUser().subscribe({
       next: (data: DigitalCheck[]) => {
         const receivedChecks: DigitalCheckExtended[] = data.map(
           (tx: DigitalCheck) => ({
@@ -367,5 +374,13 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
       this.receivedCheckFilterIssuer ||
       this.receivedCheckFilterBeneficiary
     );
+  }
+
+  openEndorseForm(checkId: string): void {
+    this.selectedCheckId = checkId;
+  }
+
+  closeEndorseForm(): void {
+    this.selectedCheckId = null;
   }
 }

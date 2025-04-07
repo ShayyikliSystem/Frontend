@@ -1,0 +1,64 @@
+.filter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .filter-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  .button-group {
+    display: flex;
+    margin-top: 15px;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background-color: #141d33;
+    color: #fff;
+  }
+  
+  .btn-secondary {
+    background-color: #e2e2e2;
+    color: #141d33;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0a354f;
+  }
+  
+  .btn-secondary:hover {
+    background-color: rgba(46, 54, 72, 0.071);
+  }
+  
+  .form-field-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .form-field-group > mat-form-field {
+    flex: 1;
+  }
+  

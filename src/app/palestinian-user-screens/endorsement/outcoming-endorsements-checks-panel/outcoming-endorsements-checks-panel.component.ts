@@ -1,28 +1,28 @@
-import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  DigitalCheckExtended,
+  DigitalCheck,
+} from '../../../models/digital.model';
+import { CheckRefreshService } from '../../../services/check-refresh.service';
+import { DigitalCheckService } from '../../../services/digital-check.service';
+import { LoadingService } from '../../../services/loading.service';
+import { UserService } from '../../../services/user.service';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSortModule, MatSort } from '@angular/material/sort';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {
-  DigitalCheck,
-  DigitalCheckExtended,
-} from '../../../models/digital.model';
-import { DigitalCheckService } from '../../../services/digital-check.service';
-import { LoadingService } from '../../../services/loading.service';
-import { UserService } from '../../../services/user.service';
-import { CheckRefreshService } from '../../../services/check-refresh.service';
-import { ReceivedChecksFilterComponent } from '../received-checks-filter/received-checks-filter.component';
+import { IssuedCheckFilterComponent } from '../../check-management/issued-check-filter/issued-check-filter.component';
 
 @Component({
-  selector: 'app-received-checks-panel',
+  selector: 'app-outcoming-endorsements-checks-panel',
   standalone: true,
   imports: [
     CommonModule,
@@ -36,17 +36,19 @@ import { ReceivedChecksFilterComponent } from '../received-checks-filter/receive
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
-    ReceivedChecksFilterComponent,
+    IssuedCheckFilterComponent,
     MatTooltipModule,
   ],
-  templateUrl: './received-checks-panel.component.html',
-  styleUrl: './received-checks-panel.component.scss',
+  templateUrl: './outcoming-endorsements-checks-panel.component.html',
+  styleUrl: './outcoming-endorsements-checks-panel.component.scss',
 })
-export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
-  receivedCheckFilterStatus: string = '';
-  receivedCheckFilterAmount: number | null = null;
-  receivedCheckFilterIssuer: string = '';
-  receivedCheckFilterBeneficiary: string = '';
+export class OutcomingEndorsementsChecksPanelComponent
+  implements OnInit, AfterViewInit
+{
+  outcomingEndorsementsCheckFilterStatus: string = '';
+  outcomingEndorsementsCheckFilterAmount: number | null = null;
+  outcomingEndorsementsCheckFilterIssuer: string = '';
+  outcomingEndorsementsCheckFilterBeneficiary: string = '';
   userFullName: string = 'N/A';
 
   showFilter: boolean = false;
@@ -63,10 +65,12 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
       'shayyikliAccountNumber'
     );
 
-    this.fetchReceivedChecks();
+    this.fetchOutcomingEndorsementsChecks();
 
     this.checkRefreshService.refresh$.subscribe(() => {
-      this.fetchReceivedChecks();
+      this.fetchOutcomingEndorsementsChecks();
+      this.updatePageSizeOptions();
+      this.resetPaginator();
     });
 
     if (this.shayyikliAccountNumber) {
@@ -88,9 +92,9 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
       });
     }
 
-    this.fetchReceivedChecks();
+    this.fetchOutcomingEndorsementsChecks();
 
-    this.receivedCheckDataSource.filterPredicate = (
+    this.outcomingEndorsementsCheckDataSource.filterPredicate = (
       data: DigitalCheckExtended,
       filter: string
     ): boolean => {
@@ -107,7 +111,7 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
       return dateMatch;
     };
 
-    this.receivedCheckDataSource.filterPredicate = (
+    this.outcomingEndorsementsCheckDataSource.filterPredicate = (
       data: DigitalCheckExtended,
       filter: string
     ): boolean => {
@@ -166,24 +170,24 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
   }
 
   clearFilter(): void {
-    this.receivedCheckFilterDate = null;
-    this.receivedCheckFilterAmount = null;
-    this.receivedCheckFilterStatus = '';
-    this.receivedCheckFilterIssuer = '';
-    this.receivedCheckFilterBeneficiary = '';
-    this.applyReceivedCheckFilter();
+    this.outcomingEndorsementsCheckFilterDate = null;
+    this.outcomingEndorsementsCheckFilterAmount = null;
+    this.outcomingEndorsementsCheckFilterStatus = '';
+    this.outcomingEndorsementsCheckFilterIssuer = '';
+    this.outcomingEndorsementsCheckFilterBeneficiary = '';
+    this.applyOutcomingEndorsementsCheckFilter();
   }
 
   onFilterApply(filter: any): void {
-    this.receivedCheckFilterDate = filter.date;
-    this.receivedCheckFilterAmount = filter.amount;
-    this.receivedCheckFilterStatus = filter.status;
-    this.receivedCheckFilterIssuer =
+    this.outcomingEndorsementsCheckFilterDate = filter.date;
+    this.outcomingEndorsementsCheckFilterAmount = filter.amount;
+    this.outcomingEndorsementsCheckFilterStatus = filter.status;
+    this.outcomingEndorsementsCheckFilterIssuer =
       typeof filter.issuer === 'object' && filter.issuer
         ? `${filter.issuer.firstName} ${filter.issuer.lastName}`
         : filter.issuer;
-    this.receivedCheckFilterBeneficiary = filter.beneficiary;
-    this.applyReceivedCheckFilter();
+    this.outcomingEndorsementsCheckFilterBeneficiary = filter.beneficiary;
+    this.applyOutcomingEndorsementsCheckFilter();
     this.closeFilter();
   }
 
@@ -193,42 +197,44 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
   filteredIssuers: any[] = [];
   filteredBeneficiaries: any[] = [];
 
-  receivedCheckDisplayedColumns: string[] = [
+  outcomingEndorsementsCheckDisplayedColumns: string[] = [
     'checkId',
     'issuerName',
     'beneficiaryName',
+    'endorsersNames',
     'amount',
     'status',
     'transferDate',
   ];
-  receivedCheckDataSource = new MatTableDataSource<DigitalCheckExtended>();
+  outcomingEndorsementsCheckDataSource =
+    new MatTableDataSource<DigitalCheckExtended>();
 
   shayyikliAccountNumber: string | null = null;
 
-  receivedCheckFilterDate: Date | null = null;
+  outcomingEndorsementsCheckFilterDate: Date | null = null;
   dynamicPageSizeOptions: number[] = [5, 10, 15, 20, 25];
 
   @ViewChild(MatSort) set sort(ms: MatSort) {
-    this.receivedCheckDataSource.sort = ms;
-    if (this.receivedCheckDataSource.paginator) {
-      this.receivedCheckDataSource.paginator.firstPage();
+    this.outcomingEndorsementsCheckDataSource.sort = ms;
+    if (this.outcomingEndorsementsCheckDataSource.paginator) {
+      this.outcomingEndorsementsCheckDataSource.paginator.firstPage();
     }
   }
 
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
-    this.receivedCheckDataSource.paginator = mp;
+    this.outcomingEndorsementsCheckDataSource.paginator = mp;
   }
 
   ngAfterViewInit(): void {
-    this.receivedCheckDataSource.sort = this.sort;
-    this.receivedCheckDataSource.paginator = this.paginator;
+    this.outcomingEndorsementsCheckDataSource.sort = this.sort;
+    this.outcomingEndorsementsCheckDataSource.paginator = this.paginator;
   }
 
-  fetchReceivedChecks(): void {
+  fetchOutcomingEndorsementsChecks(): void {
     this.loadingService.loadingOn();
-    this.digitalCheckService.getReceivedChecksForUser().subscribe({
+    this.digitalCheckService.getEndorserChecksForUser().subscribe({
       next: (data: DigitalCheck[]) => {
-        const receivedChecks: DigitalCheckExtended[] = data.map(
+        const outcomingEndorsementsChecks: DigitalCheckExtended[] = data.map(
           (tx: DigitalCheck) => ({
             ...tx,
             transferDate: this.formatDate(tx.transferDate),
@@ -236,7 +242,8 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
           })
         );
 
-        receivedChecks.forEach((tx) => {
+        outcomingEndorsementsChecks.forEach((tx) => {
+          console.log(tx);
           this.loadingService.loadingOn();
           this.userService
             .getUserDetailsByAccountNumber(tx.shyyiklinumberOfUsers)
@@ -255,6 +262,32 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
                 }, 400);
               },
             });
+
+          this.loadingService.loadingOn();
+          if (tx.shyyiklinumberOfEndorsers !== null) {
+            this.userService
+              .getUserDetailsByAccountNumber(tx.shyyiklinumberOfEndorsers)
+              .subscribe({
+                next: (userData) => {
+                  tx.endorsersNames = `${userData.firstName} ${userData.lastName}`;
+                  setTimeout(() => {
+                    this.loadingService.loadingOff();
+                  }, 400);
+                },
+                error: (err) => {
+                  console.error('Error fetching issuer details', err);
+                  tx.endorsersNames = 'N/A';
+                  setTimeout(() => {
+                    this.loadingService.loadingOff();
+                  }, 400);
+                },
+              });
+          } else {
+            tx.endorsersNames = 'N/A';
+            setTimeout(() => {
+              this.loadingService.loadingOff();
+            }, 400);
+          }
 
           this.loadingService.loadingOn();
           this.userService
@@ -276,12 +309,13 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
             });
         });
 
-        receivedChecks.sort(
+        outcomingEndorsementsChecks.sort(
           (a, b) =>
             new Date(b.rawTransferDate).getTime() -
             new Date(a.rawTransferDate).getTime()
         );
-        this.receivedCheckDataSource.data = receivedChecks;
+        this.outcomingEndorsementsCheckDataSource.data =
+          outcomingEndorsementsChecks;
         this.updatePageSizeOptions();
         this.resetPaginator();
         setTimeout(() => {
@@ -289,7 +323,10 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
         }, 400);
       },
       error: (error) => {
-        console.error('Error fetching recent receivedChecks:', error);
+        console.error(
+          'Error fetching recent outcomingEndorsementsChecks:',
+          error
+        );
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -297,31 +334,32 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
     });
   }
 
-  applyReceivedCheckFilter(): void {
+  applyOutcomingEndorsementsCheckFilter(): void {
     const filterValue = {
-      date: this.receivedCheckFilterDate
-        ? this.receivedCheckFilterDate.toISOString()
+      date: this.outcomingEndorsementsCheckFilterDate
+        ? this.outcomingEndorsementsCheckFilterDate.toISOString()
         : '',
-      status: this.receivedCheckFilterStatus
-        ? this.receivedCheckFilterStatus
+      status: this.outcomingEndorsementsCheckFilterStatus
+        ? this.outcomingEndorsementsCheckFilterStatus
         : '',
-      amount: this.receivedCheckFilterAmount
-        ? this.receivedCheckFilterAmount
+      amount: this.outcomingEndorsementsCheckFilterAmount
+        ? this.outcomingEndorsementsCheckFilterAmount
         : '',
-      issuer: this.receivedCheckFilterIssuer
-        ? this.receivedCheckFilterIssuer
+      issuer: this.outcomingEndorsementsCheckFilterIssuer
+        ? this.outcomingEndorsementsCheckFilterIssuer
         : '',
-      beneficiary: this.receivedCheckFilterBeneficiary
-        ? this.receivedCheckFilterBeneficiary
+      beneficiary: this.outcomingEndorsementsCheckFilterBeneficiary
+        ? this.outcomingEndorsementsCheckFilterBeneficiary
         : '',
     };
-    this.receivedCheckDataSource.filter = JSON.stringify(filterValue);
+    this.outcomingEndorsementsCheckDataSource.filter =
+      JSON.stringify(filterValue);
     this.updatePageSizeOptions();
     this.resetPaginator();
   }
 
   updatePageSizeOptions(): void {
-    const count = this.receivedCheckDataSource.filteredData.length;
+    const count = this.outcomingEndorsementsCheckDataSource.filteredData.length;
 
     if (count < 5) {
       this.dynamicPageSizeOptions = [count];
@@ -361,11 +399,11 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
 
   hasActiveFilter(): boolean {
     return !!(
-      this.receivedCheckFilterDate ||
-      this.receivedCheckFilterAmount ||
-      this.receivedCheckFilterStatus ||
-      this.receivedCheckFilterIssuer ||
-      this.receivedCheckFilterBeneficiary
+      this.outcomingEndorsementsCheckFilterDate ||
+      this.outcomingEndorsementsCheckFilterAmount ||
+      this.outcomingEndorsementsCheckFilterStatus ||
+      this.outcomingEndorsementsCheckFilterIssuer ||
+      this.outcomingEndorsementsCheckFilterBeneficiary
     );
   }
 }

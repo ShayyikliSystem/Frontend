@@ -8,21 +8,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSortModule, MatSort } from '@angular/material/sort';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
-  DigitalCheck,
   DigitalCheckExtended,
+  DigitalCheck,
 } from '../../../models/digital.model';
+import { CheckRefreshService } from '../../../services/check-refresh.service';
 import { DigitalCheckService } from '../../../services/digital-check.service';
 import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
-import { CheckRefreshService } from '../../../services/check-refresh.service';
-import { ReceivedChecksFilterComponent } from '../received-checks-filter/received-checks-filter.component';
+import { ReturnedChecksFilterComponent } from '../returned-checks-filter/returned-checks-filter.component';
 
 @Component({
-  selector: 'app-received-checks-panel',
+  selector: 'app-returned-checks-panel',
   standalone: true,
   imports: [
     CommonModule,
@@ -36,17 +36,17 @@ import { ReceivedChecksFilterComponent } from '../received-checks-filter/receive
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
-    ReceivedChecksFilterComponent,
+    ReturnedChecksFilterComponent,
     MatTooltipModule,
   ],
-  templateUrl: './received-checks-panel.component.html',
-  styleUrl: './received-checks-panel.component.scss',
+  templateUrl: './returned-checks-panel.component.html',
+  styleUrl: './returned-checks-panel.component.scss',
 })
-export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
-  receivedCheckFilterStatus: string = '';
-  receivedCheckFilterAmount: number | null = null;
-  receivedCheckFilterIssuer: string = '';
-  receivedCheckFilterBeneficiary: string = '';
+export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
+  returnedCheckFilterStatus: string = '';
+  returnedCheckFilterAmount: number | null = null;
+  returnedCheckFilterIssuer: string = '';
+  returnedCheckFilterBeneficiary: string = '';
   userFullName: string = 'N/A';
 
   showFilter: boolean = false;
@@ -63,10 +63,12 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
       'shayyikliAccountNumber'
     );
 
-    this.fetchReceivedChecks();
+    this.fetchReturnedChecks();
 
     this.checkRefreshService.refresh$.subscribe(() => {
-      this.fetchReceivedChecks();
+      this.fetchReturnedChecks();
+      this.updatePageSizeOptions();
+      this.resetPaginator();
     });
 
     if (this.shayyikliAccountNumber) {
@@ -88,9 +90,9 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
       });
     }
 
-    this.fetchReceivedChecks();
+    this.fetchReturnedChecks();
 
-    this.receivedCheckDataSource.filterPredicate = (
+    this.returnedCheckDataSource.filterPredicate = (
       data: DigitalCheckExtended,
       filter: string
     ): boolean => {
@@ -107,7 +109,7 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
       return dateMatch;
     };
 
-    this.receivedCheckDataSource.filterPredicate = (
+    this.returnedCheckDataSource.filterPredicate = (
       data: DigitalCheckExtended,
       filter: string
     ): boolean => {
@@ -166,24 +168,24 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
   }
 
   clearFilter(): void {
-    this.receivedCheckFilterDate = null;
-    this.receivedCheckFilterAmount = null;
-    this.receivedCheckFilterStatus = '';
-    this.receivedCheckFilterIssuer = '';
-    this.receivedCheckFilterBeneficiary = '';
-    this.applyReceivedCheckFilter();
+    this.returnedCheckFilterDate = null;
+    this.returnedCheckFilterAmount = null;
+    this.returnedCheckFilterStatus = '';
+    this.returnedCheckFilterIssuer = '';
+    this.returnedCheckFilterBeneficiary = '';
+    this.applyReturnedCheckFilter();
   }
 
   onFilterApply(filter: any): void {
-    this.receivedCheckFilterDate = filter.date;
-    this.receivedCheckFilterAmount = filter.amount;
-    this.receivedCheckFilterStatus = filter.status;
-    this.receivedCheckFilterIssuer =
+    this.returnedCheckFilterDate = filter.date;
+    this.returnedCheckFilterAmount = filter.amount;
+    this.returnedCheckFilterStatus = filter.status;
+    this.returnedCheckFilterIssuer =
       typeof filter.issuer === 'object' && filter.issuer
         ? `${filter.issuer.firstName} ${filter.issuer.lastName}`
         : filter.issuer;
-    this.receivedCheckFilterBeneficiary = filter.beneficiary;
-    this.applyReceivedCheckFilter();
+    this.returnedCheckFilterBeneficiary = filter.beneficiary;
+    this.applyReturnedCheckFilter();
     this.closeFilter();
   }
 
@@ -193,7 +195,7 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
   filteredIssuers: any[] = [];
   filteredBeneficiaries: any[] = [];
 
-  receivedCheckDisplayedColumns: string[] = [
+  returnedCheckDisplayedColumns: string[] = [
     'checkId',
     'issuerName',
     'beneficiaryName',
@@ -201,34 +203,34 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
     'status',
     'transferDate',
   ];
-  receivedCheckDataSource = new MatTableDataSource<DigitalCheckExtended>();
+  returnedCheckDataSource = new MatTableDataSource<DigitalCheckExtended>();
 
   shayyikliAccountNumber: string | null = null;
 
-  receivedCheckFilterDate: Date | null = null;
+  returnedCheckFilterDate: Date | null = null;
   dynamicPageSizeOptions: number[] = [5, 10, 15, 20, 25];
 
   @ViewChild(MatSort) set sort(ms: MatSort) {
-    this.receivedCheckDataSource.sort = ms;
-    if (this.receivedCheckDataSource.paginator) {
-      this.receivedCheckDataSource.paginator.firstPage();
+    this.returnedCheckDataSource.sort = ms;
+    if (this.returnedCheckDataSource.paginator) {
+      this.returnedCheckDataSource.paginator.firstPage();
     }
   }
 
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
-    this.receivedCheckDataSource.paginator = mp;
+    this.returnedCheckDataSource.paginator = mp;
   }
 
   ngAfterViewInit(): void {
-    this.receivedCheckDataSource.sort = this.sort;
-    this.receivedCheckDataSource.paginator = this.paginator;
+    this.returnedCheckDataSource.sort = this.sort;
+    this.returnedCheckDataSource.paginator = this.paginator;
   }
 
-  fetchReceivedChecks(): void {
+  fetchReturnedChecks(): void {
     this.loadingService.loadingOn();
-    this.digitalCheckService.getReceivedChecksForUser().subscribe({
+    this.digitalCheckService.getReturnedChecksForUser().subscribe({
       next: (data: DigitalCheck[]) => {
-        const receivedChecks: DigitalCheckExtended[] = data.map(
+        const returnedChecks: DigitalCheckExtended[] = data.map(
           (tx: DigitalCheck) => ({
             ...tx,
             transferDate: this.formatDate(tx.transferDate),
@@ -236,7 +238,7 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
           })
         );
 
-        receivedChecks.forEach((tx) => {
+        returnedChecks.forEach((tx) => {
           this.loadingService.loadingOn();
           this.userService
             .getUserDetailsByAccountNumber(tx.shyyiklinumberOfUsers)
@@ -276,12 +278,12 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
             });
         });
 
-        receivedChecks.sort(
+        returnedChecks.sort(
           (a, b) =>
             new Date(b.rawTransferDate).getTime() -
             new Date(a.rawTransferDate).getTime()
         );
-        this.receivedCheckDataSource.data = receivedChecks;
+        this.returnedCheckDataSource.data = returnedChecks;
         this.updatePageSizeOptions();
         this.resetPaginator();
         setTimeout(() => {
@@ -289,7 +291,7 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
         }, 400);
       },
       error: (error) => {
-        console.error('Error fetching recent receivedChecks:', error);
+        console.error('Error fetching recent returnedChecks:', error);
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -297,31 +299,31 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
     });
   }
 
-  applyReceivedCheckFilter(): void {
+  applyReturnedCheckFilter(): void {
     const filterValue = {
-      date: this.receivedCheckFilterDate
-        ? this.receivedCheckFilterDate.toISOString()
+      date: this.returnedCheckFilterDate
+        ? this.returnedCheckFilterDate.toISOString()
         : '',
-      status: this.receivedCheckFilterStatus
-        ? this.receivedCheckFilterStatus
+      status: this.returnedCheckFilterStatus
+        ? this.returnedCheckFilterStatus
         : '',
-      amount: this.receivedCheckFilterAmount
-        ? this.receivedCheckFilterAmount
+      amount: this.returnedCheckFilterAmount
+        ? this.returnedCheckFilterAmount
         : '',
-      issuer: this.receivedCheckFilterIssuer
-        ? this.receivedCheckFilterIssuer
+      issuer: this.returnedCheckFilterIssuer
+        ? this.returnedCheckFilterIssuer
         : '',
-      beneficiary: this.receivedCheckFilterBeneficiary
-        ? this.receivedCheckFilterBeneficiary
+      beneficiary: this.returnedCheckFilterBeneficiary
+        ? this.returnedCheckFilterBeneficiary
         : '',
     };
-    this.receivedCheckDataSource.filter = JSON.stringify(filterValue);
+    this.returnedCheckDataSource.filter = JSON.stringify(filterValue);
     this.updatePageSizeOptions();
     this.resetPaginator();
   }
 
   updatePageSizeOptions(): void {
-    const count = this.receivedCheckDataSource.filteredData.length;
+    const count = this.returnedCheckDataSource.filteredData.length;
 
     if (count < 5) {
       this.dynamicPageSizeOptions = [count];
@@ -361,11 +363,11 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
 
   hasActiveFilter(): boolean {
     return !!(
-      this.receivedCheckFilterDate ||
-      this.receivedCheckFilterAmount ||
-      this.receivedCheckFilterStatus ||
-      this.receivedCheckFilterIssuer ||
-      this.receivedCheckFilterBeneficiary
+      this.returnedCheckFilterDate ||
+      this.returnedCheckFilterAmount ||
+      this.returnedCheckFilterStatus ||
+      this.returnedCheckFilterIssuer ||
+      this.returnedCheckFilterBeneficiary
     );
   }
 }

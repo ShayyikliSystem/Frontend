@@ -2,19 +2,20 @@
   <mat-expansion-panel-header>
     <div class="security-header">
       <img
-        src="assets/takeover.png"
-        alt="takeover"
+        src="assets/return-on-investment.png"
+        alt="return-on-investment"
         class="user"
         style="display: inline-block"
       />
-      <p style="display: inline; margin-left: 5px">Received Checks</p>
+      <p style="display: inline; margin-left: 5px">Returned Checks</p>
     </div>
   </mat-expansion-panel-header>
+
   <div style="margin-top: 10px">
     <div
       *ngIf="
-        receivedCheckDataSource.data && receivedCheckDataSource.data.length > 0;
-        else noReceivedChecks
+        returnedCheckDataSource.data && returnedCheckDataSource.data.length > 0;
+        else noReturnedChecks
       "
     >
       <div class="filter-buttons" style="margin-bottom: 10px">
@@ -40,25 +41,25 @@
         </span>
       </div>
 
-      <app-received-checks-filter
+      <app-returned-checks-filter
         *ngIf="showFilter"
         [currentFilter]="{}"
         [statusOptions]="statusOptions"
         (applyFilter)="onFilterApply($event)"
         (cancelFilter)="closeFilter()"
-      ></app-received-checks-filter>
+      ></app-returned-checks-filter>
 
       <div
         *ngIf="
-          receivedCheckDataSource.filteredData &&
-            receivedCheckDataSource.filteredData.length > 0;
-          else noFilterReceivedChecks
+          returnedCheckDataSource.filteredData &&
+            returnedCheckDataSource.filteredData.length > 0;
+          else noFilterReturnedChecks
         "
       >
         <div class="table-container">
           <table
             mat-table
-            [dataSource]="receivedCheckDataSource"
+            [dataSource]="returnedCheckDataSource"
             matSort
             class="mat-elevation-z8"
           >
@@ -120,11 +121,11 @@
 
             <tr
               mat-header-row
-              *matHeaderRowDef="receivedCheckDisplayedColumns"
+              *matHeaderRowDef="returnedCheckDisplayedColumns"
             ></tr>
             <tr
               mat-row
-              *matRowDef="let row; columns: receivedCheckDisplayedColumns"
+              *matRowDef="let row; columns: returnedCheckDisplayedColumns"
             ></tr>
           </table>
         </div>
@@ -138,20 +139,20 @@
         </p>
       </div>
 
-      <ng-template #noFilterReceivedChecks>
+      <ng-template #noFilterReturnedChecks>
         <div class="limited-info" style="text-align: center">
-          <h3>No Received Checks Match Your Filter</h3>
+          <h3>No Returned Checks Match Your Filter</h3>
           <p>
-            The filter criteria you applied did not return any received checks.
+            The filter criteria you applied did not return any returned checks.
           </p>
         </div>
       </ng-template>
     </div>
 
-    <ng-template #noReceivedChecks>
+    <ng-template #noReturnedChecks>
       <div class="limited-info" style="text-align: center">
-        <h3>No Received Checks Found</h3>
-        <p>It looks like you haven't received any digital checks yet.</p>
+        <h3>No Returned Checks Found</h3>
+        <p>It looks like you haven't made any returned digital checks yet.</p>
       </div>
     </ng-template>
   </div>

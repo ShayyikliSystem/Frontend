@@ -16,4 +16,5 @@ export interface DigitalCheckExtended extends DigitalCheck {
   rawTransferDate: string;
   issuerName?: string;
   beneficiaryName?: string;
+  endorsersNames?: string;
 }

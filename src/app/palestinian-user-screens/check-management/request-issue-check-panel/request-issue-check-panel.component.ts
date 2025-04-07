@@ -13,6 +13,7 @@ import { RequestIssueCheckFormComponent } from '../request-issue-check-form/requ
 import { CheckbookService } from '../../../services/checkbook.service';
 import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
+import { CheckRefreshService } from '../../../services/check-refresh.service';
 
 @Component({
   selector: 'app-request-issue-check-panel',
@@ -42,11 +43,40 @@ export class RequestIssueCheckPanelComponent implements OnInit {
   constructor(
     private checkbookService: CheckbookService,
     private loadingService: LoadingService,
-    private userService: UserService
+    private userService: UserService,
+    private checkRefreshService: CheckRefreshService
   ) {}
 
   ngOnInit(): void {
     this.loadingService.loadingOn();
+    this.checkRefreshService.refresh$.subscribe(() => {
+      this.userService.getUserClassification().subscribe({
+        next: (data) => {
+          this.classification = data;
+          setTimeout(() => {
+            this.loadingService.loadingOff();
+          }, 400);
+        },
+        error: (err) => {
+          console.error('Error fetching classification', err);
+          setTimeout(() => {
+            this.loadingService.loadingOff();
+          }, 400);
+        },
+      });
+      this.checkbookService.hasActiveCheckbook().subscribe({
+        next: (data) => {
+          this.hasActiveCheckbook = data;
+        },
+        error: (err) => {
+          console.error('Error checking active checkbook', err);
+          setTimeout(() => {
+            this.loadingService.loadingOff();
+          }, 400);
+        },
+      });
+    });
+
     this.userService.getUserClassification().subscribe({
       next: (data) => {
         this.classification = data;

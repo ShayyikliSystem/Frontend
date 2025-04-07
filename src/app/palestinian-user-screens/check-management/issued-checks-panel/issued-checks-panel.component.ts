@@ -67,6 +67,8 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
 
     this.checkRefreshService.refresh$.subscribe(() => {
       this.fetchIssuedChecks();
+      this.updatePageSizeOptions();
+      this.resetPaginator();
     });
 
     if (this.shayyikliAccountNumber) {

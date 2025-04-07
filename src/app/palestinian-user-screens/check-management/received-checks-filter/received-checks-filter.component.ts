@@ -1,6 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UserService } from '../../../services/user.service';
+import { User } from '../../dashboard-screen/transaction-filter/transaction-filter.component';
+import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -10,11 +12,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { UserService } from '../../../services/user.service';
-import { User } from '../../dashboard-screen/transaction-filter/transaction-filter.component';
 
 @Component({
-  selector: 'app-issued-check-filter',
+  selector: 'app-received-checks-filter',
   standalone: true,
   imports: [
     CommonModule,
@@ -30,10 +30,10 @@ import { User } from '../../dashboard-screen/transaction-filter/transaction-filt
     MatExpansionModule,
     MatAutocompleteModule,
   ],
-  templateUrl: './issued-check-filter.component.html',
-  styleUrl: './issued-check-filter.component.scss',
+  templateUrl: './received-checks-filter.component.html',
+  styleUrl: './received-checks-filter.component.scss',
 })
-export class IssuedCheckFilterComponent implements OnInit {
+export class ReceivedChecksFilterComponent implements OnInit {
   @Input() currentFilter: any = {
     date: null,
     amount: null,
@@ -66,6 +66,15 @@ export class IssuedCheckFilterComponent implements OnInit {
       },
       error: (err) => console.error('Error fetching all users', err),
     });
+
+    this.issuerSearchCtrl.valueChanges.subscribe(
+      (searchTerm: string | null) => {
+        this.filteredIssuers = this.filterUsers(
+          searchTerm || '',
+          this.allUsers
+        );
+      }
+    );
 
     this.beneficiarySearchCtrl.valueChanges.subscribe(
       (searchTerm: string | null) => {

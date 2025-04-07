@@ -15,8 +15,7 @@
           [(ngModel)]="filter.amount"
           class="example-right-align"
         />
-        <span matTextPrefix>$&nbsp;</span>
-        <span matTextSuffix>.00</span>
+        <span matTextPrefix>₪&nbsp;</span>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
@@ -30,11 +29,9 @@
     </div>
 
     <div class="form-field-group">
-      <!-- Issuer mat-select with search -->
       <mat-form-field appearance="outline">
         <mat-label>Issuer</mat-label>
         <mat-select [(ngModel)]="filter.issuer">
-          <!-- Search input inside the panel -->
           <mat-option>
             <input
               matInput
@@ -50,11 +47,9 @@
         </mat-select>
       </mat-form-field>
 
-      <!-- Beneficiary mat-select with search -->
       <mat-form-field appearance="outline">
         <mat-label>Beneficiary</mat-label>
         <mat-select [(ngModel)]="filter.beneficiary">
-          <!-- Search input inside the panel -->
           <mat-option>
             <input
               matInput
