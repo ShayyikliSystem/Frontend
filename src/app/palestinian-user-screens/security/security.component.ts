@@ -19,6 +19,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { LoadingService } from '../../services/loading.service';
+import { SecurityFilterComponent } from './security-filter/security-filter.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-security',
@@ -36,6 +38,8 @@ import { LoadingService } from '../../services/loading.service';
     MatSelectModule,
     MatDatepickerModule,
     MatExpansionModule,
+    SecurityFilterComponent,
+    MatTooltipModule,
   ],
   templateUrl: './security.component.html',
   styleUrl: './security.component.css',
@@ -50,14 +54,20 @@ export class SecurityComponent implements OnInit, AfterViewInit {
 
   filterStatus: string = '';
   filterDate: Date | null = null;
+  showFilter: boolean = false;
 
   showResetPassword: boolean = false;
   showWarning: boolean = false;
 
   dynamicPageSizeOptions: number[] = [5, 10, 15, 20, 25];
 
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) set sort(ms: MatSort) {
+    this.dataSource.sort = ms;
+  }
+
+  @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this.dataSource.paginator = mp;
+  }
 
   constructor(
     private authService: AuthService,
@@ -135,6 +145,30 @@ export class SecurityComponent implements OnInit, AfterViewInit {
 
   cancelResetPassword(): void {
     this.showResetPassword = false;
+  }
+
+  openFilter(): void {
+    this.showFilter = true;
+  }
+
+  closeFilter(): void {
+    this.showFilter = false;
+  }
+
+  clearFilter(): void {
+    this.resetFilters();
+    this.showFilter = false;
+  }
+
+  onFilterApply(filter: { status: string; date: Date | null }): void {
+    this.filterStatus = filter.status;
+    this.filterDate = filter.date;
+    this.applyFilter();
+    this.showFilter = false;
+  }
+
+  hasActiveFilter(): boolean {
+    return !!this.filterStatus || !!this.filterDate;
   }
 
   fetchLoginHistory(): void {
@@ -230,7 +264,6 @@ export class SecurityComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = JSON.stringify(filterValue);
     this.updatePageSizeOptions();
     this.resetPaginator();
-    this.fetchLoginHistory();
   }
 
   resetFilters(): void {
@@ -242,7 +275,7 @@ export class SecurityComponent implements OnInit, AfterViewInit {
   resetPaginator(): void {
     if (this.paginator) {
       this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0] || 5;
+      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
     }
   }
 }

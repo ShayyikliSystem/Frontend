@@ -1,0 +1,59 @@
+<mat-expansion-panel
+  style="margin-top: 10px; margin-bottom: 10px; width: 1000px"
+  expanded="true"
+>
+  <mat-expansion-panel-header style="margin-top: 10px; margin-bottom: 20px">
+    <div class="security-header" style="margin-top: 10px">
+      <img
+        src="assets/info.png"
+        alt="info"
+        class="info"
+        style="display: inline-block"
+      />
+      <p style="display: inline; margin-left: 5px">General Information</p>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div class="general-info">
+    <div class="container" style="width: 25%">
+      <div class="header">
+        <img
+          src="assets/data-classification.png"
+          alt="data-classification"
+          class="data-classification"
+        />
+        <p>
+          Classification : <strong>{{ classification }}</strong>
+        </p>
+      </div>
+    </div>
+    <div class="container" style="width: 25%">
+      <div class="header">
+        <img src="assets/money.png" alt="money" class="money" />
+        <p>
+          Balance: <strong>{{ balance }}</strong>
+        </p>
+      </div>
+    </div>
+    <div class="container" style="width: 25%">
+      <div class="header">
+        <img
+          src="assets/return-on-investment.png"
+          alt="return-on-investment"
+          class="return-on-investment"
+        />
+        <p>
+          Returned Checks: <strong>{{ returnedChecks }}</strong>
+        </p>
+      </div>
+    </div>
+    <div class="container" style="width: 25%">
+      <div class="header">
+        <img src="assets/quality-check.png" alt="quality-check" class="quality-check" />
+        <p>
+          Issued Checks: <strong>{{ issuedChecks }}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</mat-expansion-panel>

@@ -22,6 +22,8 @@ import { EndorsementComponent } from './palestinian-user-screens/endorsement/end
 import { SecurityComponent } from './palestinian-user-screens/security/security.component';
 import { SettingsComponent } from './palestinian-user-screens/settings/settings.component';
 import { TransactionComponent } from './palestinian-user-screens/transaction/transaction.component';
+import { SupportComponent } from './palestinian-user-screens/support/support.component';
+import { CheckbookManagementComponent } from './palestinian-user-screens/checkbook-management/checkbook-management.component';
 
 export const routes: Routes = [
   { path: '', component: SplashScreenComponent },
@@ -48,11 +50,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', component: DashboardScreenComponent },
+      { path: 'checkbook-management', component: CheckbookManagementComponent },
       { path: 'check-management', component: CheckManagementComponent },
       { path: 'endorsement', component: EndorsementComponent },
       { path: 'classification', component: ClassificationComponent },
       { path: 'transaction', component: TransactionComponent },
       { path: 'security', component: SecurityComponent },
+      { path: 'support', component: SupportComponent },
       { path: 'settings', component: SettingsComponent },
     ],
     data: { roles: ['ROLE_PALESTINIAN'] },

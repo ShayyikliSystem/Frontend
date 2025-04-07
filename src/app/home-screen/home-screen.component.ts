@@ -38,12 +38,13 @@ export class HomeScreenComponent {
       const rolesString = localStorage.getItem('userRoles');
       const roles: string[] = rolesString ? JSON.parse(rolesString) : [];
 
-      if (roles.includes('ROLE_ADMIN')) {
+      console.log('User roles:', roles);
+      if (!roles) {
+        this.router.navigate(['/login']);
+      } else if (roles.includes('ROLE_ADMIN')) {
         this.router.navigate(['/admin/dashboard']);
       } else if (roles.includes('ROLE_PALESTINIAN')) {
         this.router.navigate(['/dashboard']);
-      } else {
-        this.router.navigate(['/login']);
       }
     } else {
       this.router.navigate(['/login']);

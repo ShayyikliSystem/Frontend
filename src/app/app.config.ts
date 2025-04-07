@@ -30,6 +30,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeModule } from 'primeng/tree';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MY_FORMATS } from './formats/my-date-formats';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 export const appConfig: ApplicationConfig = {
   providers: [

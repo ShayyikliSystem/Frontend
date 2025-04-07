@@ -1,1 +1,9 @@
-<p>dashboard-screen works!</p>
+<div class="greeting" style="margin-bottom: 20px">
+  <h3>Welcome {{ userFullName }}!</h3>
+  <p>{{ currentDate | date : "dd/MM/yyyy, h:mm a" }}</p>
+  <p>Let’s make financial management effortless for you!</p>
+</div>
+
+<app-general-info-panel></app-general-info-panel>
+
+<app-transactions-panel></app-transactions-panel>

@@ -1,3 +1,4 @@
+import { LoadingService } from './../services/loading.service';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -22,13 +23,19 @@ import { MatInputModule } from '@angular/material/input';
 export class ForgotPasswordScreenComponent {
   email: string = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private loadingService: LoadingService
+  ) {}
 
   onSubmit(form: NgForm): void {
+    this.loadingService.loadingOn();
     if (form.invalid) {
       Object.values(form.controls).forEach((control) =>
         control.markAsTouched()
       );
+      this.loadingService.loadingOff();
       return;
     }
     this.authService.resetPassword(this.email).subscribe({
@@ -36,9 +43,11 @@ export class ForgotPasswordScreenComponent {
         const maskedEmail = this.maskEmail(this.email);
         localStorage.setItem('resetEmail', maskedEmail);
         this.router.navigate(['/email-sent']);
+        this.loadingService.loadingOff();
       },
       error: (error) => {
         console.error('Reset password error:', error);
+        this.loadingService.loadingOff();
       },
     });
   }

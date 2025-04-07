@@ -158,3 +158,18 @@ button[mat-icon-button]:hover {
   color: #006a67;
   margin-top: 5px;
 }
+
+.filter-buttons {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+}
+
+button {
+  padding: 10px;
+  background-color: #141d33;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

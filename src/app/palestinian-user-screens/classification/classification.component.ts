@@ -3,7 +3,15 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AlertComponent } from '../../alert/alert.component';
 import { AuthService } from '../../services/auth.service';
-import { ClassificationPerUserComponent } from './classification-per-user/classification-per-user.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-classification',
@@ -11,21 +19,52 @@ import { ClassificationPerUserComponent } from './classification-per-user/classi
   imports: [
     CommonModule,
     FormsModule,
-    AlertComponent,
-    ClassificationPerUserComponent,
+    CommonModule,
+    FormsModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatExpansionModule,
   ],
   templateUrl: './classification.component.html',
   styleUrl: './classification.component.css',
 })
 export class ClassificationComponent {
-  alertMessage = '';
-  alertType: 'success' | 'error' = 'success';
+  balance: any = 'N/A';
+  returnedChecks: any = 'N/A';
+  issuedChecks: any = 'N/A';
+  classification: any = 'N/A';
 
-  showAlert(message: string, type: 'success' | 'error' = 'success'): void {
-    this.alertMessage = message;
-    this.alertType = type;
-    setTimeout(() => (this.alertMessage = ''), 5000);
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.loadUserData();
   }
 
-  constructor(private authService: AuthService) {}
+  loadUserData(): void {
+    this.userService.getUserBalance().subscribe({
+      next: (data) => (this.balance = data),
+      error: (err) => console.error('Error fetching balance', err),
+    });
+
+    this.userService.getReturnedChecksCount().subscribe({
+      next: (data) => (this.returnedChecks = data),
+      error: (err) =>
+        console.error('Error fetching returned checks count', err),
+    });
+
+    this.userService.getIssuedChecksCount().subscribe({
+      next: (data) => (this.issuedChecks = data),
+      error: (err) => console.error('Error fetching issued checks count', err),
+    });
+
+    this.userService.getUserClassification().subscribe({
+      next: (data) => (this.classification = data),
+      error: (err) => console.error('Error fetching classification', err),
+    });
+  }
 }

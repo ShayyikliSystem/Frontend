@@ -1,0 +1,125 @@
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <div class="filter-overlay">
+    <div class="filter-box">
+      <h3>Issue New Check</h3>
+      <!-- Form fields -->
+      <div class="form-field-group">
+        <!-- Check Number Field -->
+        <mat-form-field appearance="outline" class="custom-form-field">
+          <mat-label>Check Number</mat-label>
+          <input
+            matInput
+            type="tel"
+            id="shayyikliNumber"
+            name="shayyikliNumber"
+            inputmode="numeric"
+            [value]="checkNumber"
+            disabled
+            maxlength="12"
+            required
+            style="color: #201e43"
+          />
+          <!-- Disabled field; no error needed -->
+        </mat-form-field>
+
+        <!-- Beneficiary Field -->
+        <mat-form-field appearance="outline">
+          <mat-label>Beneficiary</mat-label>
+          <mat-select
+            name="beneficiary"
+            [(ngModel)]="selectedBeneficiary"
+            #beneficiaryField="ngModel"
+            required
+          >
+            <mat-option>
+              <input
+                matInput
+                placeholder="Search beneficiary"
+                [formControl]="beneficiarySearchCtrl"
+                required
+              />
+            </mat-option>
+            <mat-option
+              *ngFor="let user of filteredBeneficiaries"
+              [value]="user"
+            >
+              {{ user.firstName }} {{ user.lastName }} ({{
+                user.shayyikliAccountNumber
+              }})
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="
+              beneficiaryField.invalid &&
+              (beneficiaryField.touched || beneficiaryField.dirty)
+            "
+          >
+            Beneficiary is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-field-group">
+        <!-- Amount Field -->
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input
+            matInput
+            type="number"
+            step="1"
+            placeholder="0"
+            min="0"
+            max="100000"
+            class="example-right-align"
+            name="amount"
+            [(ngModel)]="amount"
+            #amountField="ngModel"
+            required
+          />
+          <span matTextPrefix>$&nbsp;</span>
+          <span matTextSuffix>.00</span>
+          <mat-error
+            *ngIf="
+              amountField.invalid && (amountField.touched || amountField.dirty)
+            "
+          >
+            Amount is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Date Picker Field -->
+        <mat-form-field appearance="outline">
+          <mat-label>Choose a date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="transactionPicker"
+            name="transferDate"
+            [(ngModel)]="transferDate"
+            #transferDateField="ngModel"
+            required
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="transactionPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #transactionPicker></mat-datepicker>
+          <mat-error
+            *ngIf="
+              transferDateField.invalid &&
+              (transferDateField.touched || transferDateField.dirty)
+            "
+          >
+            Date is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="button-group">
+        <button class="btn-secondary" type="button" (click)="onCancel()">
+          Cancel
+        </button>
+        <button class="btn-primary" type="submit">Apply</button>
+      </div>
+    </div>
+  </div>
+</form>

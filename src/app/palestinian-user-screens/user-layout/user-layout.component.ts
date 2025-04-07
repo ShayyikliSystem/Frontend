@@ -19,7 +19,9 @@ export class UserLayoutComponent {
         console.log('Token validation successful:', res);
       },
       error: (err) => {
-        console.error('Token validation failed:', err);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userRoles');
+        sessionStorage.clear();
         this.router.navigate(['/login']);
       },
     });

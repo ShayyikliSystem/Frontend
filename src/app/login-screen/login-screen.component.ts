@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { JwtResponse } from '../models/jwt-response.model';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-login-screen',
@@ -37,7 +38,11 @@ export class LoginScreenComponent {
     password: '',
   };
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private loadingService: LoadingService
+  ) {}
 
   togglePasswordVisibility(): void {
     this.isPasswordVisible = !this.isPasswordVisible;
@@ -65,11 +70,13 @@ export class LoginScreenComponent {
   }
 
   onSubmit(form: NgForm): void {
+    this.loadingService.loadingOn();
     if (form.invalid) {
       this.incompleteFormError = 'Check all the required fields.';
       Object.values(form.controls).forEach((control) =>
         control.markAsTouched()
       );
+      this.loadingService.loadingOff();
       return;
     }
     this.incompleteFormError = '';
@@ -85,10 +92,12 @@ export class LoginScreenComponent {
         } else {
           this.router.navigate(['/home']);
         }
+        this.loadingService.loadingOff();
       },
       error: (error) => {
         console.error('Login failed', error);
         this.loginError = 'The credentials are incorrect.';
+        this.loadingService.loadingOff();
       },
     });
   }

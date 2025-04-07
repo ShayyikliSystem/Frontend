@@ -17,6 +17,10 @@ export class DashboardSidebarComponent {
   menuItems = [
     { name: 'Dashboard', route: 'dashboard', icon: 'dashboard1.png' },
     {
+      name: 'Checkbook Management',
+      route: 'checkbook-management',
+      icon: 'cheque.png',
+    },{
       name: 'Check Management',
       route: 'check-management',
       icon: 'check-management1.png',
@@ -34,6 +38,7 @@ export class DashboardSidebarComponent {
     { name: 'Transaction', route: 'transaction', icon: 'transaction1.png' },
     { name: 'Security & Alerts', route: 'security', icon: 'security1.png' },
     { name: 'Settings', route: 'settings', icon: 'settings1.png' },
+    { name: 'Support Center', route: 'support', icon: 'technical-support.png' },
     { name: 'logout', route: 'login', icon: 'logout1.png' },
   ];
 

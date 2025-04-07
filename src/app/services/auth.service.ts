@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap, throwError } from 'rxjs';
+import { map, Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { JwtResponse } from '../models/jwt-response.model';
 import { SignupRequest } from '../models/signup-request.model';
@@ -28,6 +28,12 @@ export class AuthService {
         tap((response) => {
           localStorage.setItem('authToken', response.accessToken);
           localStorage.setItem('userRoles', JSON.stringify(response.roles));
+          if (response.roles.includes('ROLE_PALESTINIAN')) {
+            localStorage.setItem(
+              'shayyikliAccountNumber',
+              response.shayyikliAccountNumber.toString()
+            );
+          }
         })
       );
   }

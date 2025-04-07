@@ -22,6 +22,7 @@ import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MY_FORMATS } from '../formats/my-date-formats';
 import _moment from 'moment';
 import { SignupRequest } from '../models/signup-request.model';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,7 +66,11 @@ export class SignupScreenComponent {
     agreedToTerms: false,
   };
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private loadingService: LoadingService
+  ) {}
 
   date = new FormControl();
 
@@ -78,6 +83,15 @@ export class SignupScreenComponent {
 
   public onCreateAccount(form: NgForm): void {
     this.submitted = true;
+    this.loadingService.loadingOn();
+
+    if (this.signupData.cardNumber) {
+      this.signupData.cardNumber = this.signupData.cardNumber.replace(
+        /\s/g,
+        ''
+      );
+    }
+
     if (
       !this.signupData.firstName ||
       !this.signupData.lastName ||
@@ -89,17 +103,20 @@ export class SignupScreenComponent {
       !this.signupData.securityCode
     ) {
       this.signupError = 'Please fill out all required fields.';
+      this.loadingService.loadingOff();
       return;
     }
 
     if (!this.signupData.agreedToTerms) {
       this.signupError = 'You must agree to the terms.';
+      this.loadingService.loadingOff();
       return;
     }
 
     const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!emailPattern.test(this.signupData.email)) {
       this.signupError = 'Please enter a valid email address.';
+      this.loadingService.loadingOff();
       return;
     }
 
@@ -110,20 +127,24 @@ export class SignupScreenComponent {
 
     if (!phonePattern.test(this.signupData.phoneNumber)) {
       this.signupError = 'Phone number must be exactly 9 digits.';
+      this.loadingService.loadingOff();
       return;
     }
 
     if (!idPattern.test(this.signupData.idNumber.toString())) {
       this.signupError = 'ID number must be exactly 9 digits.';
+      this.loadingService.loadingOff();
       return;
     }
     if (!cardPattern.test(this.signupData.cardNumber.replace(/\s/g, ''))) {
       this.signupError = 'Card number must be exactly 16 digits.';
+      this.loadingService.loadingOff();
       return;
     }
 
     if (!securityPattern.test(this.signupData.securityCode.toString())) {
       this.signupError = 'Security code must be exactly 3 digits.';
+      this.loadingService.loadingOff();
       return;
     }
 
@@ -138,6 +159,7 @@ export class SignupScreenComponent {
         const maskedEmail = this.maskEmail(this.signupData.email);
         localStorage.setItem('signupEmail', maskedEmail);
         this.router.navigate(['/signup-success']);
+        this.loadingService.loadingOff();
       },
       error: (error) => {
         console.error('Signup error:', error);
@@ -156,6 +178,7 @@ export class SignupScreenComponent {
           this.signupError =
             'An unexpected error occurred. Please try again later.';
         }
+        this.loadingService.loadingOff();
       },
     });
   }
