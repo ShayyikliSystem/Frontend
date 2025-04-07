@@ -40,7 +40,7 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
     MatAutocompleteModule,
   ],
   templateUrl: './request-issue-check-form.component.html',
-  styleUrl: './request-issue-check-form.component.css',
+  styleUrl: './request-issue-check-form.component.scss',
 })
 export class RequestIssueCheckFormComponent implements OnInit {
   @Output() applyFilter = new EventEmitter<any>();

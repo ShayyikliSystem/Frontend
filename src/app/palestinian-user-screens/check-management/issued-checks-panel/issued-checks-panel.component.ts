@@ -40,7 +40,7 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
     MatTooltipModule,
   ],
   templateUrl: './issued-checks-panel.component.html',
-  styleUrl: './issued-checks-panel.component.css',
+  styleUrl: './issued-checks-panel.component.scss',
 })
 export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
   issuedCheckFilterStatus: string = '';

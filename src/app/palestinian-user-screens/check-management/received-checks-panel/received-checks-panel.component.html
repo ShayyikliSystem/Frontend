@@ -1,5 +1,5 @@
-<mat-expansion-panel style="margin-top: 10px; margin-bottom: 10px">
-  <mat-expansion-panel-header style="margin-top: 10px; margin-bottom: 20px">
+<mat-expansion-panel style="width: 1000px; margin-bottom: 20px">
+  <mat-expansion-panel-header>
     <div class="security-header">
       <img
         src="assets/quality-check.png"
@@ -10,157 +10,163 @@
       <p style="display: inline; margin-left: 5px">Received Checks</p>
     </div>
   </mat-expansion-panel-header>
-
-  <div
-    *ngIf="
-      receivedCheckDataSource.data && receivedCheckDataSource.data.length > 0;
-      else noReceivedChecks
-    "
-  >
-    <div class="filter-buttons" style="margin-bottom: 10px">
-      <button
-        mat-button
-        (click)="openFilter()"
-        matTooltip="Click to apply filters and update the table"
-      >
-        <i class="bi bi-filter" style="color: white"></i> Add Filter
-      </button>
-      <span
-        matTooltip="Disabled because there is no filter applied"
-        [matTooltipDisabled]="hasActiveFilter()"
-      >
-        <button
-          mat-button
-          (click)="clearFilter()"
-          [disabled]="!hasActiveFilter()"
-          [ngStyle]="{ 'background-color': !hasActiveFilter() ? 'grey' : '' }"
-        >
-          Clear Filter
-        </button>
-      </span>
-    </div>
-
-    <!-- Include the filter component as an overlay -->
-    <app-issued-check-filter
-      *ngIf="showFilter"
-      [currentFilter]="{}"
-      [statusOptions]="statusOptions"
-      (applyFilter)="onFilterApply($event)"
-      (cancelFilter)="closeFilter()"
-    ></app-issued-check-filter>
-
+  <div style="margin-top: 10px">
     <div
       *ngIf="
-        receivedCheckDataSource.filteredData &&
-          receivedCheckDataSource.filteredData.length > 0;
-        else noFilterReceivedChecks
+        receivedCheckDataSource.data && receivedCheckDataSource.data.length > 0;
+        else noReceivedChecks
       "
     >
-      <div class="table-container">
-        <table
-          mat-table
-          [dataSource]="receivedCheckDataSource"
-          matSort
-          class="mat-elevation-z8"
+      <div class="filter-buttons" style="margin-bottom: 10px">
+        <button
+          mat-button
+          (click)="openFilter()"
+          matTooltip="Click to apply filters and update the table"
         >
-          <!-- Check ID Column -->
-          <ng-container matColumnDef="checkId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Check ID</th>
-            <td mat-cell *matCellDef="let tx">{{ tx.checkId }}</td>
-          </ng-container>
-          <!-- Issuer Column -->
-          <ng-container matColumnDef="issuerName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Issuer</th>
-            <td mat-cell *matCellDef="let tx">{{ tx.issuerName }}</td>
-          </ng-container>
-          <!-- Beneficiary Column -->
-          <ng-container matColumnDef="beneficiaryName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Beneficiary
-            </th>
-            <td mat-cell *matCellDef="let tx">{{ tx.beneficiaryName }}</td>
-          </ng-container>
-          <!-- Amount Column with conditional styling -->
-          <ng-container matColumnDef="amount">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
-            <td mat-cell *matCellDef="let tx">
-              <span
-                [ngStyle]="{
-                  color:
-                    tx.status === 'Return'
-                      ? 'blue'
-                      : tx.shyyiklinumberOfUsers.toString() ===
-                        shayyikliAccountNumber
-                      ? 'red'
+          <i class="bi bi-filter" style="color: white"></i> Add Filter
+        </button>
+        <span
+          matTooltip="Disabled because there is no filter applied"
+          [matTooltipDisabled]="hasActiveFilter()"
+        >
+          <button
+            mat-button
+            (click)="clearFilter()"
+            [disabled]="!hasActiveFilter()"
+            [ngStyle]="{ 'background-color': !hasActiveFilter() ? 'grey' : '' }"
+          >
+            Clear Filter
+          </button>
+        </span>
+      </div>
+
+      <!-- Include the filter component as an overlay -->
+      <app-issued-check-filter
+        *ngIf="showFilter"
+        [currentFilter]="{}"
+        [statusOptions]="statusOptions"
+        (applyFilter)="onFilterApply($event)"
+        (cancelFilter)="closeFilter()"
+      ></app-issued-check-filter>
+
+      <div
+        *ngIf="
+          receivedCheckDataSource.filteredData &&
+            receivedCheckDataSource.filteredData.length > 0;
+          else noFilterReceivedChecks
+        "
+      >
+        <div class="table-container">
+          <table
+            mat-table
+            [dataSource]="receivedCheckDataSource"
+            matSort
+            class="mat-elevation-z8"
+          >
+            <!-- Check ID Column -->
+            <ng-container matColumnDef="checkId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Check ID
+              </th>
+              <td mat-cell *matCellDef="let tx">{{ tx.checkId }}</td>
+            </ng-container>
+            <!-- Issuer Column -->
+            <ng-container matColumnDef="issuerName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Issuer</th>
+              <td mat-cell *matCellDef="let tx">{{ tx.issuerName }}</td>
+            </ng-container>
+            <!-- Beneficiary Column -->
+            <ng-container matColumnDef="beneficiaryName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Beneficiary
+              </th>
+              <td mat-cell *matCellDef="let tx">{{ tx.beneficiaryName }}</td>
+            </ng-container>
+            <!-- Amount Column with conditional styling -->
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+              <td mat-cell *matCellDef="let tx">
+                <span
+                  [ngStyle]="{
+                    color:
+                      tx.status === 'Return'
+                        ? 'blue'
+                        : tx.shyyiklinumberOfUsers.toString() ===
+                          shayyikliAccountNumber
+                        ? 'red'
+                        : tx.shyyiklinumberOfBeneficiary.toString() ===
+                          shayyikliAccountNumber
+                        ? 'green'
+                        : 'inherit'
+                  }"
+                >
+                  {{
+                    tx.shyyiklinumberOfUsers.toString() ===
+                    shayyikliAccountNumber
+                      ? "-"
                       : tx.shyyiklinumberOfBeneficiary.toString() ===
                         shayyikliAccountNumber
-                      ? 'green'
-                      : 'inherit'
-                }"
-              >
-                {{
-                  tx.shyyiklinumberOfUsers.toString() === shayyikliAccountNumber
-                    ? "-"
-                    : tx.shyyiklinumberOfBeneficiary.toString() ===
-                      shayyikliAccountNumber
-                    ? "+"
-                    : ""
-                }}{{ tx.amount }}₪
-              </span>
-            </td>
-          </ng-container>
-          <!-- Status Column -->
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-            <td mat-cell *matCellDef="let tx">{{ tx.status }}</td>
-          </ng-container>
-          <!-- Transfer Date Column -->
-          <ng-container matColumnDef="transferDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Transfer Date
-            </th>
-            <td mat-cell *matCellDef="let tx">{{ tx.transferDate }}</td>
-          </ng-container>
+                      ? "+"
+                      : ""
+                  }}{{ tx.amount }}₪
+                </span>
+              </td>
+            </ng-container>
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+              <td mat-cell *matCellDef="let tx">{{ tx.status }}</td>
+            </ng-container>
+            <!-- Transfer Date Column -->
+            <ng-container matColumnDef="transferDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Transfer Date
+              </th>
+              <td mat-cell *matCellDef="let tx">{{ tx.transferDate }}</td>
+            </ng-container>
 
-          <tr
-            mat-header-row
-            *matHeaderRowDef="receivedCheckDisplayedColumns"
-          ></tr>
-          <tr
-            mat-row
-            *matRowDef="let row; columns: receivedCheckDisplayedColumns"
-          ></tr>
-        </table>
+            <tr
+              mat-header-row
+              *matHeaderRowDef="receivedCheckDisplayedColumns"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: receivedCheckDisplayedColumns"
+            ></tr>
+          </table>
+        </div>
+        <mat-paginator
+          [pageSizeOptions]="dynamicPageSizeOptions"
+          showFirstLastButtons
+        ></mat-paginator>
+        <p class="scroll-hint">
+          If there are more rows than displayed, scroll within the table to view
+          them.
+        </p>
       </div>
-      <mat-paginator
-        [pageSizeOptions]="dynamicPageSizeOptions"
-        showFirstLastButtons
-      ></mat-paginator>
-      <p class="scroll-hint">
-        If there are more rows than displayed, scroll within the table to view
-        them.
-      </p>
+
+      <ng-template #noFilterReceivedChecks>
+        <div class="limited-info" style="text-align: center">
+          <h3>No Received Checks Match Your Filter</h3>
+          <p>
+            The filter criteria you applied did not return any ReceivedChecks.
+          </p>
+          <p>Please adjust your filter settings or try a different criteria.</p>
+        </div>
+      </ng-template>
     </div>
 
-    <ng-template #noFilterReceivedChecks>
+    <ng-template #noReceivedChecks>
       <div class="limited-info" style="text-align: center">
-        <h3>No Received Checks Match Your Filter</h3>
+        <h3>No Received Checks Found</h3>
         <p>
-          The filter criteria you applied did not return any ReceivedChecks.
+          It looks like you haven't made / received any received checks yet.
         </p>
-        <p>Please adjust your filter settings or try a different criteria.</p>
+        <p>
+          To start making received checks, please visit the Check Management
+          section.
+        </p>
       </div>
     </ng-template>
   </div>
-
-  <ng-template #noReceivedChecks>
-    <div class="limited-info" style="text-align: center">
-      <h3>No Received Checks Found</h3>
-      <p>It looks like you haven't made / received any received checks yet.</p>
-      <p>
-        To start making received checks, please visit the Check Management
-        section.
-      </p>
-    </div>
-  </ng-template>
 </mat-expansion-panel>

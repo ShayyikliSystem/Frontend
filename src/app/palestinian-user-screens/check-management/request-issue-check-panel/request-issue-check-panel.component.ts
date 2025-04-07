@@ -31,7 +31,7 @@ import { UserService } from '../../../services/user.service';
     RequestIssueCheckFormComponent,
   ],
   templateUrl: './request-issue-check-panel.component.html',
-  styleUrl: './request-issue-check-panel.component.css',
+  styleUrl: './request-issue-check-panel.component.scss',
 })
 export class RequestIssueCheckPanelComponent implements OnInit {
   showRequestCheckOverlay: boolean = false;

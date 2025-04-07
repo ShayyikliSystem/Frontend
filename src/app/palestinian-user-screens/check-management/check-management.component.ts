@@ -12,6 +12,6 @@ import { RequestIssueCheckPanelComponent } from './request-issue-check-panel/req
     RequestIssueCheckPanelComponent,
   ],
   templateUrl: './check-management.component.html',
-  styleUrl: './check-management.component.css',
+  styleUrl: './check-management.component.scss',
 })
 export class CheckManagementComponent {}

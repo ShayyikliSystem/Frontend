@@ -1,8 +1,5 @@
-<mat-expansion-panel
-  style="margin-top: 30px; margin-bottom: 20px; width: 1000px"
-  expanded="true"
->
-  <mat-expansion-panel-header style="margin-top: 10px; margin-bottom: 20px">
+<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+  <mat-expansion-panel-header>
     <div class="security-header" style="margin-top: 10px">
       <img
         src="assets/payment-check.png"
@@ -13,38 +10,40 @@
       <p style="display: inline; margin-left: 5px">Issue Check Form</p>
     </div>
   </mat-expansion-panel-header>
-  @if(classification == 'A' || classification == 'B' ) {
-  @if(hasActiveCheckbook){
-  <div class="limited-info">
-    <h3>Issue Checks</h3>
-    <p>Here you can issue a check by clicking the button below.</p>
-    <p>
-      All transactions will be recorded. If you face any issues, please contact
-      your bank via your nearest branch or support center.
-    </p>
-    <button type="button" class="btn-secondary" (click)="openRequestCheck()">
-      Issue Check
-    </button>
-  </div>
-  }@else {
-  <div class="limited-info">
+  <div style="margin-top: 10px">
+    @if(classification == 'A' || classification == 'B' ) {
+    @if(hasActiveCheckbook){
+    <div class="limited-info">
+      <h3>Issue Checks</h3>
+      <p>Here you can issue a check by clicking the button below.</p>
+      <p>
+        All transactions will be recorded. If you face any issues, please
+        contact your bank via your nearest branch or support center.
+      </p>
+      <button type="button" class="btn-secondary" (click)="openRequestCheck()">
+        Issue Check
+      </button>
+    </div>
+    }@else {
+    <div class="limited-info">
+      <h3>Unable to Issue Checks</h3>
+      <p>
+        You cannot issue a check because you do not have an active checkbook.
+        Please contact your bank via your nearest branch or support center.
+      </p>
+    </div>
+    } }@else {
     <h3>Unable to Issue Checks</h3>
     <p>
-      You cannot issue a check because you do not have an active checkbook.
-      Please contact your bank via your nearest branch or support center.
+      Your current classification level does not allow you to issue checks in
+      this section.
     </p>
+    <p>
+      Please navigate to ‘Classification & Settlement’ in the sidebar to review
+      your classification status and take necessary actions.
+    </p>
+    }
   </div>
-  } }@else {
-  <h3>Unable to Issue Checks</h3>
-  <p>
-    Your current classification level does not allow you to issue checks in this
-    section.
-  </p>
-  <p>
-    Please navigate to ‘Classification & Settlement’ in the sidebar to review
-    your classification status and take necessary actions.
-  </p>
-  }
 </mat-expansion-panel>
 
 <app-request-issue-check-form

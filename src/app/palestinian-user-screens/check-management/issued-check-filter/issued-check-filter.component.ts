@@ -31,7 +31,7 @@ import { User } from '../../dashboard-screen/transaction-filter/transaction-filt
     MatAutocompleteModule,
   ],
   templateUrl: './issued-check-filter.component.html',
-  styleUrl: './issued-check-filter.component.css',
+  styleUrl: './issued-check-filter.component.scss',
 })
 export class IssuedCheckFilterComponent implements OnInit {
   @Input() currentFilter: any = {
