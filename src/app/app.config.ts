@@ -31,6 +31,7 @@ import { TreeModule } from 'primeng/tree';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MY_FORMATS } from './formats/my-date-formats';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -57,7 +58,8 @@ export const appConfig: ApplicationConfig = {
       MatDialogModule,
       FormsModule,
       TreeModule,
-      ReactiveFormsModule
+      ReactiveFormsModule,
+      MatSnackBarModule
     ),
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
