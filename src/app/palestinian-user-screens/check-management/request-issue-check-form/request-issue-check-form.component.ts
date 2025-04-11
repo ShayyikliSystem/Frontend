@@ -21,7 +21,7 @@ import { CheckbookService } from '../../../services/checkbook.service';
 import { DigitalCheckService } from '../../../services/digital-check.service';
 import { LoadingService } from '../../../services/loading.service';
 import { CheckRefreshService } from '../../../services/check-refresh.service';
-
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-request-issue-check-form',
   standalone: true,
@@ -38,6 +38,7 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
+    MatIconModule,
   ],
   templateUrl: './request-issue-check-form.component.html',
   styleUrl: './request-issue-check-form.component.scss',

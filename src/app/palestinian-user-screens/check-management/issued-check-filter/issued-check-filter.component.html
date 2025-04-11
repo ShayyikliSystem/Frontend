@@ -3,6 +3,7 @@
     <h3>Filter Issued Checks</h3>
 
     <div class="form-field-group">
+      <!-- Amount Field with Clear Button -->
       <mat-form-field appearance="outline">
         <mat-label>Amount</mat-label>
         <input
@@ -16,8 +17,12 @@
           class="example-right-align"
         />
         <span matTextPrefix>₪&nbsp;</span>
+        <button mat-icon-button matSuffix *ngIf="filter.amount" (click)="filter.amount = null" class="clear-btn">
+          <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
 
+      <!-- Status Field with Clear Button -->
       <mat-form-field appearance="outline">
         <mat-label>Status</mat-label>
         <mat-select [(ngModel)]="filter.status">
@@ -25,10 +30,14 @@
             {{ stat }}
           </mat-option>
         </mat-select>
+        <button mat-icon-button matSuffix *ngIf="filter.status" (click)="filter.status = ''" class="clear-btn">
+          <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
     </div>
 
     <div class="form-field-group">
+      <!-- Beneficiary Field with Clear Button -->
       <mat-form-field appearance="outline">
         <mat-label>Beneficiary</mat-label>
         <mat-select [(ngModel)]="filter.beneficiary">
@@ -43,13 +52,15 @@
             *ngFor="let user of filteredIssuers"
             [value]="user.firstName + ' ' + user.lastName"
           >
-            {{ user.firstName }} {{ user.lastName }} ({{
-              user.shayyikliAccountNumber
-            }})
+            {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
           </mat-option>
         </mat-select>
+        <button mat-icon-button matSuffix *ngIf="filter.beneficiary" (click)="filter.beneficiary = null" class="clear-btn">
+          <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
 
+      <!-- Date Field with Clear Button -->
       <mat-form-field appearance="outline">
         <mat-label>Choose a date</mat-label>
         <input
@@ -57,13 +68,21 @@
           [matDatepicker]="transactionPicker"
           [(ngModel)]="filter.date"
         />
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="transactionPicker"
-        ></mat-datepicker-toggle>
+      
+        <!-- Group Calendar Icon + Clear Button Together -->
+        <div matSuffix class="suffix-group">
+          <mat-datepicker-toggle [for]="transactionPicker"></mat-datepicker-toggle>
+          <button mat-icon-button *ngIf="filter.date" (click)="filter.date = null" class="clear-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      
         <mat-datepicker #transactionPicker></mat-datepicker>
       </mat-form-field>
+      
+      
     </div>
+
     <div class="button-group">
       <button class="btn-secondary" (click)="onCancel()">Cancel</button>
       <button class="btn-primary" (click)="onSubmit()">Apply</button>

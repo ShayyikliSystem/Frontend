@@ -22,7 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { DigitalCheck } from '../../../models/digital.model';
-
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-request-endorse-check-form',
   standalone: true,
@@ -39,6 +39,7 @@ import { DigitalCheck } from '../../../models/digital.model';
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
+    MatIconModule,
   ],
   templateUrl: './request-endorse-check-form.component.html',
   styleUrl: './request-endorse-check-form.component.scss',

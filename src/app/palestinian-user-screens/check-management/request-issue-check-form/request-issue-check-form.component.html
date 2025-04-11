@@ -2,7 +2,9 @@
   <div class="filter-overlay">
     <div class="filter-box">
       <h3>Issue New Check</h3>
+
       <div class="form-field-group">
+        <!-- Check Number Field (no clear button needed) -->
         <mat-form-field appearance="outline" class="custom-form-field">
           <mat-label>Check Number</mat-label>
           <input
@@ -19,6 +21,7 @@
           />
         </mat-form-field>
 
+        <!-- Beneficiary Select with Search and Clear Button -->
         <mat-form-field appearance="outline">
           <mat-label>Beneficiary</mat-label>
           <mat-select
@@ -26,6 +29,7 @@
             [(ngModel)]="selectedBeneficiary"
             #beneficiaryField="ngModel"
             required
+            #beneficiarySelect
           >
             <mat-option>
               <input
@@ -39,23 +43,25 @@
               *ngFor="let user of filteredBeneficiaries"
               [value]="user"
             >
-              {{ user.firstName }} {{ user.lastName }} ({{
-                user.shayyikliAccountNumber
-              }})
+              {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
             </mat-option>
           </mat-select>
-          <mat-error
-            *ngIf="
-              beneficiaryField.invalid &&
-              (beneficiaryField.touched || beneficiaryField.dirty)
-            "
-          >
+          <button 
+            mat-icon-button 
+            matSuffix 
+            *ngIf="selectedBeneficiary && !beneficiarySelect.panelOpen" 
+            (click)="selectedBeneficiary = null" 
+            class="clear-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="beneficiaryField.invalid && (beneficiaryField.touched || beneficiaryField.dirty)">
             Beneficiary is required
           </mat-error>
         </mat-form-field>
       </div>
 
       <div class="form-field-group">
+        <!-- Amount Input with Clear Button -->
         <mat-form-field appearance="outline">
           <mat-label>Amount</mat-label>
           <input
@@ -72,15 +78,20 @@
             required
           />
           <span matTextPrefix>₪&nbsp;</span>
-          <mat-error
-            *ngIf="
-              amountField.invalid && (amountField.touched || amountField.dirty)
-            "
-          >
+          <button 
+            mat-icon-button 
+            matSuffix 
+            *ngIf="amount" 
+            (click)="amount = null" 
+            class="clear-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="amountField.invalid && (amountField.touched || amountField.dirty)">
             Amount is required
           </mat-error>
         </mat-form-field>
 
+        <!-- Date Input with Calendar Icon and Clear Button -->
         <mat-form-field appearance="outline">
           <mat-label>Choose a date</mat-label>
           <input
@@ -91,17 +102,18 @@
             #transferDateField="ngModel"
             required
           />
-          <mat-datepicker-toggle
-            matSuffix
-            [for]="transactionPicker"
-          ></mat-datepicker-toggle>
+          <div matSuffix class="suffix-group">
+            <mat-datepicker-toggle [for]="transactionPicker"></mat-datepicker-toggle>
+            <button 
+              mat-icon-button 
+              *ngIf="transferDate" 
+              (click)="transferDate = null" 
+              class="clear-btn">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
           <mat-datepicker #transactionPicker></mat-datepicker>
-          <mat-error
-            *ngIf="
-              transferDateField.invalid &&
-              (transferDateField.touched || transferDateField.dirty)
-            "
-          >
+          <mat-error *ngIf="transferDateField.invalid && (transferDateField.touched || transferDateField.dirty)">
             Date is required
           </mat-error>
         </mat-form-field>

@@ -12,7 +12,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-
+import { MatIconModule } from '@angular/material/icon';  // Add this import } from '@angular/material/icon';  // Add this import
 @Component({
   selector: 'app-received-checks-filter',
   standalone: true,
@@ -29,6 +29,7 @@ import { MatTableModule } from '@angular/material/table';
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
+    MatIconModule,
   ],
   templateUrl: './received-checks-filter.component.html',
   styleUrl: './received-checks-filter.component.scss',
