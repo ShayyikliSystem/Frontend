@@ -10,7 +10,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-security-filter',
   standalone: true,
@@ -27,6 +27,7 @@ import { MatTableModule } from '@angular/material/table';
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
+    MatIconModule,
   ],
   templateUrl: './security-filter.component.html',
   styleUrl: './security-filter.component.scss',

@@ -3,6 +3,7 @@
     <h3>Filter Transactions</h3>
 
     <div class="form-field-group">
+      <!-- Amount Field + Clear X -->
       <mat-form-field appearance="outline">
         <mat-label>Amount</mat-label>
         <input
@@ -16,22 +17,42 @@
           class="example-right-align"
         />
         <span matTextPrefix>₪&nbsp;</span>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.amount"
+          (click)="filter.amount = null"
+          class="clear-btn"
+        >
+        <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
 
+      <!-- Status Field + Clear X -->
       <mat-form-field appearance="outline">
         <mat-label>Status</mat-label>
-        <mat-select [(ngModel)]="filter.status">
+        <mat-select [(ngModel)]="filter.status" #statusSelect>
           <mat-option *ngFor="let stat of statusOptions" [value]="stat">
             {{ stat }}
           </mat-option>
         </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.status && !statusSelect.panelOpen"
+          (click)="filter.status = ''"
+          class="clear-btn"
+        >
+        <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
     </div>
 
     <div class="form-field-group">
+      <!-- Issuer Field + Clear X -->
       <mat-form-field appearance="outline">
         <mat-label>Issuer</mat-label>
-        <mat-select [(ngModel)]="filter.issuer">
+        <mat-select [(ngModel)]="filter.issuer" #issuerSelect>
           <mat-option>
             <input
               matInput
@@ -40,16 +61,24 @@
             />
           </mat-option>
           <mat-option *ngFor="let user of filteredIssuers" [value]="user">
-            {{ user.firstName }} {{ user.lastName }} ({{
-              user.shayyikliAccountNumber
-            }})
+            {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
           </mat-option>
         </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.issuer && !issuerSelect.panelOpen"
+          (click)="filter.issuer = null"
+          class="clear-btn"
+        >
+        <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
 
+      <!-- Beneficiary Field + Clear X -->
       <mat-form-field appearance="outline">
         <mat-label>Beneficiary</mat-label>
-        <mat-select [(ngModel)]="filter.beneficiary">
+        <mat-select [(ngModel)]="filter.beneficiary" #beneficiarySelect>
           <mat-option>
             <input
               matInput
@@ -61,15 +90,23 @@
             *ngFor="let user of filteredIssuers"
             [value]="user.firstName + ' ' + user.lastName"
           >
-            {{ user.firstName }} {{ user.lastName }} ({{
-              user.shayyikliAccountNumber
-            }})
+            {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
           </mat-option>
         </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.beneficiary && !beneficiarySelect.panelOpen"
+          (click)="filter.beneficiary = null"
+          class="clear-btn"
+        >
+        <mat-icon>close</mat-icon>
+        </button>
       </mat-form-field>
     </div>
 
     <div class="form-field-group">
+      <!-- Date Field + Clear X -->
       <mat-form-field appearance="outline">
         <mat-label>Choose a date</mat-label>
         <input
@@ -78,10 +115,17 @@
           [(ngModel)]="filter.date"
           readonly
         />
-        <mat-datepicker-toggle
-          matSuffix
-          [for]="transactionPicker"
-        ></mat-datepicker-toggle>
+        <div matSuffix class="suffix-group">
+          <mat-datepicker-toggle matSuffix [for]="transactionPicker"></mat-datepicker-toggle>
+          <button
+            mat-icon-button
+            *ngIf="filter.date"
+            (click)="filter.date = null"
+            class="clear-btn"
+          >
+          <mat-icon>close</mat-icon>
+          </button>
+        </div>
         <mat-datepicker #transactionPicker></mat-datepicker>
       </mat-form-field>
     </div>

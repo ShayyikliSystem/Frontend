@@ -11,7 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { UserService } from '../../../services/user.service';
-
+import { MatIconModule } from '@angular/material/icon';
 export interface User {
   id: number;
   firstName: string;
@@ -35,6 +35,7 @@ export interface User {
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
+    MatIconModule,
   ],
   templateUrl: './transaction-filter.component.html',
   styleUrl: './transaction-filter.component.scss',

@@ -12,7 +12,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-returned-checks-filter',
   standalone: true,
@@ -29,6 +29,7 @@ import { MatTableModule } from '@angular/material/table';
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
+    MatIconModule,
   ],
   templateUrl: './returned-checks-filter.component.html',
   styleUrl: './returned-checks-filter.component.scss',

@@ -12,7 +12,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../dashboard-screen/transaction-filter/transaction-filter.component';
-
+import { MatIconModule } from '@angular/material/icon';  // Add this import
 @Component({
   selector: 'app-issued-check-filter',
   standalone: true,
@@ -29,6 +29,7 @@ import { User } from '../../dashboard-screen/transaction-filter/transaction-filt
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
+    MatIconModule,
   ],
   templateUrl: './issued-check-filter.component.html',
   styleUrl: './issued-check-filter.component.scss',

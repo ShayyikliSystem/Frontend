@@ -37,16 +37,15 @@ export class ContactFormComponent {
     private contactService: ContactService,
     private loadingService: LoadingService
   ) {
-    this.contactForm = this.fb.group(
-      {
-        firstName: ['', Validators.required],
-        lastName: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-        message: ['', Validators.required],
-      },
-      { updateOn: 'submit' }
-    );
+    this.contactForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]*$')]],
+      lastName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]*$')]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+      message: ['', Validators.required],
+    });
+    
+    
   }
 
   showAlert(message: string, type: 'success' | 'error' = 'success'): void {
