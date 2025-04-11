@@ -1,0 +1,131 @@
+<mat-expansion-panel
+  style="width: 1000px; margin-bottom: 20px"
+  expanded="false"
+>
+  <mat-expansion-panel-header>
+    <div class="security-header">
+      <img
+        src="assets/history.png"
+        alt="history-icon"
+        class="user"
+        style="display: inline-block"
+      />
+      <p style="display: inline; margin-left: 5px">Support Request History</p>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div
+    *ngIf="
+      supportDataSource.data && supportDataSource.data.length > 0;
+      else noSupport
+    "
+  >
+    <div style="margin-top: 10px">
+      <div class="filter-buttons" style="margin-bottom: 10px">
+        <button
+          mat-button
+          (click)="openFilter()"
+          matTooltip="Click to apply filters and update the table"
+        >
+          <i class="bi bi-filter" style="color: white"></i> Add Filter
+        </button>
+        <span
+          matTooltip="Disabled because there is no filter applied"
+          [matTooltipDisabled]="hasActiveFilter()"
+        >
+          <button
+            mat-button
+            (click)="clearFilter()"
+            [disabled]="!hasActiveFilter()"
+            [ngStyle]="{ 'background-color': !hasActiveFilter() ? 'grey' : '' }"
+          >
+            Clear Filter
+          </button>
+        </span>
+      </div>
+
+      <app-support-history-filter
+        *ngIf="showFilter"
+        [currentFilter]="{}"
+        [supportAreaOptions]="supportAreaOptions"
+        [supportStatusOptions]="supportStatusOptions"
+        (applyFilter)="onFilterApply($event)"
+        (cancelFilter)="closeFilter()"
+      ></app-support-history-filter>
+
+      <div
+        *ngIf="
+          supportDataSource.filteredData &&
+            supportDataSource.filteredData.length > 0;
+          else noFilterSupport
+        "
+      >
+        <div class="table-container">
+          <table
+            mat-table
+            [dataSource]="supportDataSource"
+            matSort
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="supportArea">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Support Area
+              </th>
+              <td mat-cell *matCellDef="let item">
+                {{ transformEnumValue(item.supportArea) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="supportDescription">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Description
+              </th>
+              <td mat-cell *matCellDef="let item">
+                {{ item.supportDescription }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+              <td mat-cell *matCellDef="let item">
+                {{ transformEnumValue(item.status) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Created At
+              </th>
+              <td mat-cell *matCellDef="let item">
+                {{ formatDate(item.createdAt) }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+        <mat-paginator
+          [pageSizeOptions]="dynamicPageSizeOptions"
+          showFirstLastButtons
+        ></mat-paginator>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noFilterSupport>
+    <div class="limited-info" style="text-align: center">
+      <h3>No Support Requests Match Your Filter</h3>
+      <p>
+        The filter criteria you applied did not return any support requests.
+      </p>
+    </div>
+  </ng-template>
+
+  <ng-template #noSupport>
+    <div class="limited-info" style="text-align: center">
+      <h3>No Support History Found</h3>
+      <p>You have not submitted any support requests yet.</p>
+    </div>
+  </ng-template>
+</mat-expansion-panel>

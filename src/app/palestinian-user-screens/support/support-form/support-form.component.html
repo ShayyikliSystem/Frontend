@@ -1,0 +1,49 @@
+<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+  <mat-expansion-panel-header>
+    <div class="support-header">
+      <img
+        src="assets/technical-support.png"
+        alt="technical-support"
+        class="icon"
+      />
+      <p style="display: inline; margin-left: 5px">Support Request Form</p>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div style="margin-top: 10px">
+    <form
+      [formGroup]="supportForm"
+      (ngSubmit)="onSubmit()"
+      class="support-form"
+    >
+      <mat-form-field appearance="outline" class="custom-form-field">
+        <mat-label>Support Area</mat-label>
+        <mat-select formControlName="supportArea" required>
+          <mat-option *ngFor="let area of supportAreas" [value]="area">
+            {{ transformEnumValue(area) }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="submitted && supportForm.get('supportArea')?.invalid">
+          Please select a support area.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="custom-form-field">
+        <mat-label>Support Description</mat-label>
+        <textarea
+          matInput
+          formControlName="supportDescription"
+          placeholder="Describe your issue"
+          required
+        ></textarea>
+        <mat-error
+          *ngIf="submitted && supportForm.get('supportDescription')?.invalid"
+        >
+          Support description is required.
+        </mat-error>
+      </mat-form-field>
+
+      <button type="submit">Submit Request</button>
+    </form>
+  </div>
+</mat-expansion-panel>
