@@ -68,7 +68,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px; /* Unified size */
+  width: 28px;
   height: 28px;
 
   i {
@@ -87,52 +87,7 @@
   }
 }
 
-/* Suffix group for Calendar + X */
 .suffix-group {
   display: flex;
   align-items: center;
-  gap: 4px;
-}
-
-/* Small adjustments for calendar */
-.mat-datepicker-toggle + .mat-icon-button {
-  margin-left: 4px;
-}
-
-/* MAT SELECT Styling */
-.mat-select {
-  &-panel {
-    /* default */
-  }
-
-  &-value {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    max-width: calc(100% - 40px);
-  }
-
-  &-trigger {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    min-width: 0;
-  }
-
-  &-value-text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-    min-width: 0;
-  }
-}
-
-/* Make material icon buttons smaller */
-.mat-icon-button {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  min-height: 28px;
-  line-height: 28px;
 }

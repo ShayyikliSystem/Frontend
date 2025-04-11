@@ -3,7 +3,6 @@
     <h3>Filter Login Attempts</h3>
 
     <div class="form-field-group">
-      <!-- Status Filter with X -->
       <mat-form-field appearance="outline">
         <mat-label>Status</mat-label>
         <mat-select [(ngModel)]="filterStatus" #statusSelect>
@@ -11,31 +10,33 @@
           <mat-option value="success">Success</mat-option>
           <mat-option value="failed">Failed</mat-option>
         </mat-select>
-        <!-- Clear Button for Status -->
-        <button 
-          mat-icon-button 
-          matSuffix 
-          *ngIf="filterStatus && !statusSelect.panelOpen" 
-          (click)="filterStatus = ''" 
-          class="clear-btn">
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filterStatus && !statusSelect.panelOpen"
+          (click)="filterStatus = ''"
+          class="clear-btn"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
     </div>
 
     <div class="form-field-group">
-      <!-- Date Filter with X -->
       <mat-form-field appearance="outline">
         <mat-label>Choose a date</mat-label>
         <input matInput [matDatepicker]="picker" [(ngModel)]="filterDate" />
         <div matSuffix class="suffix-group">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <!-- Clear Button for Date -->
-          <button 
-            mat-icon-button 
-            *ngIf="filterDate" 
-            (click)="filterDate = null" 
-            class="clear-btn">
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <button
+            mat-icon-button
+            *ngIf="filterDate"
+            (click)="filterDate = null"
+            class="clear-btn"
+          >
             <mat-icon>close</mat-icon>
           </button>
         </div>
