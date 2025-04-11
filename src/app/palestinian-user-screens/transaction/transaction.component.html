@@ -134,10 +134,6 @@
           [pageSizeOptions]="dynamicPageSizeOptions"
           showFirstLastButtons
         ></mat-paginator>
-        <p class="scroll-hint">
-          If there are more rows than displayed, scroll within the table to view
-          them.
-        </p>
       </div>
 
       <ng-template #noFilterTransactions>
@@ -153,7 +149,10 @@
     <ng-template #noTransactions>
       <div class="limited-info" style="text-align: center">
         <h3>No Transactions Found</h3>
-        <p>It looks like you haven't made / received any digital transactions yet.</p>
+        <p>
+          It looks like you haven't made / received any digital transactions
+          yet.
+        </p>
       </div>
     </ng-template>
   </div>

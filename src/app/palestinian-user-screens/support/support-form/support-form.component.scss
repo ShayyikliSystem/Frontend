@@ -1,0 +1,60 @@
+@use "@angular/material" as mat;
+
+mat-expansion-panel {
+  @include mat.expansion-overrides(
+    (
+      header-collapsed-state-height: 7vh,
+    )
+  );
+}
+
+* {
+  box-sizing: border-box;
+  font-family: Georgia, serif;
+}
+
+.support-form {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.custom-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.support-header {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  margin-bottom: -10px;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  background-color: #eee;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+button {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 4px;
+  background-color: #2e3648;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background-color: #0a354f;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}

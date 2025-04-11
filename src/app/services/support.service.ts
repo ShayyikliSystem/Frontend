@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Support } from '../models/support.model';
 
 export interface SupportRequest {
   supportArea: string;
@@ -24,6 +25,12 @@ export class SupportService {
   }
   createSupportRequest(request: SupportRequest): Observable<any> {
     return this.http.post(`${this.baseUrl}/create`, request, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  getMySupportRequests(): Observable<Support[]> {
+    return this.http.get<Support[]>(`${this.baseUrl}/my-requests`, {
       headers: this.getAuthHeaders(),
     });
   }

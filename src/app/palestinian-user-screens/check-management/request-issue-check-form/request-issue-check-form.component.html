@@ -43,18 +43,26 @@
               *ngFor="let user of filteredBeneficiaries"
               [value]="user"
             >
-              {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
+              {{ user.firstName }} {{ user.lastName }} ({{
+                user.shayyikliAccountNumber
+              }})
             </mat-option>
           </mat-select>
-          <button 
-            mat-icon-button 
-            matSuffix 
-            *ngIf="selectedBeneficiary && !beneficiarySelect.panelOpen" 
-            (click)="selectedBeneficiary = null" 
-            class="clear-btn">
+          <button
+            mat-icon-button
+            matSuffix
+            *ngIf="selectedBeneficiary && !beneficiarySelect.panelOpen"
+            (click)="selectedBeneficiary = null"
+            class="clear-btn"
+          >
             <mat-icon>close</mat-icon>
           </button>
-          <mat-error *ngIf="beneficiaryField.invalid && (beneficiaryField.touched || beneficiaryField.dirty)">
+          <mat-error
+            *ngIf="
+              beneficiaryField.invalid &&
+              (beneficiaryField.touched || beneficiaryField.dirty)
+            "
+          >
             Beneficiary is required
           </mat-error>
         </mat-form-field>
@@ -78,15 +86,20 @@
             required
           />
           <span matTextPrefix>₪&nbsp;</span>
-          <button 
-            mat-icon-button 
-            matSuffix 
-            *ngIf="amount" 
-            (click)="amount = null" 
-            class="clear-btn">
+          <button
+            mat-icon-button
+            matSuffix
+            *ngIf="amount"
+            (click)="amount = null"
+            class="clear-btn"
+          >
             <mat-icon>close</mat-icon>
           </button>
-          <mat-error *ngIf="amountField.invalid && (amountField.touched || amountField.dirty)">
+          <mat-error
+            *ngIf="
+              amountField.invalid && (amountField.touched || amountField.dirty)
+            "
+          >
             Amount is required
           </mat-error>
         </mat-form-field>
@@ -101,20 +114,34 @@
             [(ngModel)]="transferDate"
             #transferDateField="ngModel"
             required
+            [min]="minDate"
+            (dateChange)="validateDate()"
+            readonly
           />
           <div matSuffix class="suffix-group">
-            <mat-datepicker-toggle [for]="transactionPicker"></mat-datepicker-toggle>
-            <button 
-              mat-icon-button 
-              *ngIf="transferDate" 
-              (click)="transferDate = null" 
-              class="clear-btn">
+            <mat-datepicker-toggle
+              [for]="transactionPicker"
+            ></mat-datepicker-toggle>
+            <button
+              mat-icon-button
+              *ngIf="transferDate"
+              (click)="transferDate = null"
+              class="clear-btn"
+            >
               <mat-icon>close</mat-icon>
             </button>
           </div>
           <mat-datepicker #transactionPicker></mat-datepicker>
-          <mat-error *ngIf="transferDateField.invalid && (transferDateField.touched || transferDateField.dirty)">
+          <mat-error
+            *ngIf="
+              transferDateField.invalid &&
+              (transferDateField.touched || transferDateField.dirty)
+            "
+          >
             Date is required
+          </mat-error>
+          <mat-error *ngIf="transferDateField.errors?.['futureDate']">
+            Date must be in the future
           </mat-error>
         </mat-form-field>
       </div>

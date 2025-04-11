@@ -113,6 +113,7 @@
           matInput
           [matDatepicker]="transactionPicker"
           [(ngModel)]="filter.date"
+          readonly
         />
         <div matSuffix class="suffix-group">
           <mat-datepicker-toggle matSuffix [for]="transactionPicker"></mat-datepicker-toggle>

@@ -3,49 +3,7 @@
   font-family: Georgia, serif;
 }
 
-.support-form {
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
-}
-
-.custom-form-field {
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.support-header {
-  display: flex;
-  align-items: center;
-}
-
-.icon {
-  margin-bottom: -10px;
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-  background-color: #eee;
-  padding: 8px;
-  border-radius: 8px;
-}
-
-button {
-  width: 100%;
-  background-color: #141d33;
-  color: #fff;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-button:hover {
-  background-color: #0a354f;
-}
-
-.error-message {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 10px;
+h3 {
+  font-size: 2em;
+  margin-bottom: 20px;
 }

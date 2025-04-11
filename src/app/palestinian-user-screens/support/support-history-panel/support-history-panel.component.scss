@@ -32,16 +32,9 @@ p {
   box-shadow: 5px 5px 10px #cdcdcd;
 }
 
-.header {
+.security-header {
+  display: flex;
   align-items: center;
-}
-
-h3 {
-  font-size: 2em;
-}
-
-p {
-  font-size: 14px;
 }
 
 img {
@@ -53,6 +46,7 @@ img {
   padding: 8px;
   border-radius: 8px;
 }
+
 table th,
 table td {
   padding: 12px;
@@ -80,11 +74,16 @@ table th {
   overflow-y: auto;
 }
 
+.limited-info {
+  padding: 20px;
+}
+
 .filter-buttons {
   display: flex;
   justify-content: end;
   gap: 10px;
 }
+
 button {
   padding: 10px;
   background-color: #141d33;
