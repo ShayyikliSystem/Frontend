@@ -16,7 +16,7 @@
     <div class="form-field-group">
       <mat-form-field appearance="outline">
         <mat-label>Choose a date</mat-label>
-        <input matInput [matDatepicker]="picker" [(ngModel)]="filterDate" />
+        <input matInput [matDatepicker]="picker" [(ngModel)]="filterDate" readonly />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
