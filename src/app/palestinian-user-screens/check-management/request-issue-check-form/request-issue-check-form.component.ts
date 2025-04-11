@@ -5,6 +5,9 @@ import {
   FormsModule,
   NgForm,
   ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn
 } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -53,6 +56,7 @@ export class RequestIssueCheckFormComponent implements OnInit {
   checkNumber: string = '';
   amount: number | null = null;
   transferDate: Date | null = null;
+  minDate: Date;
 
   constructor(
     private userService: UserService,
@@ -60,7 +64,11 @@ export class RequestIssueCheckFormComponent implements OnInit {
     private digitalCheckService: DigitalCheckService,
     private loadingService: LoadingService,
     private checkRefreshService: CheckRefreshService
-  ) {}
+  ) {
+    // Set minimum date to tomorrow
+    this.minDate = new Date();
+    this.minDate.setDate(this.minDate.getDate() + 1);
+  }
 
   ngOnInit(): void {
     this.loadingService.loadingOn();
@@ -129,11 +137,49 @@ export class RequestIssueCheckFormComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  validateDate(): void {
+    if (this.transferDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const selectedDate = new Date(this.transferDate);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      if (selectedDate <= today) {
+        this.transferDate = null;
+      }
+    }
+  }
+
+  futureDateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) {
+        return null;
+      }
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const selectedDate = new Date(control.value);
+      selectedDate.setHours(0, 0, 0, 0);
+      
+      return selectedDate <= today ? { futureDate: true } : null;
+    };
+  }
+
   onSubmit(form: NgForm): void {
+    // Manual validation for future date
+    if (this.transferDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const selectedDate = new Date(this.transferDate);
+      selectedDate.setHours(0, 0, 0, 0);
+      
+      if (selectedDate <= today) {
+        form.controls['transferDate'].setErrors({ futureDate: true });
+        return;
+      }
+    }
+
     if (form.invalid) {
-      Object.values(form.controls).forEach((control) =>
-        control.markAsTouched()
-      );
+      Object.values(form.controls).forEach((control) => control.markAsTouched());
       this.loadingService.loadingOff();
       return;
     }

@@ -90,6 +90,8 @@
             [(ngModel)]="transferDate"
             #transferDateField="ngModel"
             required
+            [min]="minDate"
+            (dateChange)="validateDate()"
             readonly
           />
           <mat-datepicker-toggle
@@ -97,13 +99,12 @@
             [for]="transactionPicker"
           ></mat-datepicker-toggle>
           <mat-datepicker #transactionPicker></mat-datepicker>
-          <mat-error
-            *ngIf="
-              transferDateField.invalid &&
-              (transferDateField.touched || transferDateField.dirty)
-            "
-          >
+          <mat-error *ngIf="transferDateField.errors?.['required'] && 
+                           (transferDateField.touched || transferDateField.dirty)">
             Date is required
+          </mat-error>
+          <mat-error *ngIf="transferDateField.errors?.['futureDate']">
+            Date must be in the future
           </mat-error>
         </mat-form-field>
       </div>
