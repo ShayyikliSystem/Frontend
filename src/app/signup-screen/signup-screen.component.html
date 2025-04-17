@@ -15,47 +15,65 @@
         <div class="form-row">
           <mat-form-field appearance="outline" class="custom-form-field">
             <mat-label>First Name</mat-label>
-            <input
-              matInput
-              type="text"
-              id="firstName"
-              name="firstName"
-              required
-              maxlength="50"
-              [(ngModel)]="signupData.firstName"
-              #firstNameField="ngModel"
-            />
-          </mat-form-field>
+  <input
+    matInput
+    name="firstName"
+    required
+    maxlength="50"
+    pattern="[a-zA-Z _-]*"
+    [(ngModel)]="signupData.firstName"
+    #firstNameField="ngModel"
+    (keypress)="allowOnlyLetters($event)"
+  />
+  <mat-error *ngIf="firstNameField.hasError('required') && (firstNameField.dirty || firstNameField.touched)">
+    First name is required
+  </mat-error>
+  <mat-error *ngIf="firstNameField.hasError('pattern') && (firstNameField.dirty || firstNameField.touched)">
+    Only letters allowed
+  </mat-error>
+</mat-form-field>
           <mat-form-field appearance="outline" class="custom-form-field">
             <mat-label>Last Name</mat-label>
-            <input
-              matInput
-              type="text"
-              id="lastName"
-              name="lastName"
-              required
-              maxlength="50"
-              [(ngModel)]="signupData.lastName"
-              #lastNameField="ngModel"
-            />
-          </mat-form-field>
+  <input
+    matInput
+    name="lastName"
+    required
+    maxlength="50"
+    pattern="[a-zA-Z _-]*"
+    [(ngModel)]="signupData.lastName"
+    #lastNameField="ngModel"
+    (keypress)="allowOnlyLetters($event)"
+  />
+  <mat-error *ngIf="lastNameField.hasError('required') && (lastNameField.dirty || lastNameField.touched)">
+    Last name is required
+  </mat-error>
+  <mat-error *ngIf="lastNameField.hasError('pattern') && (lastNameField.dirty || lastNameField.touched)">
+    Only letters allowed
+  </mat-error>
+</mat-form-field>
         </div>
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="custom-form-field">
             <mat-label>Email</mat-label>
-            <input
-              matInput
-              type="email"
-              id="email"
-              name="email"
-              required
-              maxlength="50"
-              email
-              [(ngModel)]="signupData.email"
-              #emailField="ngModel"
-            />
-          </mat-form-field>
+    <input
+      matInput
+      type="email"
+      name="email"
+      required
+      email
+      maxlength="50"
+      [(ngModel)]="signupData.email"
+      #emailField="ngModel"
+    />
+    <mat-error *ngIf="emailField.hasError('required') && (emailField.dirty || emailField.touched)">
+      Email is required
+    </mat-error>
+    <mat-error *ngIf="emailField.hasError('email') && (emailField.dirty || emailField.touched)">
+      Enter a valid email
+    </mat-error>
+  
+  </mat-form-field>
 
           <mat-form-field appearance="outline" class="custom-form-field">
             <mat-label>Phone Number</mat-label>
@@ -73,20 +91,30 @@
               +970&nbsp;
             </span>
             <input
-              matInput
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              required
-              pattern="^\d{9}$"
-              maxlength="9"
-              [(ngModel)]="signupData.phoneNumber"
-              #phoneField="ngModel"
-              inputmode="numeric"
-              (keypress)="allowOnlyNumbers($event)"
-              placeholder=""
-            />
-          </mat-form-field>
+      matInput
+      type="tel"
+      name="phoneNumber"
+      required
+      pattern="[0-9]{9}"
+    maxlength="9"
+      inputmode="numeric"
+      (keypress)="allowOnlyNumbers($event)"
+      [(ngModel)]="signupData.phoneNumber"
+      #phoneField="ngModel"
+      [ngModelOptions]="{ updateOn: 'change' }"
+    />
+    <mat-error
+    *ngIf="phoneField.invalid && (phoneField.dirty || phoneField.touched)"
+  >
+    <ng-container *ngIf="phoneField.hasError('required')">
+      Phone number is required
+    </ng-container>
+    <ng-container *ngIf="phoneField.hasError('pattern')">
+      Must be exactly 9 digits
+    </ng-container>
+  </mat-error>
+ 
+  </mat-form-field>
         </div>
 
         <div class="form-row">
@@ -106,6 +134,9 @@
               placeholder=""
               maxlength="9"
             />
+            <mat-error *ngIf="idNumberField.hasError('required') && (idNumberField.dirty || idNumberField.touched)">
+              ID is required
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="custom-form-field">
@@ -122,8 +153,17 @@
               inputmode="numeric"
               (keypress)="allowOnlyNumbers($event)"
               (input)="formatCardNumber($event)"
-              placeholder=""
+              (blur)="onCardBlur()"
             />
+            <mat-error *ngIf="cardField.hasError('required') && (cardField.dirty || cardField.touched)">
+              Card number is required
+            </mat-error>
+            <mat-error *ngIf="cardField.hasError('pattern') || cardField.hasError('minlength')">
+              Card number must be exactly 16 digits.
+            </mat-error>
+            <mat-error *ngIf="cardInUse">
+              This card is already registered.
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -149,6 +189,8 @@
               panelClass="example-month-picker"
             >
             </mat-datepicker>
+            
+
           </mat-form-field>
           <mat-form-field appearance="outline" class="custom-form-field">
             <mat-label>Security Code</mat-label>
@@ -159,13 +201,26 @@
               name="securityCode"
               required
               pattern="^\d{3}$"
+            
               [(ngModel)]="signupData.securityCode"
               #securityField="ngModel"
               inputmode="numeric"
               (keypress)="allowOnlyNumbers($event)"
               placeholder=""
+              minlength="3"
               maxlength="3"
+              [ngModelOptions]="{ updateOn: 'change' }"
             />
+            <mat-error
+            *ngIf="securityField.invalid && (securityField.dirty || securityField.touched)"
+          >
+            <ng-container *ngIf="securityField.hasError('required')">
+              Security code is required
+            </ng-container>
+            <ng-container *ngIf="securityField.hasError('minlength')">
+              Must be 3 digits
+            </ng-container>
+          </mat-error>
           </mat-form-field>
         </div>
 
@@ -179,8 +234,11 @@
             I agree to the <a routerLink="/terms">Terms</a> and
             <a routerLink="/privacy">Privacy Policies</a>.
           </mat-checkbox>
+          <mat-error *ngIf="termsField.hasError('required') && (termsField.dirty || termsField.touched)">
+    You must agree to the terms
+  </mat-error>
         </div>
-        <button type="submit" class="btn-primary">Create account</button>
+        <button type="submit" class="btn-primary" [disabled]="signupForm.invalid || cardInUse">Create account</button>
 
         <div *ngIf="signupError" class="error">
           {{ signupError }}
