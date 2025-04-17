@@ -21,24 +21,20 @@
           />
         </mat-form-field>
 
-        <!-- Beneficiary Select with Search and Clear Button -->
+        <!-- Beneficiary Input with Autocomplete and Clear Button -->
         <mat-form-field appearance="outline">
           <mat-label>Beneficiary</mat-label>
-          <mat-select
+          <input
+            matInput
+            type="text"
             name="beneficiary"
-            [(ngModel)]="selectedBeneficiary"
+            [(ngModel)]="beneficiaryInput"
             #beneficiaryField="ngModel"
+            [matAutocomplete]="auto"
             required
-            #beneficiarySelect
-          >
-            <mat-option>
-              <input
-                matInput
-                placeholder="Search beneficiary"
-                [formControl]="beneficiarySearchCtrl"
-                required
-              />
-            </mat-option>
+            (input)="onBeneficiaryInput()"
+          />
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayBeneficiary">
             <mat-option
               *ngFor="let user of filteredBeneficiaries"
               [value]="user"
@@ -47,12 +43,12 @@
                 user.shayyikliAccountNumber
               }})
             </mat-option>
-          </mat-select>
+          </mat-autocomplete>
           <button
             mat-icon-button
             matSuffix
-            *ngIf="selectedBeneficiary && !beneficiarySelect.panelOpen"
-            (click)="selectedBeneficiary = null"
+            *ngIf="beneficiaryInput"
+            (click)="clearBeneficiary()"
             class="clear-btn"
           >
             <mat-icon>close</mat-icon>
@@ -71,50 +67,44 @@
       <div class="form-field-group">
         <!-- Amount Input with Clear Button -->
         <mat-form-field appearance="outline">
-  <mat-label>Amount</mat-label>
-  <input
-    matInput
-    type="number"
-    name="amount"
-    [(ngModel)]="amount"
-    #amountField="ngModel"
-    required
-    inputmode="numeric"
-    step="1"
-    pattern="[0-9]*"
-    (keypress)="allowOnlyIntegers($event)"
-    class="example-right-align"
-    placeholder="0"
-    min="0"
-    max="100000"
-  />
-  <span matTextPrefix>₪&nbsp;</span>
-  <button
-    mat-icon-button
-    matSuffix
-    *ngIf="amount"
-    (click)="amount = null"
-    class="clear-btn"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
-  <!-- existing “required” error -->
-  <mat-error
-    *ngIf="amountField.invalid && (amountField.touched || amountField.dirty)"
-  >
-    <ng-container *ngIf="amountField.hasError('required')">
-      Amount is required 
-    </ng-container>
-    <ng-container *ngIf="amountField.hasError('pattern')">
-      Only whole number amounts are allowed
-    </ng-container>
-
-    
-
-
-  </mat-error>
-</mat-form-field>
-
+          <mat-label>Amount</mat-label>
+          <input
+            matInput
+            type="number"
+            name="amount"
+            [(ngModel)]="amount"
+            #amountField="ngModel"
+            required
+            inputmode="numeric"
+            step="1"
+            pattern="[0-9]*"
+            (keypress)="allowOnlyIntegers($event)"
+            class="example-right-align"
+            placeholder="0"
+            min="0"
+            max="100000"
+          />
+          <span matTextPrefix>₪&nbsp;</span>
+          <button
+            mat-icon-button
+            matSuffix
+            *ngIf="amount"
+            (click)="amount = null"
+            class="clear-btn"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error
+            *ngIf="amountField.invalid && (amountField.touched || amountField.dirty)"
+          >
+            <ng-container *ngIf="amountField.hasError('required')">
+              Amount is required 
+            </ng-container>
+            <ng-container *ngIf="amountField.hasError('pattern')">
+              Only whole number amounts are allowed
+            </ng-container>
+          </mat-error>
+        </mat-form-field>
 
         <!-- Date Input with Calendar Icon and Clear Button -->
         <mat-form-field appearance="outline">

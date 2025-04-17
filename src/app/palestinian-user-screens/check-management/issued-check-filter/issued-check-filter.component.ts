@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,7 +12,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../dashboard-screen/transaction-filter/transaction-filter.component';
-import { MatIconModule } from '@angular/material/icon';  // Add this import
+import { MatIconModule } from '@angular/material/icon';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+
 @Component({
   selector: 'app-issued-check-filter',
   standalone: true,
@@ -47,13 +49,11 @@ export class IssuedCheckFilterComponent implements OnInit {
   @Output() applyFilter = new EventEmitter<any>();
   @Output() cancelFilter = new EventEmitter<void>();
 
+  @ViewChild('auto') matAutocomplete!: MatAutocomplete;
+
   filter = { ...this.currentFilter };
-
   allUsers: User[] = [];
-  filteredIssuers: User[] = [];
   filteredBeneficiaries: User[] = [];
-
-  issuerSearchCtrl = new FormControl('');
   beneficiarySearchCtrl = new FormControl('');
 
   constructor(private userService: UserService) {}
@@ -62,20 +62,40 @@ export class IssuedCheckFilterComponent implements OnInit {
     this.userService.getAllUsersExcludingSelf().subscribe({
       next: (data: User[]) => {
         this.allUsers = data;
-        this.filteredIssuers = data;
         this.filteredBeneficiaries = data;
       },
       error: (err) => console.error('Error fetching all users', err),
     });
 
     this.beneficiarySearchCtrl.valueChanges.subscribe(
-      (searchTerm: string | null) => {
-        this.filteredBeneficiaries = this.filterUsers(
-          searchTerm || '',
-          this.allUsers
-        );
+      (searchTerm: string | User | null) => {
+        if (typeof searchTerm === 'string') {
+          this.filteredBeneficiaries = this.filterUsers(searchTerm, this.allUsers);
+        } else if (searchTerm === null) {
+          this.filteredBeneficiaries = this.allUsers;
+        }
       }
     );
+  }
+
+  displayBeneficiary(user: User): string {
+    return user ? `${user.firstName} ${user.lastName}` : '';
+  }
+
+  onBeneficiarySelected(event: MatAutocompleteSelectedEvent): void {
+    const selectedUser = event.option.value as User;
+    this.filter.beneficiary = `${selectedUser.firstName} ${selectedUser.lastName}`;
+  }
+
+  openBeneficiaryPanel(): void {
+    this.beneficiarySearchCtrl.setValue('');
+    this.filteredBeneficiaries = this.allUsers;
+  }
+
+  clearBeneficiary(): void {
+    this.filter.beneficiary = null;
+    this.beneficiarySearchCtrl.setValue('');
+    this.filteredBeneficiaries = this.allUsers;
   }
 
   filterUsers(search: string, users: User[]): User[] {
@@ -87,10 +107,7 @@ export class IssuedCheckFilterComponent implements OnInit {
       (user) =>
         user.firstName.toLowerCase().includes(lowerSearch) ||
         user.lastName.toLowerCase().includes(lowerSearch) ||
-        user.shayyikliAccountNumber
-          .toString()
-          .toLowerCase()
-          .includes(lowerSearch)
+        user.shayyikliAccountNumber.toString().toLowerCase().includes(lowerSearch)
     );
   }
 

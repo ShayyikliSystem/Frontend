@@ -37,25 +37,22 @@
     </div>
 
     <div class="form-field-group">
-      <!-- Beneficiary Field with Clear Button -->
+      <!-- Updated Beneficiary Field with Autocomplete -->
       <mat-form-field appearance="outline">
         <mat-label>Beneficiary</mat-label>
-        <mat-select [(ngModel)]="filter.beneficiary">
-          <mat-option>
-            <input
-              matInput
-              placeholder="Search beneficiary"
-              [formControl]="beneficiarySearchCtrl"
-            />
-          </mat-option>
-          <mat-option
-            *ngFor="let user of filteredIssuers"
-            [value]="user.firstName + ' ' + user.lastName"
-          >
+        <input
+          matInput
+          placeholder="Search beneficiary"
+          [formControl]="beneficiarySearchCtrl"
+          [matAutocomplete]="auto"
+          (click)="openBeneficiaryPanel()"
+        >
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayBeneficiary" (optionSelected)="onBeneficiarySelected($event)">
+          <mat-option *ngFor="let user of filteredBeneficiaries" [value]="user">
             {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
           </mat-option>
-        </mat-select>
-        <button mat-icon-button matSuffix *ngIf="filter.beneficiary" (click)="filter.beneficiary = null" class="clear-btn">
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix *ngIf="filter.beneficiary" (click)="clearBeneficiary()" class="clear-btn">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
@@ -80,8 +77,6 @@
       
         <mat-datepicker #transactionPicker></mat-datepicker>
       </mat-form-field>
-      
-      
     </div>
 
     <div class="button-group">

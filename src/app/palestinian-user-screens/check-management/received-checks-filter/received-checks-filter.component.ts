@@ -12,7 +12,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';  // Add this import } from '@angular/material/icon';  // Add this import
+import { MatIconModule } from '@angular/material/icon';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+
 @Component({
   selector: 'app-received-checks-filter',
   standalone: true,
@@ -69,11 +71,12 @@ export class ReceivedChecksFilterComponent implements OnInit {
     });
 
     this.issuerSearchCtrl.valueChanges.subscribe(
-      (searchTerm: string | null) => {
-        this.filteredIssuers = this.filterUsers(
-          searchTerm || '',
-          this.allUsers
-        );
+      (searchTerm: string | User | null) => {
+        if (typeof searchTerm === 'string') {
+          this.filteredIssuers = this.filterUsers(searchTerm, this.allUsers);
+        } else if (searchTerm === null) {
+          this.filteredIssuers = this.allUsers;
+        }
       }
     );
 
@@ -87,6 +90,26 @@ export class ReceivedChecksFilterComponent implements OnInit {
     );
   }
 
+  displayIssuer(user: User): string {
+    return user ? `${user.firstName} ${user.lastName}` : '';
+  }
+
+  onIssuerSelected(event: MatAutocompleteSelectedEvent): void {
+    const selectedUser = event.option.value as User;
+    this.filter.issuer = `${selectedUser.firstName} ${selectedUser.lastName}`;
+  }
+
+  openIssuerPanel(): void {
+    this.issuerSearchCtrl.setValue('');
+    this.filteredIssuers = this.allUsers;
+  }
+
+  clearIssuer(): void {
+    this.filter.issuer = null;
+    this.issuerSearchCtrl.setValue('');
+    this.filteredIssuers = this.allUsers;
+  }
+
   filterUsers(search: string, users: User[]): User[] {
     if (!search) {
       return users;
@@ -96,10 +119,7 @@ export class ReceivedChecksFilterComponent implements OnInit {
       (user) =>
         user.firstName.toLowerCase().includes(lowerSearch) ||
         user.lastName.toLowerCase().includes(lowerSearch) ||
-        user.shayyikliAccountNumber
-          .toString()
-          .toLowerCase()
-          .includes(lowerSearch)
+        user.shayyikliAccountNumber.toString().toLowerCase().includes(lowerSearch)
     );
   }
 

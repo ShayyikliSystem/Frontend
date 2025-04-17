@@ -37,22 +37,22 @@
     </div>
 
     <div class="form-field-group">
-      <!-- Issuer Field with Clear Button -->
+      <!-- Updated Issuer Field with Autocomplete -->
       <mat-form-field appearance="outline">
         <mat-label>Issuer</mat-label>
-        <mat-select #issuerSelect [(ngModel)]="filter.issuer">
-          <mat-option>
-            <input
-              matInput
-              placeholder="Search issuer"
-              [formControl]="issuerSearchCtrl"
-            />
-          </mat-option>
+        <input
+          matInput
+          placeholder="Search issuer"
+          [formControl]="issuerSearchCtrl"
+          [matAutocomplete]="issuerAutocomplete"
+          (click)="openIssuerPanel()"
+        />
+        <mat-autocomplete #issuerAutocomplete="matAutocomplete" [displayWith]="displayIssuer" (optionSelected)="onIssuerSelected($event)">
           <mat-option *ngFor="let user of filteredIssuers" [value]="user">
             {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
           </mat-option>
-        </mat-select>
-        <button mat-icon-button matSuffix *ngIf="filter.issuer && !issuerSelect.panelOpen" (click)="filter.issuer = null" class="clear-btn">
+        </mat-autocomplete>
+        <button mat-icon-button matSuffix *ngIf="filter.issuer" (click)="clearIssuer()" class="clear-btn">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
