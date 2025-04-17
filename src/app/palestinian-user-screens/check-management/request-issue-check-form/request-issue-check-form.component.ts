@@ -214,4 +214,14 @@ export class RequestIssueCheckFormComponent implements OnInit {
   onCancel(): void {
     this.cancelFilter.emit();
   }
+  /**
+ * Blocks any non‑digit key from being entered.
+ */
+allowOnlyIntegers(event: KeyboardEvent): void {
+  // If the key is not a digit, prevent it
+  if (!/^\d$/.test(event.key)) {
+    event.preventDefault();
+  }
+}
+
 }

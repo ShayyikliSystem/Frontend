@@ -53,7 +53,7 @@ import { LoadingService } from '../services/loading.service';
 export class SignupScreenComponent {
   submitted: boolean = false;
   signupError: string = '';
-
+  cardInUse = false;
   public signupData: SignupRequest = {
     firstName: '',
     lastName: '',
@@ -80,8 +80,24 @@ export class SignupScreenComponent {
     this.date.setValue(selectedDate);
     datepicker.close();
   }
-
+/** Call on blur of card‐input */
+onCardBlur(): void {
+  const raw = this.signupData.cardNumber.replace(/\s+/g, '');
+  if (raw.length === 16) {
+    this.authService.checkCardNumber(raw).subscribe(resp => {
+      this.cardInUse = resp.exists;
+    });
+  } else {
+    this.cardInUse = false;
+  }
+}
   public onCreateAccount(form: NgForm): void {
+    // prevent submission if card is in use
+    if (this.cardInUse) {
+      this.signupError = 'Card number already has an account in Shayyikli!';
+      this.loadingService.loadingOff();
+      return;
+    }
     this.submitted = true;
     this.loadingService.loadingOn();
 
@@ -204,4 +220,17 @@ export class SignupScreenComponent {
     let formattedInput = input.match(/.{1,4}/g)?.join(' ') || '';
     this.signupData.cardNumber = formattedInput;
   }
+/**
+ * Allow letters, spaces, hyphens, and underscores only.
+ */
+allowOnlyLetters(event: KeyboardEvent): void {
+  const char = event.key;
+  // A–Z, a–z, space, hyphen (-), or underscore (_)
+  if (!/^[a-zA-Z _-]$/.test(char)) {
+    event.preventDefault();
+  }
+}
+
+
+  
 }
