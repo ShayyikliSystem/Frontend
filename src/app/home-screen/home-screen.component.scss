@@ -121,13 +121,12 @@ html {
   width: 150px;
   height: 150px;
 }
-
 .services {
   padding: 20px;
   text-align: center;
 }
 
-.services-cards {
+.services-cards .row {
   display: flex;
   justify-content: center;
   gap: 100px;

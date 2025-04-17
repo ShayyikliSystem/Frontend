@@ -1,0 +1,62 @@
+<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+  <mat-expansion-panel-header>
+    <div class="security-header" style="margin-top: 10px">
+      <img
+        src="assets/classification1.png"
+        alt="info"
+        class="info"
+        style="display: inline-block"
+      />
+      <p style="display: inline; margin-left: 5px">Settlement</p>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div style="margin-top: 10px">
+    @if(classification == 'A' || classification == 'B' ) {
+    <div class="limited-info">
+      <h3>No Settlement Required</h3>
+      <p>
+        Your classification level is high, so you don’t need to complete any
+        settlement.
+      </p>
+      <p>You can continue managing checks and access all features as normal.</p>
+    </div>
+    } @else if(classification == 'CO' || classification == 'DO' ){
+    <div class="limited-info">
+      <h3>Settlement &amp; Check Management Locked</h3>
+      <p>
+        Your classification level is <strong>{{ classification }}</strong
+        >, which is too low to perform settlements or manage checks.
+      </p>
+      <p>
+        You are currently under a penalty period and cannot access these
+        features.
+      </p>
+      <p>
+        Please wait until your penalty period has ended to regain full access.
+      </p>
+    </div>
+    } @else { @if(!isSettlementActive){
+    <div class="limited-info">
+      <h3>Low Classification Rating</h3>
+      <p>Your account is restricted due to unsettled checks.</p>
+      <p>Complete the settlement to restore full functionality.</p>
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="openSettlementForm()"
+      >
+        Request Settlement
+      </button>
+    </div>
+
+    } @else{ table } }
+  </div>
+</mat-expansion-panel>
+
+<app-create-settlement-form
+  *ngIf="showSettlementForm"
+  (cancelRequest)="closeSettlementForm()"
+  (requestCompleted)="onSettlementCompleted()"
+>
+</app-create-settlement-form>
