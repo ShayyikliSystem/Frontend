@@ -23,9 +23,16 @@
             {{ transformEnumValue(area) }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="submitted && supportForm.get('supportArea')?.invalid">
+        <mat-error
+          *ngIf="
+            supportForm.get('supportArea')!.hasError('required') &&
+            (supportForm.get('supportArea')!.touched ||
+             supportForm.get('supportArea')!.dirty)
+          "
+        >
           Please select a support area.
         </mat-error>
+      
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="custom-form-field">
@@ -37,7 +44,11 @@
           required
         ></textarea>
         <mat-error
-          *ngIf="submitted && supportForm.get('supportDescription')?.invalid"
+          *ngIf="
+            supportForm.get('supportDescription')!.hasError('required') &&
+            (supportForm.get('supportDescription')!.touched ||
+             supportForm.get('supportDescription')!.dirty)
+          "
         >
           Support description is required.
         </mat-error>
