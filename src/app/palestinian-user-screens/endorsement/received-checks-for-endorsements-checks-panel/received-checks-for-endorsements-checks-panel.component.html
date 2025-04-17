@@ -40,13 +40,15 @@
         </span>
       </div>
 
-      <app-received-checks-filter
-        *ngIf="showFilter"
-        [currentFilter]="{}"
-        [statusOptions]="statusOptions"
-        (applyFilter)="onFilterApply($event)"
-        (cancelFilter)="closeFilter()"
-      ></app-received-checks-filter>
+      <app-request-endorse-check-form
+  *ngIf="selectedCheckId"
+  [checkId]="selectedCheckId"
+  (cancelFilter)="closeEndorseForm()"
+  (applyFilter)="closeEndorseForm()"
+>
+</app-request-endorse-check-form>
+
+
 
       <div
         *ngIf="

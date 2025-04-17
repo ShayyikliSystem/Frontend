@@ -376,11 +376,12 @@ export class ReceivedChecksForEndorsementsChecksPanelComponent
     );
   }
 
+  closeEndorseForm(): void {
+    console.log('Form closed');
+    this.selectedCheckId = null;
+  }
   openEndorseForm(checkId: string): void {
     this.selectedCheckId = checkId;
   }
-
-  closeEndorseForm(): void {
-    this.selectedCheckId = null;
-  }
+  
 }
