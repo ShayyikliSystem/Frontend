@@ -8,9 +8,8 @@ describe('HistorySettlmentPanelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HistorySettlmentPanelComponent]
-    })
-    .compileComponents();
+      imports: [HistorySettlmentPanelComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HistorySettlmentPanelComponent);
     component = fixture.componentInstance;

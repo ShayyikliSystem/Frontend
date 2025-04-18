@@ -19,7 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { IssuedCheckFilterComponent } from '../../check-management/issued-check-filter/issued-check-filter.component';
+import { OutcomingEndorsementsChecksFilterComponent } from '../outcoming-endorsements-checks-filter/outcoming-endorsements-checks-filter.component';
 
 @Component({
   selector: 'app-outcoming-endorsements-checks-panel',
@@ -36,7 +36,7 @@ import { IssuedCheckFilterComponent } from '../../check-management/issued-check-
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
-    IssuedCheckFilterComponent,
+    OutcomingEndorsementsChecksFilterComponent,
     MatTooltipModule,
   ],
   templateUrl: './outcoming-endorsements-checks-panel.component.html',

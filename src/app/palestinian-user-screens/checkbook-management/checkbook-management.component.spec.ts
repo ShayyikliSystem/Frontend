@@ -8,9 +8,8 @@ describe('CheckbookManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CheckbookManagementComponent]
-    })
-    .compileComponents();
+      imports: [CheckbookManagementComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CheckbookManagementComponent);
     component = fixture.componentInstance;

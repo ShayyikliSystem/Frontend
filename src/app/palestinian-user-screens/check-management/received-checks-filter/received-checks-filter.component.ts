@@ -119,7 +119,10 @@ export class ReceivedChecksFilterComponent implements OnInit {
       (user) =>
         user.firstName.toLowerCase().includes(lowerSearch) ||
         user.lastName.toLowerCase().includes(lowerSearch) ||
-        user.shayyikliAccountNumber.toString().toLowerCase().includes(lowerSearch)
+        user.shayyikliAccountNumber
+          .toString()
+          .toLowerCase()
+          .includes(lowerSearch)
     );
   }
 

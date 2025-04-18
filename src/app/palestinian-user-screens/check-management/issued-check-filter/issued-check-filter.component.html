@@ -3,26 +3,6 @@
     <h3>Filter Issued Digital Checks</h3>
 
     <div class="form-field-group">
-      <!-- Amount Field with Clear Button -->
-      <mat-form-field appearance="outline">
-        <mat-label>Amount</mat-label>
-        <input
-          matInput
-          type="number"
-          step="1"
-          placeholder="0"
-          min="0"
-          max="100000"
-          [(ngModel)]="filter.amount"
-          class="example-right-align"
-        />
-        <span matTextPrefix>₪&nbsp;</span>
-        <button mat-icon-button matSuffix *ngIf="filter.amount" (click)="filter.amount = null" class="clear-btn">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <!-- Status Field with Clear Button -->
       <mat-form-field appearance="outline">
         <mat-label>Status</mat-label>
         <mat-select [(ngModel)]="filter.status">
@@ -30,14 +10,17 @@
             {{ stat }}
           </mat-option>
         </mat-select>
-        <button mat-icon-button matSuffix *ngIf="filter.status" (click)="filter.status = ''" class="clear-btn">
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.status"
+          (click)="filter.status = ''"
+          class="clear-btn"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-    </div>
 
-    <div class="form-field-group">
-      <!-- Updated Beneficiary Field with Autocomplete -->
       <mat-form-field appearance="outline">
         <mat-label>Beneficiary</mat-label>
         <input
@@ -46,18 +29,31 @@
           [formControl]="beneficiarySearchCtrl"
           [matAutocomplete]="auto"
           (click)="openBeneficiaryPanel()"
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          [displayWith]="displayBeneficiary"
+          (optionSelected)="onBeneficiarySelected($event)"
         >
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayBeneficiary" (optionSelected)="onBeneficiarySelected($event)">
           <mat-option *ngFor="let user of filteredBeneficiaries" [value]="user">
-            {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
+            {{ user.firstName }} {{ user.lastName }} ({{
+              user.shayyikliAccountNumber
+            }})
           </mat-option>
         </mat-autocomplete>
-        <button mat-icon-button matSuffix *ngIf="filter.beneficiary" (click)="clearBeneficiary()" class="clear-btn">
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.beneficiary"
+          (click)="clearBeneficiary()"
+          class="clear-btn"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
+    </div>
 
-      <!-- Date Field with Clear Button -->
+    <div class="form-field-group">
       <mat-form-field appearance="outline">
         <mat-label>Choose a date</mat-label>
         <input
@@ -66,15 +62,21 @@
           [(ngModel)]="filter.date"
           readonly
         />
-      
-        <!-- Group Calendar Icon + Clear Button Together -->
+
         <div matSuffix class="suffix-group">
-          <mat-datepicker-toggle [for]="transactionPicker"></mat-datepicker-toggle>
-          <button mat-icon-button *ngIf="filter.date" (click)="filter.date = null" class="clear-btn">
+          <mat-datepicker-toggle
+            [for]="transactionPicker"
+          ></mat-datepicker-toggle>
+          <button
+            mat-icon-button
+            *ngIf="filter.date"
+            (click)="filter.date = null"
+            class="clear-btn"
+          >
             <mat-icon>close</mat-icon>
           </button>
         </div>
-      
+
         <mat-datepicker #transactionPicker></mat-datepicker>
       </mat-form-field>
     </div>

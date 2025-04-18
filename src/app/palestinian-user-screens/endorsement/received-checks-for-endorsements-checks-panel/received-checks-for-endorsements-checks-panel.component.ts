@@ -19,7 +19,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ReceivedChecksFilterComponent } from '../../check-management/received-checks-filter/received-checks-filter.component';
 import { RequestEndorseCheckFormComponent } from '../request-endorse-check-form/request-endorse-check-form.component';
 
 @Component({
@@ -37,7 +36,6 @@ import { RequestEndorseCheckFormComponent } from '../request-endorse-check-form/
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
-    ReceivedChecksFilterComponent,
     MatTooltipModule,
     RequestEndorseCheckFormComponent,
   ],
