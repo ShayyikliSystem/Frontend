@@ -1,3 +1,5 @@
+<h3>Settings</h3>
+
 <mat-expansion-panel style="width: 1000px; margin: 0 auto 20px;" expanded="true">
   <mat-expansion-panel-header>
     <div class="security-header">
@@ -5,51 +7,77 @@
       <p>Your Profile</p>
     </div>
   </mat-expansion-panel-header>
+
   <div class="settings-container">
+    <!-- alert banner -->
+    <app-alert
+      *ngIf="alertMessage"
+      [message]="alertMessage"
+      [type]="alertType"
+    ></app-alert>
+
     <form #form="ngForm" (ngSubmit)="onSaveSettings()" class="settings-form">
-
       <!-- Email Field -->
-      <mat-form-field appearance="outline" class="custom-form-field">
-        <mat-label>Email</mat-label>
-        <input
-          matInput
-          type="email"
-          name="email"
-          [(ngModel)]="settingsData.email"
-          (ngModelChange)="validateEmail(); checkFormChanges()"
-          required
-          placeholder="your@email.com"
-        />
-        <mat-error *ngIf="emailError">{{ emailError }}</mat-error>
-      </mat-form-field>
+      <!-- Email Field -->
+<mat-form-field appearance="outline" class="custom-form-field">
+  <mat-label>Email</mat-label>
+  <input
+    matInput
+    type="email"
+    name="email"
+    required
+    email
+    placeholder="your@email.com"
+    [(ngModel)]="settingsData.email"
+    (input)="validateEmail()"
+    #emailInput="ngModel"
+  >
+  <mat-error *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)">
+    <span *ngIf="emailInput.errors?.['required']">Email is required</span>
+    <span *ngIf="emailInput.errors?.['email'] && !emailInput.errors?.['required']">
+      Please enter a valid email address
+    </span>
+    <span *ngIf="emailError && !emailInput.errors?.['required'] && !emailInput.errors?.['email']">
+      {{ emailError }}
+    </span>
+  </mat-error>
+</mat-form-field>
 
-      <!-- Phone Field: flag +970 is now a matPrefix -->
-      <mat-form-field appearance="outline" class="custom-form-field">
-        <mat-label>Phone Number</mat-label>
-
-         <!-- prefix lives here -->
-         <span matPrefix class="phone-prefix">
-          <img src="assets/palestine-flag.png"
-               alt="Palestine flag"
-               class="flag-icon" />
-          &nbsp;+970&nbsp;
-        </span>
-
-        <input
-          matInput
-          type="tel"
-          name="phoneNumber"
-          [(ngModel)]="settingsData.phoneNumber"
-          (ngModelChange)="validatePhoneNumber(); checkFormChanges()"
-          placeholder="599123456"
-          maxlength="9"
-          required
-        />
-
-        <mat-error *ngIf="phoneError">{{ phoneError }}</mat-error>
-      </mat-form-field>
-
-
+      <!-- Phone Field -->
+<mat-form-field appearance="outline" class="custom-form-field">
+  <mat-label>Phone Number</mat-label>
+  <span matPrefix class="phone-prefix">
+    <img src="assets/palestine-flag.png" alt="Palestine flag" class="flag-icon"/>
+    &nbsp;+970&nbsp;
+  </span>
+  <input
+    matInput
+    type="tel"
+    name="phoneNumber"
+    required
+    minlength="9"
+    maxlength="9"
+    placeholder="599123456"
+    [(ngModel)]="settingsData.phoneNumber"
+    (input)="validatePhoneNumber()"
+    (keypress)="allowOnlyNumbers($event)"
+    #phoneInput="ngModel"
+    inputmode="numeric"
+    pattern="[0-9]*"
+  >
+  <mat-error *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)">
+    <span *ngIf="phoneInput.errors?.['required']">Phone number is required</span>
+    <span *ngIf="phoneInput.errors?.['minlength']">
+      Phone number must be exactly 9 digits ({{phoneInput.errors?.['minlength'].actualLength || 0}}/9)
+    </span>
+    <span *ngIf="phoneInput.errors?.['pattern']">
+      Only numbers are allowed
+    </span>
+    <span *ngIf="phoneError && !phoneInput.errors?.['required'] && !phoneInput.errors?.['minlength'] && !phoneInput.errors?.['pattern']">
+      {{ phoneError }}
+    </span>
+  </mat-error>
+</mat-form-field>
       <!-- Reset Password -->
       <div class="reset-password">
         <p>Want to change your password?</p>
@@ -57,16 +85,17 @@
       </div>
 
       <!-- Save Button -->
-   
-<div class="button-group">
-  <button
-    type="submit"
-    [disabled]="form.pristine || form.invalid"
-  >
-    Save Settings
-  </button>
-</div>
-
+      <div class="button-group">
+       <!-- In your template (settings.component.html) -->
+<button
+type="submit"
+[disabled]="!isFormChanged || emailError || phoneError"
+[class.btn-primary]="isFormChanged && !emailError && !phoneError"
+[class.btn-primary:disabled]="!isFormChanged || emailError || phoneError"
+>
+Save Settings
+</button>
+      </div>
     </form>
   </div>
 </mat-expansion-panel>
