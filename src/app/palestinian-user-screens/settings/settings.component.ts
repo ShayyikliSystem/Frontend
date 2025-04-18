@@ -95,7 +95,9 @@ export class SettingsComponent {
             (err.error?.message || 'Something went wrong'),
           'error'
         );
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
   }
