@@ -6,7 +6,11 @@ import { ConfirmResetComponent } from './confirm-reset/confirm-reset.component';
 import { AlertComponent } from '../../alert/alert.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { LoadingService } from '../../services/loading.service';
+import { MatButtonModule } from '@angular/material/button';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 @Component({
   selector: 'app-settings',
   standalone: true,
@@ -16,6 +20,10 @@ import { LoadingService } from '../../services/loading.service';
     ConfirmResetComponent,
     AlertComponent,
     MatExpansionModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatButtonModule,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',

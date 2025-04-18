@@ -1,82 +1,72 @@
-<app-alert
-  *ngIf="alertMessage"
-  [message]="alertMessage"
-  [type]="alertType"
-></app-alert>
-<h3>Settings</h3>
-
-<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+<mat-expansion-panel style="width: 1000px; margin: 0 auto 20px;" expanded="true">
   <mat-expansion-panel-header>
-    <div class="security-header" style="margin-top: 10px">
-      <img
-        src="assets/user.png"
-        alt="user"
-        class="user"
-        style="display: inline-block"
-      />
-      <p style="display: inline; margin-left: 5px">Your Profile</p>
+    <div class="security-header">
+      <img src="assets/user.png" alt="user" class="icon" />
+      <p>Your Profile</p>
     </div>
   </mat-expansion-panel-header>
+  <div class="settings-container">
+    <form #form="ngForm" (ngSubmit)="onSaveSettings()" class="settings-form">
 
-  <div class="setting" style="margin-top: 10px">
-    <form (ngSubmit)="onSaveSettings()" class="settings-form">
-      <div class="error-padding">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            [(ngModel)]="settingsData.email"
-            (input)="validateEmail(); checkFormChanges()"
-            required
-          />
-        </div>
-        <small *ngIf="emailError" class="error">{{ emailError }}</small>
-      </div>
+      <!-- Email Field -->
+      <mat-form-field appearance="outline" class="custom-form-field">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          name="email"
+          [(ngModel)]="settingsData.email"
+          (ngModelChange)="validateEmail(); checkFormChanges()"
+          required
+          placeholder="your@email.com"
+        />
+        <mat-error *ngIf="emailError">{{ emailError }}</mat-error>
+      </mat-form-field>
 
-      <hr class="separator" />
-      <div class="error-padding">
-        <div class="form-group">
-          <label for="phoneNumber">Phone Number</label>
-          <div class="phone-input-group">
-            <span class="phone-prefix">
-              <img src="assets/palestine-flag.png" alt="Palestine" />
-              +970 </span
-            ><input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              pattern="\\d{9}"
-              maxlength="9"
-              [(ngModel)]="settingsData.phoneNumber"
-              (input)="validatePhoneNumber(); checkFormChanges()"
-              required
-            />
-          </div>
-        </div>
+      <!-- Phone Field: flag +970 is now a matPrefix -->
+      <mat-form-field appearance="outline" class="custom-form-field">
+        <mat-label>Phone Number</mat-label>
 
-        <small *ngIf="phoneError" class="error">{{ phoneError }}</small>
-      </div>
+         <!-- prefix lives here -->
+         <span matPrefix class="phone-prefix">
+          <img src="assets/palestine-flag.png"
+               alt="Palestine flag"
+               class="flag-icon" />
+          &nbsp;+970&nbsp;
+        </span>
 
-      <hr class="separator" />
+        <input
+          matInput
+          type="tel"
+          name="phoneNumber"
+          [(ngModel)]="settingsData.phoneNumber"
+          (ngModelChange)="validatePhoneNumber(); checkFormChanges()"
+          placeholder="599123456"
+          maxlength="9"
+          required
+        />
 
+        <mat-error *ngIf="phoneError">{{ phoneError }}</mat-error>
+      </mat-form-field>
+
+
+      <!-- Reset Password -->
       <div class="reset-password">
-        <label class="note-label"
-          >Want to change your password? Click here</label
-        >
-        <button type="button" class="btn-secondary" (click)="onResetPassword()">
-          Reset Password
-        </button>
+        <p>Want to change your password?</p>
+        <button type="button" (click)="onResetPassword()">Reset Password</button>
       </div>
 
-      <hr class="separator" />
+      <!-- Save Button -->
+   
+<div class="button-group">
+  <button
+    type="submit"
+    [disabled]="form.pristine || form.invalid"
+  >
+    Save Settings
+  </button>
+</div>
 
-      <div class="button-group">
-        <button type="submit" class="btn-primary" [disabled]="!isFormChanged">
-          Save Settings
-        </button>
-      </div>
     </form>
   </div>
 </mat-expansion-panel>
