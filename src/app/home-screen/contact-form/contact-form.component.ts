@@ -38,14 +38,18 @@ export class ContactFormComponent {
     private loadingService: LoadingService
   ) {
     this.contactForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]*$')]],
-      lastName: ['', [Validators.required, Validators.pattern('^[a-zA-Z\\s]*$')]],
+      firstName: [
+        '',
+        [Validators.required, Validators.pattern('^[a-zA-Z\\s]*$')],
+      ],
+      lastName: [
+        '',
+        [Validators.required, Validators.pattern('^[a-zA-Z\\s]*$')],
+      ],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
       message: ['', Validators.required],
     });
-    
-    
   }
 
   showAlert(message: string, type: 'success' | 'error' = 'success'): void {
@@ -89,13 +93,17 @@ export class ContactFormComponent {
           control?.markAsUntouched();
         });
         this.submitted = false;
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
 
       error: (error) => {
         console.error('Error submitting contact:', error);
         this.showAlert('Failed to send message. Please try again.', 'error');
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
   }
