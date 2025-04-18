@@ -47,7 +47,12 @@ export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
   ];
   returnedCheckDataSource = new MatTableDataSource<DigitalCheckExtended>();
 
-  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort) set sort(ms: MatSort) {
+    this.returnedCheckDataSource.sort = ms;
+    if (this.returnedCheckDataSource.paginator) {
+      this.returnedCheckDataSource.paginator.firstPage();
+    }
+  }
 
   constructor(
     private settlementService: SettlementService,
@@ -148,12 +153,16 @@ export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
     this.loadingService.loadingOn();
     this.settlementService.submitSettlement().subscribe({
       next: () => {
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
         this.requestCompleted.emit();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Settlement failed:', err.error);
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
   }

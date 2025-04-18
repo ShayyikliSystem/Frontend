@@ -1,0 +1,96 @@
+<mat-expansion-panel
+  style="width: 1000px; margin-bottom: 20px"
+  expanded="false"
+>
+  <mat-expansion-panel-header>
+    <div class="security-header">
+      <img
+        src="assets/history.png"
+        alt="history-icon"
+        class="user"
+        style="display: inline-block"
+      />
+      <p style="display: inline; margin-left: 5px">Settlement History</p>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div style="margin-top: 10px">
+    <div
+      *ngIf="
+        settlementDataSource.data && settlementDataSource.data.length > 0;
+        else noHistory
+      "
+    >
+      <div class="table-container">
+        <table
+          mat-table
+          [dataSource]="settlementDataSource"
+          matSort
+          class="mat-elevation-z8"
+        >
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+            <td mat-cell *matCellDef="let s">{{ s.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="previousClassification">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Previous Classification
+            </th>
+            <td mat-cell *matCellDef="let s">{{ s.previousClassification }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="newClassification">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              New Classification
+            </th>
+            <td mat-cell *matCellDef="let s">
+              {{ s.newClassification ?? "–" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Created At
+            </th>
+            <td mat-cell *matCellDef="let s">
+              {{ formatDate(s.createdAt) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="responseAt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Response At
+            </th>
+            <td mat-cell *matCellDef="let s">
+              {{ formatDate(s.responseAt) ? formatDate(s.responseAt) : "–" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let s">{{ s.status }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="settlementDisplayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: settlementDisplayedColumns"
+          ></tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        [pageSizeOptions]="dynamicPageSizeOptions"
+        showFirstLastButtons
+      ></mat-paginator>
+    </div>
+
+    <ng-template #noHistory>
+      <div class="limited-info" style="text-align: center">
+        <h3>No Settlement History Found</h3>
+        <p>You have no settlement records.</p>
+      </div>
+    </ng-template>
+  </div>
+</mat-expansion-panel>

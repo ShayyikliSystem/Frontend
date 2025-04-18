@@ -54,43 +54,18 @@ img {
   border-radius: 8px;
 }
 
-.general-info {
-  display: flex;
-  gap: 30px;
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  background-color: #ffffff;
 }
 
-.checkbook-info {
-  display: flex;
-  gap: 30px;
-}
-
-.limited-info {
-  margin-top: 10px;
-  text-align: center;
-}
-
-.container {
-  background-color: white;
-}
-
-.btn-primary,
-.btn-secondary {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #141d33;
-  color: #fff;
-  border: none;
+mat-paginator {
+  border-top: 1px solid #ddd;
   border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn-secondary {
-  padding: 10px 25px;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #0a354f;
+  background-color: #ffffff;
 }
 
 table th {
@@ -106,20 +81,10 @@ table th {
   overflow-y: auto;
 }
 
-table th,
-table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-table td {
-  background-color: #ffffff;
-}
-
-.btn-accept {
-  background-color: #201e43;
-  color: white;
+.filter-buttons {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
 }
 
 button {
@@ -129,4 +94,30 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.btn-accept {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-reject {
+  background-color: #f44336;
+  color: white;
+  margin-left: 10px;
+}
+
+.status-label {
+  font-weight: bold;
+  color: #555;
+  padding: 12px;
+  display: inline-block;
+  text-align: left;
+  width: 100%;
+}
+
+.filter-buttons {
+  display: inline-block;
+  text-align: left;
+  width: 100%;
 }
