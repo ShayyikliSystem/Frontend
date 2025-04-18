@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DashboardSidebarComponent } from '../dashboard-sidebar/dashboard-sidebar.component';
-
 @Component({
   selector: 'app-user-layout',
   standalone: true,
@@ -12,20 +11,6 @@ import { DashboardSidebarComponent } from '../dashboard-sidebar/dashboard-sideba
 })
 export class UserLayoutComponent {
   constructor(private authService: AuthService, private router: Router) {}
-
-  ngOnInit(): void {
-    this.authService.validateToken().subscribe({
-      next: (res) => {
-        console.log('Token validation successful:', res);
-      },
-      error: (err) => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userRoles');
-        sessionStorage.clear();
-        this.router.navigate(['/login']);
-      },
-    });
-  }
 
   logout(): void {
     this.authService.logout();
