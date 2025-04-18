@@ -76,7 +76,9 @@ export class LoginScreenComponent {
       Object.values(form.controls).forEach((control) =>
         control.markAsTouched()
       );
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
     this.incompleteFormError = '';
@@ -92,12 +94,16 @@ export class LoginScreenComponent {
         } else {
           this.router.navigate(['/home']);
         }
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
       error: (error) => {
         console.error('Login failed', error);
         this.loginError = 'The credentials are incorrect.';
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
   }

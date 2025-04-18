@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { SettlementResponseRequest } from '../models/settlement.model';
 
 @Injectable({
   providedIn: 'root',
@@ -40,9 +41,10 @@ export class SettlementService {
     });
   }
 
-  respondToSettlement(request: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/respond`, request, {
+  respondToSettlement(request: SettlementResponseRequest): Observable<string> {
+    return this.http.post(`${this.baseUrl}/respond`, request, {
       headers: this.getAuthHeaders(),
+      responseType: 'text' as 'text',
     });
   }
 
@@ -64,9 +66,10 @@ export class SettlementService {
     });
   }
 
-  resettle(request: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/resettle`, request, {
+  resettle(request: any): Observable<string> {
+    return this.http.post(`${this.baseUrl}/resettle`, request, {
       headers: this.getAuthHeaders(),
+      responseType: 'text' as 'text',
     });
   }
 }

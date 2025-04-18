@@ -80,22 +80,24 @@ export class SignupScreenComponent {
     this.date.setValue(selectedDate);
     datepicker.close();
   }
-/** Call on blur of card‐input */
-onCardBlur(): void {
-  const raw = this.signupData.cardNumber.replace(/\s+/g, '');
-  if (raw.length === 16) {
-    this.authService.checkCardNumber(raw).subscribe(resp => {
-      this.cardInUse = resp.exists;
-    });
-  } else {
-    this.cardInUse = false;
+  /** Call on blur of card‐input */
+  onCardBlur(): void {
+    const raw = this.signupData.cardNumber.replace(/\s+/g, '');
+    if (raw.length === 16) {
+      this.authService.checkCardNumber(raw).subscribe((resp) => {
+        this.cardInUse = resp.exists;
+      });
+    } else {
+      this.cardInUse = false;
+    }
   }
-}
   public onCreateAccount(form: NgForm): void {
     // prevent submission if card is in use
     if (this.cardInUse) {
       this.signupError = 'Card number already has an account in Shayyikli!';
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
     this.submitted = true;
@@ -119,20 +121,26 @@ onCardBlur(): void {
       !this.signupData.securityCode
     ) {
       this.signupError = 'Please fill out all required fields.';
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
 
     if (!this.signupData.agreedToTerms) {
       this.signupError = 'You must agree to the terms.';
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
 
     const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!emailPattern.test(this.signupData.email)) {
       this.signupError = 'Please enter a valid email address.';
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
 
@@ -143,24 +151,32 @@ onCardBlur(): void {
 
     if (!phonePattern.test(this.signupData.phoneNumber)) {
       this.signupError = 'Phone number must be exactly 9 digits.';
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
 
     if (!idPattern.test(this.signupData.idNumber.toString())) {
       this.signupError = 'ID number must be exactly 9 digits.';
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
     if (!cardPattern.test(this.signupData.cardNumber.replace(/\s/g, ''))) {
       this.signupError = 'Card number must be exactly 16 digits.';
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
 
     if (!securityPattern.test(this.signupData.securityCode.toString())) {
       this.signupError = 'Security code must be exactly 3 digits.';
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
 
@@ -175,7 +191,9 @@ onCardBlur(): void {
         const maskedEmail = this.maskEmail(this.signupData.email);
         localStorage.setItem('signupEmail', maskedEmail);
         this.router.navigate(['/signup-success']);
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
       error: (error) => {
         console.error('Signup error:', error);
@@ -194,7 +212,9 @@ onCardBlur(): void {
           this.signupError =
             'An unexpected error occurred. Please try again later.';
         }
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
   }
@@ -220,17 +240,11 @@ onCardBlur(): void {
     let formattedInput = input.match(/.{1,4}/g)?.join(' ') || '';
     this.signupData.cardNumber = formattedInput;
   }
-/**
- * Allow letters, spaces, hyphens, and underscores only.
- */
-allowOnlyLetters(event: KeyboardEvent): void {
-  const char = event.key;
-  // A–Z, a–z, space, hyphen (-), or underscore (_)
-  if (!/^[a-zA-Z _-]$/.test(char)) {
-    event.preventDefault();
+
+  allowOnlyLetters(event: KeyboardEvent): void {
+    const char = event.key;
+    if (!/^[a-zA-Z _-]$/.test(char)) {
+      event.preventDefault();
+    }
   }
-}
-
-
-  
 }
