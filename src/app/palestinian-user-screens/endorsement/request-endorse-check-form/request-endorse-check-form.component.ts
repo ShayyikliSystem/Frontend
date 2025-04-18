@@ -48,7 +48,10 @@ export class RequestEndorseCheckFormComponent implements OnInit {
   @Input() checkId!: string;
   @Output() applyFilter = new EventEmitter<any>();
   @Output() cancelFilter = new EventEmitter<void>();
+  @Output() closeForm = new EventEmitter<void>();
 
+ 
+  // Or keep both and decide which one to use
   allUsers: User[] = [];
   filteredBeneficiaries: User[] = [];
   beneficiarySearchCtrl = new FormControl('');
@@ -56,6 +59,7 @@ export class RequestEndorseCheckFormComponent implements OnInit {
   checkNumber: string = '';
   amount: number | null = null;
   transferDate: Date | null = null;
+
 
   endorseCheck: DigitalCheck | undefined;
 
@@ -182,7 +186,16 @@ export class RequestEndorseCheckFormComponent implements OnInit {
       });
   }
 
-  onCancel(): void {
-    this.cancelFilter.emit();
-  }
+  // onCancel(): void {
+  //   console.log('Cancel clicked'); // ✅ Confirm this shows in browser console
+  //   this.cancelFilter.emit();
+  // }
+ // Then either:
+ onCancel(): void {
+  this.closeForm.emit();
 }
+
+}
+
+  
+
