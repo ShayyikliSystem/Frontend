@@ -7,9 +7,12 @@ import {
   ReactiveFormsModule,
   AbstractControl,
   ValidationErrors,
-  ValidatorFn
+  ValidatorFn,
 } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import {
+  MatAutocompleteModule,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +28,8 @@ import { DigitalCheckService } from '../../../services/digital-check.service';
 import { LoadingService } from '../../../services/loading.service';
 import { CheckRefreshService } from '../../../services/check-refresh.service';
 import { MatIconModule } from '@angular/material/icon';
+import { Observable, startWith, map } from 'rxjs';
+
 @Component({
   selector: 'app-request-issue-check-form',
   standalone: true,
@@ -52,9 +57,9 @@ export class RequestIssueCheckFormComponent implements OnInit {
 
   allUsers: User[] = [];
   filteredBeneficiaries: User[] = [];
-  beneficiarySearchCtrl = new FormControl('');
   selectedBeneficiary: User | null = null;
-  checkNumber: string = '';
+  beneficiaryControl = new FormControl<string | User>('');
+  checkNumber = '';
   amount: number | null = null;
   transferDate: Date | null = null;
   minDate: Date;
@@ -66,7 +71,6 @@ export class RequestIssueCheckFormComponent implements OnInit {
     private loadingService: LoadingService,
     private checkRefreshService: CheckRefreshService
   ) {
-    // Set minimum date to tomorrow
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate() + 1);
   }
@@ -77,110 +81,99 @@ export class RequestIssueCheckFormComponent implements OnInit {
       next: (data: User[]) => {
         this.allUsers = data;
         this.filteredBeneficiaries = data;
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
+        setTimeout(() => this.loadingService.loadingOff(), 400);
       },
-      error: (err) => {
-        console.error('Error fetching all users', err);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
+      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
     });
-
-    this.beneficiarySearchCtrl.valueChanges.subscribe(
-      (searchTerm: string | null) => {
-        this.filteredBeneficiaries = this.filterUsers(
-          searchTerm || '',
-          this.allUsers
-        );
-      }
-    );
 
     this.loadingService.loadingOn();
     this.checkbookService.getRandomInactiveCheck().subscribe({
       next: (data: any) => {
         this.checkNumber = data;
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
+        setTimeout(() => this.loadingService.loadingOff(), 400);
       },
-      error: (error) => {
-        console.error('Error fetching random check number', error);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
+      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
+    });
+
+    this.beneficiaryControl.valueChanges.subscribe((value) => {
+      if (typeof value === 'string') {
+        this.filteredBeneficiaries = this.filterUsers(value);
+        this.selectedBeneficiary = null;
+      } else {
+        this.selectedBeneficiary = value;
+      }
     });
   }
 
-  filterUsers(search: string, users: User[]): User[] {
-    if (!search) {
-      return users;
-    }
-    const lowerSearch = search.toLowerCase();
-    return users.filter(
+  private filterUsers(search: string): User[] {
+    if (!search) return this.allUsers;
+    const term = search.toLowerCase();
+    return this.allUsers.filter(
       (user) =>
-        user.firstName.toLowerCase().includes(lowerSearch) ||
-        user.lastName.toLowerCase().includes(lowerSearch) ||
-        user.shayyikliAccountNumber
-          .toString()
-          .toLowerCase()
-          .includes(lowerSearch)
+        user.firstName.toLowerCase().includes(term) ||
+        user.lastName.toLowerCase().includes(term) ||
+        user.shayyikliAccountNumber.toString().includes(term) ||
+        `${user.firstName} ${user.lastName}`.toLowerCase().includes(term)
     );
   }
 
+  displayBeneficiary(user: User): string {
+    return user
+      ? `${user.firstName} ${user.lastName} (${user.shayyikliAccountNumber})`
+      : '';
+  }
+
+  clearBeneficiary(): void {
+    this.beneficiaryControl.setValue('');
+    this.selectedBeneficiary = null;
+    this.filteredBeneficiaries = this.allUsers;
+  }
+
   formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const y = date.getFullYear();
+    const m = (date.getMonth() + 1).toString().padStart(2, '0');
+    const d = date.getDate().toString().padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 
   validateDate(): void {
     if (this.transferDate) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const selectedDate = new Date(this.transferDate);
-      selectedDate.setHours(0, 0, 0, 0);
-
-      if (selectedDate <= today) {
-        this.transferDate = null;
-      }
+      const sel = new Date(this.transferDate);
+      sel.setHours(0, 0, 0, 0);
+      if (sel <= today) this.transferDate = null;
     }
   }
 
   futureDateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (!control.value) {
-        return null;
-      }
+      if (!control.value) return null;
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const selectedDate = new Date(control.value);
-      selectedDate.setHours(0, 0, 0, 0);
-      
-      return selectedDate <= today ? { futureDate: true } : null;
+      const sel = new Date(control.value);
+      sel.setHours(0, 0, 0, 0);
+      return sel <= today ? { futureDate: true } : null;
     };
   }
 
   onSubmit(form: NgForm): void {
-    // Manual validation for future date
     if (this.transferDate) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const selectedDate = new Date(this.transferDate);
-      selectedDate.setHours(0, 0, 0, 0);
-      
-      if (selectedDate <= today) {
+      const sel = new Date(this.transferDate);
+      sel.setHours(0, 0, 0, 0);
+      if (sel <= today) {
         form.controls['transferDate'].setErrors({ futureDate: true });
         return;
       }
     }
 
-    if (form.invalid) {
-      Object.values(form.controls).forEach((control) => control.markAsTouched());
+    if (form.invalid || !this.selectedBeneficiary) {
+      Object.values(form.controls).forEach((c) => c.markAsTouched());
+      if (!this.selectedBeneficiary) {
+        this.beneficiaryControl.markAsTouched();
+      }
       this.loadingService.loadingOff();
       return;
     }
@@ -188,7 +181,7 @@ export class RequestIssueCheckFormComponent implements OnInit {
     const newCheckRequest = {
       checkId: this.checkNumber,
       shyyiklinumberOfBeneficiary:
-        this.selectedBeneficiary!.shayyikliAccountNumber,
+        this.selectedBeneficiary.shayyikliAccountNumber,
       amount: this.amount!.toString(),
       transferDate: this.formatDate(this.transferDate!),
     };
@@ -198,30 +191,17 @@ export class RequestIssueCheckFormComponent implements OnInit {
       next: (response) => {
         this.applyFilter.emit(response);
         this.checkRefreshService.refreshTables();
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
+        setTimeout(() => this.loadingService.loadingOff(), 400);
       },
-      error: (error) => {
-        console.error('Error creating digital check:', error);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
+      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
     });
   }
 
   onCancel(): void {
     this.cancelFilter.emit();
   }
-  /**
- * Blocks any non‑digit key from being entered.
- */
-allowOnlyIntegers(event: KeyboardEvent): void {
-  // If the key is not a digit, prevent it
-  if (!/^\d$/.test(event.key)) {
-    event.preventDefault();
-  }
-}
 
+  allowOnlyIntegers(event: KeyboardEvent): void {
+    if (!/^[0-9]$/.test(event.key)) event.preventDefault();
+  }
 }

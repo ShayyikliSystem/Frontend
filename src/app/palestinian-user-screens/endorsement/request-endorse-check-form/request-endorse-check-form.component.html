@@ -4,61 +4,54 @@
       <h3>Endorse Check</h3>
 
       <div class="form-field-group">
-        <!-- Check Number (disabled, no clear) -->
         <mat-form-field appearance="outline" class="custom-form-field">
           <mat-label>Check Number</mat-label>
           <input
             matInput
             type="tel"
-            id="shayyikliNumber"
-            name="shayyikliNumber"
-            inputmode="numeric"
-            [value]="endorseCheck?.checkId"
+            [value]="checkNumber"
             disabled
             maxlength="12"
             required
-            style="color: #201e43"
           />
         </mat-form-field>
 
-        <!-- Beneficiary Select + Clear X Button -->
         <mat-form-field appearance="outline">
           <mat-label>Beneficiary</mat-label>
-          <mat-select
-            name="beneficiary"
-            [(ngModel)]="selectedBeneficiary"
-            #beneficiaryField="ngModel"
-            required
-            #beneficiarySelect
+          <input
+            matInput
+            type="text"
+            [formControl]="beneficiaryControl"
+            [matAutocomplete]="auto"
+            placeholder="Type to search beneficiaries"
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            [displayWith]="displayBeneficiary"
           >
-            <mat-option>
-              <input
-                matInput
-                placeholder="Search beneficiary"
-                [formControl]="beneficiarySearchCtrl"
-                required
-              />
-            </mat-option>
             <mat-option
               *ngFor="let user of filteredBeneficiaries"
               [value]="user"
             >
-              {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
+              {{ user.firstName }} {{ user.lastName }} ({{
+                user.shayyikliAccountNumber
+              }})
             </mat-option>
-          </mat-select>
-
-          <!-- Clear button next to the dropdown -->
-          <button 
-            mat-icon-button 
-            matSuffix 
-            *ngIf="selectedBeneficiary && !beneficiarySelect.panelOpen" 
-            (click)="selectedBeneficiary = null" 
-            class="clear-btn">
+          </mat-autocomplete>
+          <button
+            mat-icon-button
+            matSuffix
+            *ngIf="beneficiaryControl.value"
+            (click)="clearBeneficiary()"
+            class="clear-btn"
+          >
             <mat-icon>close</mat-icon>
           </button>
-
           <mat-error
-            *ngIf="beneficiaryField.invalid && (beneficiaryField.touched || beneficiaryField.dirty)"
+            *ngIf="
+              !selectedBeneficiary &&
+              (beneficiaryControl.touched || beneficiaryControl.dirty)
+            "
           >
             Beneficiary is required
           </mat-error>
@@ -66,59 +59,33 @@
       </div>
 
       <div class="form-field-group">
-        <!-- Amount (disabled, no clear) -->
         <mat-form-field appearance="outline">
           <mat-label>Amount</mat-label>
-          <input
-            matInput
-            type="number"
-            step="1"
-            placeholder="0"
-            min="0"
-            max="100000"
-            class="example-right-align"
-            name="amount"
-            [(ngModel)]="amount"
-            [value]="endorseCheck?.amount"
-            disabled
-            #amountField="ngModel"
-            required
-          />
+          <input matInput type="number" [value]="amount" disabled readonly />
           <span matTextPrefix>₪&nbsp;</span>
-          <mat-error
-            *ngIf="amountField.invalid && (amountField.touched || amountField.dirty)"
-          >
-            Amount is required
-          </mat-error>
         </mat-form-field>
 
-        <!-- Date (disabled, no clear) -->
         <mat-form-field appearance="outline">
           <mat-label>Choose a date</mat-label>
           <input
             matInput
-            [matDatepicker]="transactionPicker"
-            name="transferDate"
-            [(ngModel)]="transferDate"
-            #transferDateField="ngModel"
-            required
-            [value]="endorseCheck?.transferDate"
+            [matDatepicker]="picker"
+            [value]="transferDate"
             disabled
             readonly
           />
-          <mat-datepicker-toggle matSuffix [for]="transactionPicker"></mat-datepicker-toggle>
-          <mat-datepicker #transactionPicker></mat-datepicker>
-          <mat-error
-            *ngIf="transferDateField.invalid && (transferDateField.touched || transferDateField.dirty)"
-          >
-            Date is required
-          </mat-error>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
       </div>
 
       <div class="button-group">
-        <button class="btn-secondary" type="button" (click)="onCancel()">Cancel</button>
-
+        <button class="btn-secondary" type="button" (click)="onCancel()">
+          Cancel
+        </button>
         <button class="btn-primary" type="submit">Apply</button>
       </div>
     </div>

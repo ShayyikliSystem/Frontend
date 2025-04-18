@@ -23,6 +23,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { DigitalCheck } from '../../../models/digital.model';
 import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-request-endorse-check-form',
   standalone: true,
@@ -50,22 +51,18 @@ export class RequestEndorseCheckFormComponent implements OnInit {
   @Output() cancelFilter = new EventEmitter<void>();
   @Output() closeForm = new EventEmitter<void>();
 
- 
-  // Or keep both and decide which one to use
   allUsers: User[] = [];
   filteredBeneficiaries: User[] = [];
-  beneficiarySearchCtrl = new FormControl('');
+  beneficiaryControl = new FormControl<string | User>('');
   selectedBeneficiary: User | null = null;
-  checkNumber: string = '';
+
+  endorseCheck?: DigitalCheck;
+  checkNumber = '';
   amount: number | null = null;
   transferDate: Date | null = null;
 
-
-  endorseCheck: DigitalCheck | undefined;
-
   constructor(
     private userService: UserService,
-    private checkbookService: CheckbookService,
     private digitalCheckService: DigitalCheckService,
     private loadingService: LoadingService,
     private checkRefreshService: CheckRefreshService
@@ -74,128 +71,82 @@ export class RequestEndorseCheckFormComponent implements OnInit {
   ngOnInit(): void {
     this.loadingService.loadingOn();
     this.userService.getAllUsersExcludingSelf().subscribe({
-      next: (data: User[]) => {
-        this.allUsers = data;
-        this.filteredBeneficiaries = data;
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
+      next: (users) => {
+        this.allUsers = users;
+        this.filteredBeneficiaries = users;
+        setTimeout(() => this.loadingService.loadingOff(), 400);
       },
-      error: (err) => {
-        console.error('Error fetching all users', err);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
+      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
     });
-
-    this.beneficiarySearchCtrl.valueChanges.subscribe(
-      (searchTerm: string | null) => {
-        this.filteredBeneficiaries = this.filterUsers(
-          searchTerm || '',
-          this.allUsers
-        );
-      }
-    );
 
     this.loadingService.loadingOn();
-    this.checkbookService.getRandomInactiveCheck().subscribe({
-      next: (data: any) => {
-        this.checkNumber = data;
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
-      error: (error) => {
-        console.error('Error fetching random check number', error);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
-    });
-
     this.digitalCheckService.readCheck(this.checkId).subscribe({
-      next: (response) => {
-        this.endorseCheck = response;
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
+      next: (chk) => {
+        this.endorseCheck = chk;
+        this.checkNumber = chk.checkId;
+        this.amount = chk.amount;
+        this.transferDate = new Date(chk.transferDate);
+        setTimeout(() => this.loadingService.loadingOff(), 400);
       },
-      error: (error) => {
-        console.error('Error fetching digital check:', error);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
+      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
+    });
+
+    this.beneficiaryControl.valueChanges.subscribe((value) => {
+      if (typeof value === 'string') {
+        const term = value.toLowerCase();
+        this.filteredBeneficiaries = this.allUsers.filter(
+          (user) =>
+            user.firstName.toLowerCase().includes(term) ||
+            user.lastName.toLowerCase().includes(term) ||
+            user.shayyikliAccountNumber.toString().includes(term) ||
+            `${user.firstName} ${user.lastName}`.toLowerCase().includes(term)
+        );
+        this.selectedBeneficiary = null;
+      } else {
+        this.selectedBeneficiary = value;
+      }
     });
   }
 
-  filterUsers(search: string, users: User[]): User[] {
-    if (!search) {
-      return users;
-    }
-    const lowerSearch = search.toLowerCase();
-    return users.filter(
-      (user) =>
-        user.firstName.toLowerCase().includes(lowerSearch) ||
-        user.lastName.toLowerCase().includes(lowerSearch) ||
-        user.shayyikliAccountNumber
-          .toString()
-          .toLowerCase()
-          .includes(lowerSearch)
-    );
+  displayBeneficiary(user: User): string {
+    return user
+      ? `${user.firstName} ${user.lastName} (${user.shayyikliAccountNumber})`
+      : '';
   }
 
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  clearBeneficiary(): void {
+    this.beneficiaryControl.setValue('');
+    this.selectedBeneficiary = null;
+    this.filteredBeneficiaries = this.allUsers;
   }
 
   onSubmit(form: NgForm): void {
-    if (form.invalid) {
-      Object.values(form.controls).forEach((control) =>
-        control.markAsTouched()
-      );
+    if (form.invalid || !this.selectedBeneficiary) {
+      Object.values(form.controls).forEach((c) => c.markAsTouched());
+      if (!this.selectedBeneficiary) {
+        this.beneficiaryControl.markAsTouched();
+      }
       this.loadingService.loadingOff();
       return;
     }
 
     this.loadingService.loadingOn();
-    this.digitalCheckService;
     this.digitalCheckService
       .endorseCheck(this.checkId, {
         newBeneficiary:
-          this.selectedBeneficiary!.shayyikliAccountNumber.toString(),
+          this.selectedBeneficiary.shayyikliAccountNumber.toString(),
       })
       .subscribe({
-        next: (response) => {
-          this.applyFilter.emit(response);
+        next: (res) => {
+          this.applyFilter.emit(res);
           this.checkRefreshService.refreshTables();
-          setTimeout(() => {
-            this.loadingService.loadingOff();
-          }, 400);
+          setTimeout(() => this.loadingService.loadingOff(), 400);
         },
-        error: (error) => {
-          console.error('Error creating digital check:', error);
-          setTimeout(() => {
-            this.loadingService.loadingOff();
-          }, 400);
-        },
+        error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
       });
   }
 
-  // onCancel(): void {
-  //   console.log('Cancel clicked'); // ✅ Confirm this shows in browser console
-  //   this.cancelFilter.emit();
-  // }
- // Then either:
- onCancel(): void {
-  this.closeForm.emit();
+  onCancel(): void {
+    this.closeForm.emit();
+  }
 }
-
-}
-
-  
-

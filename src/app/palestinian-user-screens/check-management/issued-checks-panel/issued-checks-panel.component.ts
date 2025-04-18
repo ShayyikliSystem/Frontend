@@ -231,6 +231,7 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
     this.loadingService.loadingOn();
     this.digitalCheckService.getIssuedChecksForUser().subscribe({
       next: (data: DigitalCheck[]) => {
+        console.log('Fetched issued checks:', data);
         const issuedChecks: DigitalCheckExtended[] = data.map(
           (tx: DigitalCheck) => ({
             ...tx,
@@ -277,6 +278,26 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
                 }, 400);
               },
             });
+
+          const endorserNumber = tx.shyyiklinumberOfEndorsers;
+          if (endorserNumber != null) {
+            this.loadingService.loadingOn();
+            this.userService
+              .getUserDetailsByAccountNumber(endorserNumber)
+              .subscribe({
+                next: (userData) => {
+                  tx.endorsersNames = `${userData.firstName} ${userData.lastName}`;
+                  setTimeout(() => this.loadingService.loadingOff(), 400);
+                },
+                error: (err) => {
+                  console.error('Error fetching endorser details', err);
+                  tx.endorsersNames = '-';
+                  setTimeout(() => this.loadingService.loadingOff(), 400);
+                },
+              });
+          } else {
+            tx.endorsersNames = '-';
+          }
         });
 
         issuedChecks.sort(
