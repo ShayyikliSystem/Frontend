@@ -226,3 +226,35 @@ input:valid {
   background-color: #141d33;
   color: #fff;
 }
+.card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.card-header .icon-container {
+  width: 50px;              /* Size of the grey pill */
+  height: 50px;             /* Size of the grey pill */
+  padding: 15px;            /* Space around the icon */
+  background-color: #eee;   /* Light grey background */
+  border-radius: 12px;      /* Rounded corners */
+  margin-bottom: 13px;      /* Space below the icon */
+  display: flex;
+  justify-content: center;  /* Center horizontally */
+  align-items: center;      /* Center vertically */
+}
+
+.card-header .icon-container img {
+  width: 40px;             /* Make icon fill container */
+  height: 40px;            /* Make icon fill container */
+  object-fit: contain;     /* Maintain aspect ratio */
+  align-items: center; 
+  justify-content: center;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.3em;          /* adjust heading size if you like */
+  color: #201e43;
+  text-align: center;        /* redundant with flex, but safe */
+}
