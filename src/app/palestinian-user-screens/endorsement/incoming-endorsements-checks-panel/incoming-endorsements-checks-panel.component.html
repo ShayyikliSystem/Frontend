@@ -42,13 +42,13 @@
         </span>
       </div>
 
-      <app-issued-check-filter
+      <app-incoming-endorsements-checks-filter
         *ngIf="showFilter"
         [currentFilter]="{}"
         [statusOptions]="statusOptions"
         (applyFilter)="onFilterApply($event)"
         (cancelFilter)="closeFilter()"
-      ></app-issued-check-filter>
+      ></app-incoming-endorsements-checks-filter>
 
       <div
         *ngIf="

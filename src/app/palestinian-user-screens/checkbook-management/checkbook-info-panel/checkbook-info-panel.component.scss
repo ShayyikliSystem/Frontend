@@ -31,25 +31,21 @@ p {
   border-right: 2px;
   border-bottom: 2px;
   box-shadow: 5px 5px 10px #cdcdcd;
-  
 }
-
 
 .header {
   align-items: center;
-  height: 100%; /* Take full height of container */
+  height: 100%;
 }
 .header p {
-
-  white-space: nowrap; /* Prevent text from wrapping */
-  word-break: keep-all; /* Prevent breaking words */
-  hyphens: auto; /* Add hyphens if needed */
+  white-space: nowrap;
+  word-break: keep-all;
+  hyphens: auto;
 }
 
 .header strong {
- 
-  white-space: nowrap; /* Keep numbers on one line */
-  display: inline-block; /* Better control over the number display */
+  white-space: nowrap;
+  display: inline-block;
 }
 
 h3 {
@@ -78,7 +74,6 @@ img {
 .checkbook-info {
   display: flex;
   gap: 28px;
-  
 }
 
 .limited-info {

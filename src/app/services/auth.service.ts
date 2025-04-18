@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { JwtResponse } from '../models/jwt-response.model';
 import { SignupRequest } from '../models/signup-request.model';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -113,17 +112,10 @@ export class AuthService {
     return this.http.get(`${this.authUrl}/validate-token`, { headers });
   }
 
-
-/**
- * Checks whether a given 16‑digit cardNumber is already registered in Shayyikli.
- * Returns an object: { exists: boolean }.
- */
-checkCardNumber(cardNumber: string): Observable<{ exists: boolean }> {
-  const params = new HttpParams().set('cardNumber', cardNumber);
-  return this.http.get<{ exists: boolean }>(
-    `${this.authUrl}/check-card`,
-    { params }
-  );
-}
-
+  checkCardNumber(cardNumber: string): Observable<{ exists: boolean }> {
+    const params = new HttpParams().set('cardNumber', cardNumber);
+    return this.http.get<{ exists: boolean }>(`${this.authUrl}/check-card`, {
+      params,
+    });
+  }
 }

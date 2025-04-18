@@ -1,4 +1,3 @@
-/* Your existing styles (no change) */
 .filter-overlay {
   position: fixed;
   top: 0;
@@ -62,24 +61,23 @@
 .form-field-group > mat-form-field {
   flex: 1;
 }
-/* CLEAR BUTTON 🔥 */
 .clear-btn {
   all: unset;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px; /* Unified size */
+  width: 28px;
   height: 28px;
 
   i {
     font-size: 18px;
-    color: rgba(0, 0, 0, 0.54); /* Greyish */
+    color: rgba(0, 0, 0, 0.54);
     transition: color 0.2s ease-in-out;
   }
 
   &:hover i {
-    color: #333; /* Darker on hover */
+    color: #333;
   }
 
   &:hover {
@@ -88,24 +86,17 @@
   }
 }
 
-/* Suffix group for Calendar + X */
 .suffix-group {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-/* Small adjustments for calendar */
 .mat-datepicker-toggle + .mat-icon-button {
   margin-left: 4px;
 }
 
-/* MAT SELECT Styling */
 .mat-select {
-  &-panel {
-    /* default */
-  }
-
   &-value {
     display: flex;
     align-items: center;
@@ -129,7 +120,6 @@
   }
 }
 
-/* Make material icon buttons smaller */
 .mat-icon-button {
   width: 28px;
   height: 28px;

@@ -11,10 +11,10 @@
         transactions.
       </p>
       <form
-  (ngSubmit)="onSubmit(loginForm)"
-  #loginForm="ngForm"
-  class="login-form"
->
+        (ngSubmit)="onSubmit(loginForm)"
+        #loginForm="ngForm"
+        class="login-form"
+      >
         <mat-form-field appearance="outline" class="custom-form-field">
           <mat-label>Role</mat-label>
           <mat-select
@@ -28,40 +28,33 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- <br /> -->
-
         <ng-container [ngSwitch]="loginData.role">
           <ng-container *ngSwitchCase="'admin'">
- <!-- Admin e‑mail field (fixed) -->
-<mat-form-field appearance="outline" class="custom-form-field">
-  <mat-label>Email</mat-label>
+            <mat-form-field appearance="outline" class="custom-form-field">
+              <mat-label>Email</mat-label>
 
-  <input
-    matInput
-    type="email"
-    name="email"
-    required
-    email
-    [ngModelOptions]="{ updateOn: 'change' }"
-    [(ngModel)]="loginData.shayyikliAccountNumberOrUsername"
-    #emailCtrl="ngModel"
-    (ngModelChange)="validateEmail(emailCtrl)"
-  />
+              <input
+                matInput
+                type="email"
+                name="email"
+                required
+                email
+                [ngModelOptions]="{ updateOn: 'change' }"
+                [(ngModel)]="loginData.shayyikliAccountNumberOrUsername"
+                #emailCtrl="ngModel"
+                (ngModelChange)="validateEmail(emailCtrl)"
+              />
 
-  <!-- required -->
-  <mat-error *ngIf="emailCtrl.errors?.['required'] && (emailCtrl.dirty || emailCtrl.touched)">
-    Email is required
-  </mat-error>
+              <mat-error
+                *ngIf="emailCtrl.errors?.['required'] && (emailCtrl.dirty || emailCtrl.touched)"
+              >
+                Email is required
+              </mat-error>
 
-<!-- invalid format (our custom check) -->
-<mat-error *ngIf="!emailCtrl.errors?.['required'] && emailError">
-  {{ emailError }}
-</mat-error>
-
-</mat-form-field>
-
-
-            
+              <mat-error *ngIf="!emailCtrl.errors?.['required'] && emailError">
+                {{ emailError }}
+              </mat-error>
+            </mat-form-field>
           </ng-container>
           <ng-container *ngSwitchDefault>
             <mat-form-field appearance="outline" class="custom-form-field">
@@ -78,7 +71,6 @@
                 maxlength="6"
                 required
               />
-              <!-- required error -->
               <mat-error
                 *ngIf="
                   shayyikliField.errors?.['required'] &&
@@ -87,53 +79,45 @@
               >
                 Shayyikli Number is required
               </mat-error>
-            
             </mat-form-field>
-            
           </ng-container>
         </ng-container>
-<!-- 
-        <br /> -->
 
         <mat-form-field appearance="outline" class="custom-form-field">
-            <mat-label>Password</mat-label>
-            <input
-              matInput
-              [type]="isPasswordVisible ? 'text' : 'password'"
-              name="password"
-              [(ngModel)]="loginData.password"
-              #passwordField="ngModel"
-              required
-              minlength="8"
-            />
-            <button
-              mat-icon-button
-              matSuffix
-              type="button"
-              (click)="togglePasswordVisibility()"
-            >
-              <i
-                class="bi"
-                [class.bi-eye-slash]="!isPasswordVisible"
-                [class.bi-eye]="isPasswordVisible"
-              ></i>
-            </button>
-        
-            <!-- Required error -->
-            <mat-error
-              *ngIf="
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="isPasswordVisible ? 'text' : 'password'"
+            name="password"
+            [(ngModel)]="loginData.password"
+            #passwordField="ngModel"
+            required
+            minlength="8"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+          >
+            <i
+              class="bi"
+              [class.bi-eye-slash]="!isPasswordVisible"
+              [class.bi-eye]="isPasswordVisible"
+            ></i>
+          </button>
+
+          <mat-error
+            *ngIf="
                 passwordField.errors?.['required'] &&
                 (passwordField.dirty ||
                  passwordField.touched ||
                  loginForm.submitted)
               "
-            >
-              Password is required
-            </mat-error>
-        
-           
-          </mat-form-field>
-          
+          >
+            Password is required
+          </mat-error>
+        </mat-form-field>
 
         <a routerLink="/forgot-password" class="forgot-password"
           >Forgot Password?</a

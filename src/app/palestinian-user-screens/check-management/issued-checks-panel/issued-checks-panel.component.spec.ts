@@ -8,9 +8,8 @@ describe('IssuedChecksPanelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IssuedChecksPanelComponent]
-    })
-    .compileComponents();
+      imports: [IssuedChecksPanelComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(IssuedChecksPanelComponent);
     component = fixture.componentInstance;

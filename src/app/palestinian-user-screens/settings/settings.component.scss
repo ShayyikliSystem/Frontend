@@ -7,43 +7,38 @@ mat-expansion-panel {
     )
   );
 }
- 
+
 * {
   box-sizing: border-box;
   font-family: Georgia, serif;
 }
+
 h3 {
   font-size: 2em;
   margin-bottom: 20px;
 }
-// wrap entire form in a centered white card
+
 .settings-container {
   max-width: 600px;
   margin: 30px auto;
-  padding: 20px;
- 
   border-radius: 8px;
- 
 }
 
-// identical to .support-form
 .settings-form {
   padding: 0;
   max-width: 100%;
   margin: auto;
 }
 
-// identical to .custom-form-field
 .custom-form-field {
   width: 100%;
   margin-bottom: 15px;
 }
 
-// mirror the support-header icon + text alignment
 .security-header {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .security-header .icon {
@@ -56,7 +51,6 @@ h3 {
   border-radius: 8px;
 }
 
-
 button[type="submit"],
 .reset-password button {
   width: 100%;
@@ -66,7 +60,6 @@ button[type="submit"],
   background-color: #2e3648;
   color: #fff;
   cursor: pointer;
-  margin-top: 15px;
 }
 
 button[type="submit"]:hover,
@@ -77,24 +70,18 @@ button[type="submit"]:hover,
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 20px 0;
 
   button {
-    width: auto;
-    padding: 6px 16px;
-    margin-top: 0;
-    background-color: #2e3648;
-    color: white;
+    padding: 10px;
+    background-color: #141d33;
+    color: #fff;
     border: none;
-    border-radius: 4px;
-
-    &:hover {
-      background-color: #0a354f;
-    }
+    border-radius: 5px;
+    cursor: pointer;
+    width: 20%;
   }
 }
 
-// smaller inline error text
 .error {
   color: red;
   font-size: 0.9rem;
@@ -102,32 +89,21 @@ button[type="submit"]:hover,
   margin-bottom: 10px;
 }
 
-// phone‑group styling matches support form’s prefix
 .phone-input-group {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 .phone-prefix {
   display: inline-flex;
   align-items: center;
-  margin-right: 4px; 
-  // background: #f3f3f3;
+  margin-right: 4px;
   padding: 0 10px;
-  height: 50px;              /* match mat-form-field height */
- 
+  height: 50px;
   border-right: none;
   border-radius: 4px 0 0 4px;
 }
-
-
-// keep your general mat‑expansion overrides, etc.
-.custom-form-field {
-  width: 100%;
-  margin-bottom: 15px;
-}
-
 
 .flag-icon {
   width: 24px;
@@ -144,13 +120,13 @@ button[type="submit"]:disabled {
 button[type="submit"]:not(:disabled):hover {
   background-color: #0a354f;
 }
+
 mat-error {
   font-size: 12px;
-  margin-top: -3px; // Adjust as needed
+  margin-top: -3px;
   margin-bottom: 10px;
 }
 
-// Ensure form fields have proper spacing
-.custom-form-field {
-  margin-bottom: 2em;
+.btn-submit {
+  margin-top: 20px;
 }

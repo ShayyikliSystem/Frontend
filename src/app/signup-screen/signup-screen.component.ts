@@ -80,7 +80,6 @@ export class SignupScreenComponent {
     this.date.setValue(selectedDate);
     datepicker.close();
   }
-  /** Call on blur of card‐input */
   onCardBlur(): void {
     const raw = this.signupData.cardNumber.replace(/\s+/g, '');
     if (raw.length === 16) {
@@ -92,7 +91,6 @@ export class SignupScreenComponent {
     }
   }
   public onCreateAccount(form: NgForm): void {
-    // prevent submission if card is in use
     if (this.cardInUse) {
       this.signupError = 'Card number already has an account in Shayyikli!';
       setTimeout(() => {

@@ -1,5 +1,5 @@
-import { Component, NgModule } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ConfirmResetComponent } from './confirm-reset/confirm-reset.component';
 import { AlertComponent } from '../../alert/alert.component';
@@ -11,7 +11,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { NgModel } from '@angular/forms';
 @Component({
   selector: 'app-settings',
   standalone: true,
@@ -66,11 +65,13 @@ export class SettingsComponent {
 
   checkFormChanges(): void {
     const isEmailChanged = this.settingsData.email !== this.originalData.email;
-  const isPhoneChanged = this.settingsData.phoneNumber !== this.originalData.phoneNumber;
-  
-  this.isFormChanged = (isEmailChanged || isPhoneChanged) && 
-                      !this.emailError && 
-                      !this.phoneError;
+    const isPhoneChanged =
+      this.settingsData.phoneNumber !== this.originalData.phoneNumber;
+
+    this.isFormChanged =
+      (isEmailChanged || isPhoneChanged) &&
+      !this.emailError &&
+      !this.phoneError;
   }
 
   onResetPassword(): void {
@@ -133,44 +134,42 @@ export class SettingsComponent {
     });
   }
 
- 
   validateEmail(): void {
-    // Reset error message
     this.emailError = '';
-    
-    // Check if empty
+
     if (!this.settingsData.email) {
-      return; // Let Angular handle required validation
+      return;
     }
-  
-    // Custom validation
+
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(this.settingsData.email)) {
       this.emailError = 'Invalid email format';
     }
-    
+
     this.checkFormChanges();
   }
 
   validatePhoneNumber(): void {
-    // Remove any non-numeric characters that might have been pasted
-    this.settingsData.phoneNumber = this.settingsData.phoneNumber.replace(/\D/g, '');
-    
-    // Trim to 9 digits if pasted content was longer
+    this.settingsData.phoneNumber = this.settingsData.phoneNumber.replace(
+      /\D/g,
+      ''
+    );
+
     if (this.settingsData.phoneNumber.length > 9) {
-      this.settingsData.phoneNumber = this.settingsData.phoneNumber.substring(0, 9);
+      this.settingsData.phoneNumber = this.settingsData.phoneNumber.substring(
+        0,
+        9
+      );
     }
-    
-    // Clear previous error
+
     this.phoneError = '';
-    
-    // Update validation
+
     if (!this.settingsData.phoneNumber) {
       this.phoneError = 'Phone number is required.';
     } else if (this.settingsData.phoneNumber.length < 9) {
       this.phoneError = 'Phone number must be exactly 9 digits.';
     }
-    
+
     this.checkFormChanges();
   }
 
@@ -211,15 +210,11 @@ export class SettingsComponent {
           }, 400);
         },
       });
-    }
-    allowOnlyNumbers(event: KeyboardEvent): void {
-      const charCode = event.which ? event.which : event.keyCode;
-      if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        event.preventDefault();
-      }
-    }
-  
-  
   }
-
-   
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+    }
+  }
+}
