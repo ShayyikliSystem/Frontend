@@ -1,0 +1,132 @@
+@use "@angular/material" as mat;
+
+mat-expansion-panel {
+  @include mat.expansion-overrides(
+    (
+      header-collapsed-state-height: 7vh,
+    )
+  );
+}
+
+* {
+  box-sizing: border-box;
+  font-family: Georgia, serif;
+  color: #201e43;
+}
+
+h3 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 14px;
+}
+
+.container {
+  height: fit-content;
+  padding: 20px;
+  border-radius: 10px;
+  border-right: 2px;
+  border-bottom: 2px;
+  box-shadow: 5px 5px 10px #cdcdcd;
+}
+
+.header {
+  align-items: center;
+}
+
+h3 {
+  font-size: 2em;
+}
+
+p {
+  font-size: 14px;
+}
+
+img {
+  margin-bottom: -10px;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  background-color: #eee;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.general-info {
+  display: flex;
+  gap: 30px;
+}
+
+.checkbook-info {
+  display: flex;
+  gap: 30px;
+}
+
+.limited-info {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.container {
+  background-color: white;
+}
+
+.btn-primary,
+.btn-secondary {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #141d33;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  padding: 10px 25px;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0a354f;
+}
+
+table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table-container {
+  max-height: 330px;
+  overflow-y: auto;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table td {
+  background-color: #ffffff;
+}
+
+.btn-accept {
+  background-color: #201e43;
+  color: white;
+}
+
+button {
+  padding: 10px;
+  background-color: #141d33;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

@@ -199,6 +199,7 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
     'checkId',
     'issuerName',
     'beneficiaryName',
+    'endorsersNames',
     'amount',
     'status',
     'transferDate',

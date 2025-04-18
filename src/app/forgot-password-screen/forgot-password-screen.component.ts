@@ -35,7 +35,9 @@ export class ForgotPasswordScreenComponent {
       Object.values(form.controls).forEach((control) =>
         control.markAsTouched()
       );
-      this.loadingService.loadingOff();
+      setTimeout(() => {
+        this.loadingService.loadingOff();
+      }, 400);
       return;
     }
     this.authService.resetPassword(this.email).subscribe({
@@ -43,11 +45,15 @@ export class ForgotPasswordScreenComponent {
         const maskedEmail = this.maskEmail(this.email);
         localStorage.setItem('resetEmail', maskedEmail);
         this.router.navigate(['/email-sent']);
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
       error: (error) => {
         console.error('Reset password error:', error);
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
   }
