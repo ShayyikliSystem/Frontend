@@ -9,6 +9,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  
 }
 
 .grid-container {
@@ -20,6 +21,8 @@
   padding: 20px;
   background: #fff;
   border-radius: 10px;
+  
+
 }
 
 .grid-column img.logo {
@@ -31,6 +34,7 @@
 
 .grid-column {
   text-align: left;
+
 }
 
 .back-link {
@@ -156,4 +160,9 @@ p {
 
 .btn-primary:hover {
   background-color: #0a354f;
+}
+/* Add consistent spacing between form fields */
+mat-form-field {
+  margin-bottom: 8px; /* Increased from default */
+  display: block;
 }
