@@ -53,16 +53,16 @@ export class RequestEndorseCheckFormComponent implements OnInit {
 
   allUsers: User[] = [];
   filteredBeneficiaries: User[] = [];
-  beneficiaryInput: string = '';
+  beneficiaryControl = new FormControl<string | User>('');
   selectedBeneficiary: User | null = null;
-  checkNumber: string = '';
+
+  endorseCheck?: DigitalCheck;
+  checkNumber = '';
   amount: number | null = null;
   transferDate: Date | null = null;
-  endorseCheck: DigitalCheck | undefined;
 
   constructor(
     private userService: UserService,
-    private checkbookService: CheckbookService,
     private digitalCheckService: DigitalCheckService,
     private loadingService: LoadingService,
     private checkRefreshService: CheckRefreshService
@@ -71,82 +71,60 @@ export class RequestEndorseCheckFormComponent implements OnInit {
   ngOnInit(): void {
     this.loadingService.loadingOn();
     this.userService.getAllUsersExcludingSelf().subscribe({
-      next: (data: User[]) => {
-        this.allUsers = data;
-        this.filteredBeneficiaries = data;
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
+      next: (users) => {
+        this.allUsers = users;
+        this.filteredBeneficiaries = users;
+        setTimeout(() => this.loadingService.loadingOff(), 400);
       },
-      error: (err) => {
-        console.error('Error fetching all users', err);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
+      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
     });
 
     this.loadingService.loadingOn();
     this.digitalCheckService.readCheck(this.checkId).subscribe({
-      next: (response) => {
-        this.endorseCheck = response;
-        this.checkNumber = response.checkId;
-        this.amount = response.amount;
-        this.transferDate = new Date(response.transferDate);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
+      next: (chk) => {
+        this.endorseCheck = chk;
+        this.checkNumber = chk.checkId;
+        this.amount = chk.amount;
+        this.transferDate = new Date(chk.transferDate);
+        setTimeout(() => this.loadingService.loadingOff(), 400);
       },
-      error: (error) => {
-        console.error('Error fetching digital check:', error);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
+      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
+    });
+
+    this.beneficiaryControl.valueChanges.subscribe((value) => {
+      if (typeof value === 'string') {
+        const term = value.toLowerCase();
+        this.filteredBeneficiaries = this.allUsers.filter(
+          (user) =>
+            user.firstName.toLowerCase().includes(term) ||
+            user.lastName.toLowerCase().includes(term) ||
+            user.shayyikliAccountNumber.toString().includes(term) ||
+            `${user.firstName} ${user.lastName}`.toLowerCase().includes(term)
+        );
+        this.selectedBeneficiary = null;
+      } else {
+        this.selectedBeneficiary = value;
+      }
     });
   }
 
-  private filterUsers(search: string): User[] {
-    if (!search) {
-      return this.allUsers;
-    }
-    const lowerSearch = search.toLowerCase();
-    return this.allUsers.filter(
-      (user) =>
-        user.firstName.toLowerCase().includes(lowerSearch) ||
-        user.lastName.toLowerCase().includes(lowerSearch) ||
-        user.shayyikliAccountNumber.toString().toLowerCase().includes(lowerSearch) ||
-        `${user.firstName} ${user.lastName}`.toLowerCase().includes(lowerSearch)
-    );
-  }
-
-  onBeneficiaryInput(): void {
-    this.filteredBeneficiaries = this.filterUsers(this.beneficiaryInput);
-    
-    // Try to find an exact match
-    const exactMatch = this.allUsers.find(user => 
-      `${user.firstName} ${user.lastName}`.toLowerCase() === this.beneficiaryInput.toLowerCase() ||
-      user.shayyikliAccountNumber.toString() === this.beneficiaryInput
-    );
-    
-    this.selectedBeneficiary = exactMatch || null;
-  }
-
   displayBeneficiary(user: User): string {
-    return user ? `${user.firstName} ${user.lastName} (${user.shayyikliAccountNumber})` : '';
+    return user
+      ? `${user.firstName} ${user.lastName} (${user.shayyikliAccountNumber})`
+      : '';
   }
 
   clearBeneficiary(): void {
-    this.beneficiaryInput = '';
+    this.beneficiaryControl.setValue('');
     this.selectedBeneficiary = null;
     this.filteredBeneficiaries = this.allUsers;
   }
 
   onSubmit(form: NgForm): void {
     if (form.invalid || !this.selectedBeneficiary) {
-      Object.values(form.controls).forEach(control => control.markAsTouched());
+      Object.values(form.controls).forEach((c) => c.markAsTouched());
       if (!this.selectedBeneficiary) {
-        form.controls['beneficiary'].setErrors({ required: true });
+        this.beneficiaryControl.markAsTouched();
       }
       this.loadingService.loadingOff();
       return;
@@ -155,22 +133,16 @@ export class RequestEndorseCheckFormComponent implements OnInit {
     this.loadingService.loadingOn();
     this.digitalCheckService
       .endorseCheck(this.checkId, {
-        newBeneficiary: this.selectedBeneficiary.shayyikliAccountNumber.toString(),
+        newBeneficiary:
+          this.selectedBeneficiary.shayyikliAccountNumber.toString(),
       })
       .subscribe({
-        next: (response) => {
-          this.applyFilter.emit(response);
+        next: (res) => {
+          this.applyFilter.emit(res);
           this.checkRefreshService.refreshTables();
-          setTimeout(() => {
-            this.loadingService.loadingOff();
-          }, 400);
+          setTimeout(() => this.loadingService.loadingOff(), 400);
         },
-        error: (error) => {
-          console.error('Error endorsing check:', error);
-          setTimeout(() => {
-            this.loadingService.loadingOff();
-          }, 400);
-        },
+        error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
       });
   }
 

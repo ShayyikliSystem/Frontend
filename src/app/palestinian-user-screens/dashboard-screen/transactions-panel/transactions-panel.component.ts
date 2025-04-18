@@ -12,7 +12,10 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TransactionFilterComponent } from '../transaction-filter/transaction-filter.component';
-import { DigitalCheck, DigitalCheckExtended } from '../../../models/digital.model';
+import {
+  DigitalCheck,
+  DigitalCheckExtended,
+} from '../../../models/digital.model';
 import { DigitalCheckService } from '../../../services/digital-check.service';
 import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
@@ -87,6 +90,7 @@ export class TransactionsPanelComponent implements OnInit, AfterViewInit {
     'checkId',
     'issuerName',
     'beneficiaryName',
+    'endorsersNames',
     'amount',
     'status',
     'transferDate',
@@ -263,6 +267,25 @@ export class TransactionsPanelComponent implements OnInit, AfterViewInit {
                 }, 400);
               },
             });
+          const endorserNumber = tx.shyyiklinumberOfEndorsers;
+          if (endorserNumber != null) {
+            this.loadingService.loadingOn();
+            this.userService
+              .getUserDetailsByAccountNumber(endorserNumber)
+              .subscribe({
+                next: (userData) => {
+                  tx.endorsersNames = `${userData.firstName} ${userData.lastName}`;
+                  setTimeout(() => this.loadingService.loadingOff(), 400);
+                },
+                error: (err) => {
+                  console.error('Error fetching endorser details', err);
+                  tx.endorsersNames = '-';
+                  setTimeout(() => this.loadingService.loadingOff(), 400);
+                },
+              });
+          } else {
+            tx.endorsersNames = '-';
+          }
         });
 
         transactions.sort(
