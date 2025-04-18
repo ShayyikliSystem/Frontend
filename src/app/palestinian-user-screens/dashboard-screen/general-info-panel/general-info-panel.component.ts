@@ -73,7 +73,7 @@ export class GeneralInfoPanelComponent {
         }, 400);
       },
       error: (err) => {
-        console.error('Error fetching returned checks count', err);
+        console.error('Error fetching returned digital checks count', err);
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -89,7 +89,7 @@ export class GeneralInfoPanelComponent {
         }, 400);
       },
       error: (err) => {
-        console.error('Error fetching issued checks count', err);
+        console.error('Error fetching issued digital checks count', err);
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
