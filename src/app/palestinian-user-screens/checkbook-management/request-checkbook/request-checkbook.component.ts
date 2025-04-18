@@ -24,13 +24,17 @@ export class RequestCheckbookComponent {
     this.loadingService.loadingOn();
     this.checkbookService.requestCheckbook().subscribe({
       next: (response) => {
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
         this.checkRefreshService.refreshTables();
         this.requestCompleted.emit();
       },
       error: (err) => {
         console.error('Error requesting checkbook', err);
-        this.loadingService.loadingOff();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
   }
