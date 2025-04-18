@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm ,NgModel} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -31,6 +31,7 @@ export class LoginScreenComponent {
   isPasswordVisible: boolean = false;
   loginError: string = '';
   incompleteFormError: string = '';
+  emailError = '';      
 
   loginData = {
     role: 'user',
@@ -107,4 +108,15 @@ export class LoginScreenComponent {
       },
     });
   }
+
+
+  validateEmail(ctrl: NgModel): void {
+    const value = ctrl.value || '';
+    // clear when empty → let “required” handle it
+    if (!value) { this.emailError = ''; return; }
+
+    const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    this.emailError = pattern.test(value) ? '' : 'Invalid email format';
+  }
+
 }

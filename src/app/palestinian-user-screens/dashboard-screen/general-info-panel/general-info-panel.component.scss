@@ -25,12 +25,15 @@ p {
 
 .container {
   height: fit-content;
+  min-width: 220px;
   padding: 20px;
   border-radius: 10px;
   border-right: 2px;
   border-bottom: 2px;
   box-shadow: 5px 5px 10px #cdcdcd;
 }
+
+  
 
 .header {
   align-items: center;

@@ -190,7 +190,9 @@
             >
             </mat-datepicker>
             
-
+            <mat-error *ngIf="date.hasError('required') && (date.dirty || date.touched)">
+              Expiry date is required
+            </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" class="custom-form-field">
             <mat-label>Security Code</mat-label>

@@ -25,15 +25,31 @@ p {
 
 .container {
   height: fit-content;
-  padding: 20px;
+  min-width: 220px;
+  padding: 18px;
   border-radius: 10px;
   border-right: 2px;
   border-bottom: 2px;
   box-shadow: 5px 5px 10px #cdcdcd;
+  
 }
+
 
 .header {
   align-items: center;
+  height: 100%; /* Take full height of container */
+}
+.header p {
+
+  white-space: nowrap; /* Prevent text from wrapping */
+  word-break: keep-all; /* Prevent breaking words */
+  hyphens: auto; /* Add hyphens if needed */
+}
+
+.header strong {
+ 
+  white-space: nowrap; /* Keep numbers on one line */
+  display: inline-block; /* Better control over the number display */
 }
 
 h3 {
@@ -61,7 +77,8 @@ img {
 
 .checkbook-info {
   display: flex;
-  gap: 30px;
+  gap: 28px;
+  
 }
 
 .limited-info {
