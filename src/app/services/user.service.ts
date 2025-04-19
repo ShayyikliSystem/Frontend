@@ -65,4 +65,21 @@ export class UserService {
     const url = `${this.baseUrl}/details-by-account-number?accountNumber=${accountNumber}`;
     return this.http.get<any>(url, { headers: this.getAuthHeaders() });
   }
+
+
+  /**
+ * Get all users except the current beneficiary and the issuer.
+ */
+getAllUsersExcludingBeneficiaryAndIssuer(
+  beneficiaryAccountNumber: number,
+  issuerAccountNumber: number
+): Observable<any> {
+  const body = { beneficiaryAccountNumber, issuerAccountNumber };
+  return this.http.post<any>(
+    `${this.baseUrl}/all/exclude-beneficiary-issuer`,
+    body,
+    { headers: this.getAuthHeaders() }
+  );
+}
+
 }

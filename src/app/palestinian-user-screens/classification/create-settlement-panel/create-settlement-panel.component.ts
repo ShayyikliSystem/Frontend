@@ -200,14 +200,19 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
     });
   }
 
-  formatDate(dateString: string): string {
-    const dt = new Date(dateString);
-    return new Intl.DateTimeFormat('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    }).format(dt);
-  }
+ // ⬇️ IssuedChecksPanelComponent
+ formatDate(dateString: string): string {
+  if (!dateString) return 'Invalid Date';
+  const date = new Date(dateString);
+
+  // day‑month‑year, no time
+  return new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+}
+
 
   resettle(tx: any): void {
     this.loadingService.loadingOn();
