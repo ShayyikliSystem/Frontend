@@ -1,2 +1,6 @@
 <router-outlet></router-outlet>
 <app-loading-component [detectRouteTransitions]="false"></app-loading-component>
+
+@if (showTimeout()) {
+<app-session-timeout (close)="showTimeout.set(false)"></app-session-timeout>
+}

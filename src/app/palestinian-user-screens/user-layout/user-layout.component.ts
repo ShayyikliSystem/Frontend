@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DashboardSidebarComponent } from '../dashboard-sidebar/dashboard-sidebar.component';
-
 @Component({
   selector: 'app-user-layout',
   standalone: true,

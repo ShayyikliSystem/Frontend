@@ -74,7 +74,8 @@ export class ContactFormComponent {
 
   onSubmit() {
     this.submitted = true;
-    if (this.contactForm.invalid) {
+    if (this.contactForm.invalid || this.contactForm.pristine) {
+      this.contactForm.markAllAsTouched();
       return;
     }
     const formValue = this.contactForm.value;
