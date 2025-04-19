@@ -13,6 +13,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoadingService } from '../../../services/loading.service';
 import { SettlementService } from '../../../services/settlement.service';
+import { RequestedSettlementFilterComponent } from '../requested-settlement-filter/requested-settlement-filter.component';
 
 @Component({
   selector: 'app-response-settlment-panel',
@@ -30,6 +31,7 @@ import { SettlementService } from '../../../services/settlement.service';
     MatExpansionModule,
     MatAutocompleteModule,
     MatTooltipModule,
+    RequestedSettlementFilterComponent,
   ],
   templateUrl: './response-settlment-panel.component.html',
   styleUrl: './response-settlment-panel.component.scss',
@@ -43,6 +45,10 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
     'status',
     'actions',
   ];
+
+  showFilter = false;
+  defaultFilter = { status: '', initiator: '', date: null };
+  currentFilter = { ...this.defaultFilter };
 
   beneficiaryRequestsDataSource = new MatTableDataSource<any>();
   dynamicPageSizeOptions: number[] = [5, 10, 15];
@@ -131,5 +137,56 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
       minute: '2-digit',
       hour12: true,
     }).format(date);
+  }
+
+  applyFilter(): void {
+    this.beneficiaryRequestsDataSource.filterPredicate = (
+      data: any,
+      filter: string
+    ) => {
+      const f = JSON.parse(filter);
+      const dateMatch = f.date
+        ? new Date(data.transferDate).toDateString() ===
+          new Date(f.date).toDateString()
+        : true;
+      const statusMatch = f.status
+        ? data.status?.toLowerCase() === f.status.toLowerCase()
+        : true;
+      const initiatorMatch = f.initiator
+        ? data.initiatorName?.toLowerCase().includes(f.initiator.toLowerCase())
+        : true;
+
+      return dateMatch && statusMatch && initiatorMatch;
+    };
+
+    this.beneficiaryRequestsDataSource.filter = JSON.stringify(
+      this.currentFilter
+    );
+    this.updatePageSizeOptions();
+    if (this.paginator) this.paginator.firstPage();
+  }
+
+  onFilterApply(filter: any): void {
+    this.currentFilter = filter;
+    this.applyFilter();
+    this.showFilter = false;
+  }
+
+  clearFilter(): void {
+    this.currentFilter = { ...this.defaultFilter };
+    this.applyFilter();
+  }
+
+  hasActiveFilter(): boolean {
+    return !!(
+      this.currentFilter.status ||
+      this.currentFilter.initiator ||
+      this.currentFilter.date
+    );
+  }
+
+  openFilter(): void {
+    this.currentFilter = { ...this.defaultFilter };
+    this.showFilter = true;
   }
 }

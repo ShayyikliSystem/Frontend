@@ -56,7 +56,7 @@ img {
 
 table th,
 table td {
-  padding: 12px;
+  padding: 8px;
   text-align: left;
   border-bottom: 1px solid #ddd;
   background-color: #ffffff;
@@ -116,8 +116,23 @@ button {
   width: 100%;
 }
 
-.filter-buttons {
+.request-buttons {
   display: inline-block;
   text-align: left;
   width: 100%;
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+}
+
+button {
+  padding: 10px;
+  background-color: #141d33;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
