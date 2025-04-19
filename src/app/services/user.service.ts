@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
+
+export interface CurrentUser {
+  shayyikliAccountNumber: number;
+  // add more fields here if needed
+}
 
 @Injectable({
   providedIn: 'root',
@@ -9,12 +13,12 @@ import { Router } from '@angular/router';
 export class UserService {
   private baseUrl = 'http://localhost:8080/api/users';
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken') || '';
     return new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+      Authorization: token ? `Bearer ${token}` : '',
       'Content-Type': 'application/json',
     });
   }
@@ -32,9 +36,10 @@ export class UserService {
   }
 
   isAllowedCheckManagement(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/check-management/allowed`, {
-      headers: this.getAuthHeaders(),
-    });
+    return this.http.get<any>(
+      `${this.baseUrl}/check-management/allowed`,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
   getAllUsers(): Observable<any> {
@@ -62,7 +67,41 @@ export class UserService {
   }
 
   getUserDetailsByAccountNumber(accountNumber: number): Observable<any> {
-    const url = `${this.baseUrl}/details-by-account-number?accountNumber=${accountNumber}`;
-    return this.http.get<any>(url, { headers: this.getAuthHeaders() });
+    const params = new HttpParams().set('accountNumber', accountNumber.toString());
+    return this.http.get<any>(`${this.baseUrl}/details-by-account-number`, {
+      headers: this.getAuthHeaders(),
+      params,
+    });
+  }
+
+  /** Record that the user agreed to terms */
+  agreeToTerms(accountNumber: number): Observable<string> {
+    const params = new HttpParams().set('accountNumber', accountNumber.toString());
+    return this.http.post(
+      `${this.baseUrl}/agree`,
+      null,
+      {
+        headers: this.getAuthHeaders(),
+        params,
+        responseType: 'text'    // ← HERE: treat server response as text
+      }
+    );
+  }
+
+  /** Fetch whether the user has already agreed */
+  getAgreeStatus(accountNumber: number): Observable<boolean> {
+    const params = new HttpParams().set('accountNumber', accountNumber.toString());
+    return this.http.get<boolean>(
+      `${this.baseUrl}/agree-status`,
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  /** Fetch the logged‑in user’s info */
+  getCurrentUser(): Observable<CurrentUser> {
+    return this.http.get<CurrentUser>(
+      `${this.baseUrl}/me`,
+      { headers: this.getAuthHeaders() }
+    );
   }
 }

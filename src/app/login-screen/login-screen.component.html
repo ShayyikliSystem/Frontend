@@ -1,4 +1,9 @@
-<div class="login-container">
+<app-agree-terms-policy-request
+  *ngIf="showTermsModal"
+  (agreed)="onTermsAgreed()">
+</app-agree-terms-policy-request>
+
+<div *ngIf="!showTermsModal" class="login-container">
   <div class="grid-container">
     <div class="grid-column">
       <img src="assets/logo.png" alt="Logo" class="logo" />
