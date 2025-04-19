@@ -68,27 +68,52 @@ export class RequestEndorseCheckFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadingService.loadingOn();
-    this.userService.getAllUsersExcludingSelf().subscribe({
-      next: (users) => {
-        this.allUsers = users;
-        this.filteredBeneficiaries = users;
-        setTimeout(() => this.loadingService.loadingOff(), 400);
-      },
-      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
-    });
+    // this.loadingService.loadingOn();
+    // this.userService.getAllUsersExcludingSelf().subscribe({
+    //   next: (users) => {
+    //     this.allUsers = users;
+    //     this.filteredBeneficiaries = users;
+    //     setTimeout(() => this.loadingService.loadingOff(), 400);
+    //   },
+    //   error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
+    // });
 
-    this.loadingService.loadingOn();
+    // this.loadingService.loadingOn();
+    // this.digitalCheckService.readCheck(this.checkId).subscribe({
+    //   next: (chk) => {
+    //     this.endorseCheck = chk;
+    //     this.checkNumber = chk.checkId;
+    //     this.amount = chk.amount;
+    //     this.transferDate = new Date(chk.transferDate);
+    //     setTimeout(() => this.loadingService.loadingOff(), 400);
+    //   },
+    //   error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
+    // });
     this.digitalCheckService.readCheck(this.checkId).subscribe({
       next: (chk) => {
-        this.endorseCheck = chk;
-        this.checkNumber = chk.checkId;
-        this.amount = chk.amount;
-        this.transferDate = new Date(chk.transferDate);
-        setTimeout(() => this.loadingService.loadingOff(), 400);
+        this.endorseCheck  = chk;
+        this.checkNumber   = chk.checkId;
+        this.amount        = chk.amount;
+        this.transferDate  = new Date(chk.transferDate);
+  
+     
+        this.userService
+          .getAllUsersExcludingBeneficiaryAndIssuer(
+            chk.shyyiklinumberOfBeneficiary,   
+            chk.shyyiklinumberOfUsers          
+          )
+          .subscribe({
+            next: (users) => {
+              this.allUsers = users;
+              this.filteredBeneficiaries = users;
+              setTimeout(() => this.loadingService.loadingOff(), 400);
+            },
+            error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
+          });
       },
       error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
     });
+    
 
     this.beneficiaryControl.valueChanges.subscribe((value) => {
       if (typeof value === 'string') {

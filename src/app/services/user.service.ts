@@ -104,4 +104,21 @@ export class UserService {
       { headers: this.getAuthHeaders() }
     );
   }
+
+
+  /**
+ * Get all users except the current beneficiary and the issuer.
+ */
+getAllUsersExcludingBeneficiaryAndIssuer(
+  beneficiaryAccountNumber: number,
+  issuerAccountNumber: number
+): Observable<any> {
+  const body = { beneficiaryAccountNumber, issuerAccountNumber };
+  return this.http.post<any>(
+    `${this.baseUrl}/all/exclude-beneficiary-issuer`,
+    body,
+    { headers: this.getAuthHeaders() }
+  );
+}
+
 }
