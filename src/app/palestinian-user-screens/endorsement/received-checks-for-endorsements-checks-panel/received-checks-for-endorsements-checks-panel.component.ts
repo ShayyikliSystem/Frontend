@@ -19,7 +19,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ReceivedChecksFilterComponent } from '../../check-management/received-checks-filter/received-checks-filter.component';
 import { RequestEndorseCheckFormComponent } from '../request-endorse-check-form/request-endorse-check-form.component';
 
 @Component({
@@ -37,7 +36,6 @@ import { RequestEndorseCheckFormComponent } from '../request-endorse-check-form/
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
-    ReceivedChecksFilterComponent,
     MatTooltipModule,
     RequestEndorseCheckFormComponent,
   ],
@@ -281,6 +279,25 @@ export class ReceivedChecksForEndorsementsChecksPanelComponent
                 }, 400);
               },
             });
+          const endorserNumber = tx.shyyiklinumberOfEndorsers;
+          if (endorserNumber != null) {
+            this.loadingService.loadingOn();
+            this.userService
+              .getUserDetailsByAccountNumber(endorserNumber)
+              .subscribe({
+                next: (userData) => {
+                  tx.endorsersNames = `${userData.firstName} ${userData.lastName}`;
+                  setTimeout(() => this.loadingService.loadingOff(), 400);
+                },
+                error: (err) => {
+                  console.error('Error fetching endorser details', err);
+                  tx.endorsersNames = '-';
+                  setTimeout(() => this.loadingService.loadingOff(), 400);
+                },
+              });
+          } else {
+            tx.endorsersNames = '-';
+          }
         });
 
         receivedChecks.sort(
@@ -383,5 +400,4 @@ export class ReceivedChecksForEndorsementsChecksPanelComponent
   openEndorseForm(checkId: string): void {
     this.selectedCheckId = checkId;
   }
-  
 }

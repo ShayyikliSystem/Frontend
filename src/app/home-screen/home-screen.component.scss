@@ -225,3 +225,35 @@ input:valid {
   background-color: #141d33;
   color: #fff;
 }
+.card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.card-header .icon-container {
+  width: 50px;
+  height: 50px;
+  padding: 15px;
+  background-color: #eee;
+  border-radius: 12px;
+  margin-bottom: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-header .icon-container img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.3em;
+  color: #201e43;
+  text-align: center;
+}

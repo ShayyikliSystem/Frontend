@@ -1,12 +1,16 @@
-import { CommonModule } from '@angular/common';
-import { Component, NgModule } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ConfirmResetComponent } from './confirm-reset/confirm-reset.component';
 import { AlertComponent } from '../../alert/alert.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { LoadingService } from '../../services/loading.service';
+import { MatButtonModule } from '@angular/material/button';
 
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-settings',
   standalone: true,
@@ -16,6 +20,10 @@ import { LoadingService } from '../../services/loading.service';
     ConfirmResetComponent,
     AlertComponent,
     MatExpansionModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatButtonModule,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
@@ -59,9 +67,6 @@ export class SettingsComponent {
     const isEmailChanged = this.settingsData.email !== this.originalData.email;
     const isPhoneChanged =
       this.settingsData.phoneNumber !== this.originalData.phoneNumber;
-
-    this.validateEmail();
-    this.validatePhoneNumber();
 
     this.isFormChanged =
       (isEmailChanged || isPhoneChanged) &&
@@ -130,25 +135,42 @@ export class SettingsComponent {
   }
 
   validateEmail(): void {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    this.emailError = '';
+
     if (!this.settingsData.email) {
-      this.emailError = 'Email is required.';
-    } else if (!emailPattern.test(this.settingsData.email)) {
-      this.emailError = 'Invalid email format.';
-    } else {
-      this.emailError = '';
+      return;
     }
+
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(this.settingsData.email)) {
+      this.emailError = 'Invalid email format';
+    }
+
+    this.checkFormChanges();
   }
 
   validatePhoneNumber(): void {
-    const phonePattern = /^\d{9}$/;
+    this.settingsData.phoneNumber = this.settingsData.phoneNumber.replace(
+      /\D/g,
+      ''
+    );
+
+    if (this.settingsData.phoneNumber.length > 9) {
+      this.settingsData.phoneNumber = this.settingsData.phoneNumber.substring(
+        0,
+        9
+      );
+    }
+
+    this.phoneError = '';
+
     if (!this.settingsData.phoneNumber) {
       this.phoneError = 'Phone number is required.';
-    } else if (!phonePattern.test(this.settingsData.phoneNumber)) {
+    } else if (this.settingsData.phoneNumber.length < 9) {
       this.phoneError = 'Phone number must be exactly 9 digits.';
-    } else {
-      this.phoneError = '';
     }
+
+    this.checkFormChanges();
   }
 
   onSaveSettings(): void {
@@ -188,5 +210,11 @@ export class SettingsComponent {
           }, 400);
         },
       });
+  }
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      event.preventDefault();
+    }
   }
 }

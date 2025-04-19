@@ -1,79 +1,118 @@
-<app-alert
-  *ngIf="alertMessage"
-  [message]="alertMessage"
-  [type]="alertType"
-></app-alert>
 <h3>Settings</h3>
 
-<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+<mat-expansion-panel style="width: 1100px; margin: 0 auto 20px" expanded="true">
   <mat-expansion-panel-header>
-    <div class="security-header" style="margin-top: 10px">
-      <img
-        src="assets/user.png"
-        alt="user"
-        class="user"
-        style="display: inline-block"
-      />
-      <p style="display: inline; margin-left: 5px">Your Profile</p>
+    <div class="security-header">
+      <img src="assets/user.png" alt="user" class="icon" />
+      <p>Your Profile</p>
     </div>
   </mat-expansion-panel-header>
 
-  <div class="setting" style="margin-top: 10px">
-    <form (ngSubmit)="onSaveSettings()" class="settings-form">
-      <div class="error-padding">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            [(ngModel)]="settingsData.email"
-            (input)="validateEmail(); checkFormChanges()"
-            required
-          />
-        </div>
-        <small *ngIf="emailError" class="error">{{ emailError }}</small>
-      </div>
+  <div class="settings-container">
+    <app-alert
+      *ngIf="alertMessage"
+      [message]="alertMessage"
+      [type]="alertType"
+    ></app-alert>
 
-      <hr class="separator" />
-      <div class="error-padding">
-        <div class="form-group">
-          <label for="phoneNumber">Phone Number</label>
-          <div class="phone-input-group">
-            <span class="phone-prefix">
-              <img src="assets/palestine-flag.png" alt="Palestine" />
-              +970 </span
-            ><input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              pattern="\\d{9}"
-              maxlength="9"
-              [(ngModel)]="settingsData.phoneNumber"
-              (input)="validatePhoneNumber(); checkFormChanges()"
-              required
-            />
-          </div>
-        </div>
-
-        <small *ngIf="phoneError" class="error">{{ phoneError }}</small>
-      </div>
-
-      <hr class="separator" />
-
-      <div class="reset-password">
-        <label class="note-label"
-          >Want to change your password? Click here</label
+    <form #form="ngForm" (ngSubmit)="onSaveSettings()" class="settings-form">
+      <mat-form-field appearance="outline" class="custom-form-field">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          name="email"
+          required
+          email
+          placeholder="your@email.com"
+          [(ngModel)]="settingsData.email"
+          (input)="validateEmail()"
+          #emailInput="ngModel"
+        />
+        <mat-error
+          *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)"
         >
-        <button type="button" class="btn-secondary" (click)="onResetPassword()">
+          <span *ngIf="emailInput.errors?.['required']">Email is required</span>
+          <span
+            *ngIf="emailInput.errors?.['email'] && !emailInput.errors?.['required']"
+          >
+            Please enter a valid email address
+          </span>
+          <span
+            *ngIf="emailError && !emailInput.errors?.['required'] && !emailInput.errors?.['email']"
+          >
+            {{ emailError }}
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="custom-form-field">
+        <mat-label>Phone Number</mat-label>
+        <span matPrefix class="phone-prefix">
+          <img
+            src="assets/palestine-flag.png"
+            alt="Palestine flag"
+            class="flag-icon"
+          />
+          &nbsp;+970&nbsp;
+        </span>
+        <input
+          matInput
+          type="tel"
+          name="phoneNumber"
+          required
+          minlength="9"
+          maxlength="9"
+          placeholder="599123456"
+          [(ngModel)]="settingsData.phoneNumber"
+          (input)="validatePhoneNumber()"
+          (keypress)="allowOnlyNumbers($event)"
+          #phoneInput="ngModel"
+          inputmode="numeric"
+          pattern="[0-9]*"
+        />
+        <mat-error
+          *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)"
+        >
+          <span *ngIf="phoneInput.errors?.['required']"
+            >Phone number is required</span
+          >
+          <span *ngIf="phoneInput.errors?.['minlength']">
+            Phone number must be exactly 9 digits ({{phoneInput.errors?.['minlength'].actualLength || 0
+
+
+
+
+
+            }}/9)
+          </span>
+          <span *ngIf="phoneInput.errors?.['pattern']">
+            Only numbers are allowed
+          </span>
+          <span
+            *ngIf="phoneError && !phoneInput.errors?.['required'] && !phoneInput.errors?.['minlength'] && !phoneInput.errors?.['pattern']"
+          >
+            {{ phoneError }}
+          </span>
+        </mat-error>
+      </mat-form-field>
+      <div class="reset-password">
+        <p>Want to change your password?</p>
+        <button type="button" (click)="onResetPassword()">
           Reset Password
         </button>
       </div>
 
-      <hr class="separator" />
-
       <div class="button-group">
-        <button type="submit" class="btn-primary" [disabled]="!isFormChanged">
+        <button
+          class="btn-submit"
+          type="submit"
+          [disabled]="!isFormChanged || emailError || phoneError"
+          [class.btn-primary]="isFormChanged && !emailError && !phoneError"
+          [class.btn-primary:disabled]="
+            !isFormChanged || emailError || phoneError
+          "
+        >
           Save Settings
         </button>
       </div>

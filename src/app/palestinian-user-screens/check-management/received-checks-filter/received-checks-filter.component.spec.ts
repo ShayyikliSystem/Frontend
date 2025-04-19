@@ -8,9 +8,8 @@ describe('ReceivedChecksFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReceivedChecksFilterComponent]
-    })
-    .compileComponents();
+      imports: [ReceivedChecksFilterComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ReceivedChecksFilterComponent);
     component = fixture.componentInstance;

@@ -8,9 +8,8 @@ describe('SecurityFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SecurityFilterComponent]
-    })
-    .compileComponents();
+      imports: [SecurityFilterComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SecurityFilterComponent);
     component = fixture.componentInstance;

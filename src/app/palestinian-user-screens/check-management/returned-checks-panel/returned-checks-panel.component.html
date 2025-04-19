@@ -1,4 +1,4 @@
-<mat-expansion-panel style="width: 1000px; margin-bottom: 20px">
+<mat-expansion-panel style="width: 1100px; margin-bottom: 20px">
   <mat-expansion-panel-header>
     <div class="security-header">
       <img
@@ -7,7 +7,7 @@
         class="user"
         style="display: inline-block"
       />
-      <p style="display: inline; margin-left: 5px">Returned Checks</p>
+      <p style="display: inline; margin-left: 5px">Returned Digital Checks</p>
     </div>
   </mat-expansion-panel-header>
 
@@ -149,9 +149,10 @@
 
       <ng-template #noFilterReturnedChecks>
         <div class="limited-info" style="text-align: center">
-          <h3>No Returned Checks Match Your Filter</h3>
+          <h3>No Returned Digital Checks Match Your Filter</h3>
           <p>
-            The filter criteria you applied did not return any returned checks.
+            The filter criteria you applied did not return any returned digital
+            checks.
           </p>
         </div>
       </ng-template>
@@ -159,7 +160,7 @@
 
     <ng-template #noReturnedChecks>
       <div class="limited-info" style="text-align: center">
-        <h3>No Returned Checks Found</h3>
+        <h3>No Returned Digital Checks Found</h3>
         <p>It looks like you haven't made any returned digital checks yet.</p>
       </div>
     </ng-template>

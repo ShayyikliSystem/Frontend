@@ -2,43 +2,32 @@
   <div class="filter-overlay">
     <div class="filter-box">
       <h3>Issue New Check</h3>
-
       <div class="form-field-group">
-        <!-- Check Number Field (no clear button needed) -->
         <mat-form-field appearance="outline" class="custom-form-field">
           <mat-label>Check Number</mat-label>
           <input
             matInput
             type="tel"
-            id="shayyikliNumber"
-            name="shayyikliNumber"
-            inputmode="numeric"
             [value]="checkNumber"
             disabled
             maxlength="12"
             required
-            style="color: #201e43"
           />
         </mat-form-field>
 
-        <!-- Beneficiary Select with Search and Clear Button -->
         <mat-form-field appearance="outline">
           <mat-label>Beneficiary</mat-label>
-          <mat-select
-            name="beneficiary"
-            [(ngModel)]="selectedBeneficiary"
-            #beneficiaryField="ngModel"
-            required
-            #beneficiarySelect
+          <input
+            matInput
+            type="text"
+            [formControl]="beneficiaryControl"
+            [matAutocomplete]="auto"
+            placeholder="Type to search beneficiaries"
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            [displayWith]="displayBeneficiary"
           >
-            <mat-option>
-              <input
-                matInput
-                placeholder="Search beneficiary"
-                [formControl]="beneficiarySearchCtrl"
-                required
-              />
-            </mat-option>
             <mat-option
               *ngFor="let user of filteredBeneficiaries"
               [value]="user"
@@ -47,20 +36,20 @@
                 user.shayyikliAccountNumber
               }})
             </mat-option>
-          </mat-select>
+          </mat-autocomplete>
           <button
             mat-icon-button
             matSuffix
-            *ngIf="selectedBeneficiary && !beneficiarySelect.panelOpen"
-            (click)="selectedBeneficiary = null"
+            *ngIf="beneficiaryControl.value"
+            (click)="clearBeneficiary()"
             class="clear-btn"
           >
             <mat-icon>close</mat-icon>
           </button>
           <mat-error
             *ngIf="
-              beneficiaryField.invalid &&
-              (beneficiaryField.touched || beneficiaryField.dirty)
+              !selectedBeneficiary &&
+              (beneficiaryControl.touched || beneficiaryControl.dirty)
             "
           >
             Beneficiary is required
@@ -69,54 +58,48 @@
       </div>
 
       <div class="form-field-group">
-        <!-- Amount Input with Clear Button -->
         <mat-form-field appearance="outline">
-  <mat-label>Amount</mat-label>
-  <input
-    matInput
-    type="number"
-    name="amount"
-    [(ngModel)]="amount"
-    #amountField="ngModel"
-    required
-    inputmode="numeric"
-    step="1"
-    pattern="[0-9]*"
-    (keypress)="allowOnlyIntegers($event)"
-    class="example-right-align"
-    placeholder="0"
-    min="0"
-    max="100000"
-  />
-  <span matTextPrefix>₪&nbsp;</span>
-  <button
-    mat-icon-button
-    matSuffix
-    *ngIf="amount"
-    (click)="amount = null"
-    class="clear-btn"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
-  <!-- existing “required” error -->
-  <mat-error
-    *ngIf="amountField.invalid && (amountField.touched || amountField.dirty)"
-  >
-    <ng-container *ngIf="amountField.hasError('required')">
-      Amount is required 
-    </ng-container>
-    <ng-container *ngIf="amountField.hasError('pattern')">
-      Only whole number amounts are allowed
-    </ng-container>
+          <mat-label>Amount</mat-label>
+          <input
+            matInput
+            type="number"
+            name="amount"
+            [(ngModel)]="amount"
+            #amountField="ngModel"
+            required
+            inputmode="numeric"
+            step="1"
+            pattern="[0-9]*"
+            (keypress)="allowOnlyIntegers($event)"
+            class="example-right-align"
+            placeholder="0"
+            min="0"
+            max="100000"
+          />
+          <span matTextPrefix>₪&nbsp;</span>
+          <button
+            mat-icon-button
+            matSuffix
+            *ngIf="amount"
+            (click)="amount = null"
+            class="clear-btn"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error
+            *ngIf="
+              amountField.invalid && (amountField.touched || amountField.dirty)
+            "
+          >
+            <ng-container *ngIf="amountField.hasError('required')"
+              >Amount is required</ng-container
+            >
+            <ng-container *ngIf="amountField.hasError('pattern')"
+              >Only whole number amounts are allowed</ng-container
+            >
+          </mat-error>
+        </mat-form-field>
 
-    
-
-
-  </mat-error>
-</mat-form-field>
-
-
-        <!-- Date Input with Calendar Icon and Clear Button -->
         <mat-form-field appearance="outline">
           <mat-label>Choose a date</mat-label>
           <input
@@ -149,12 +132,11 @@
               transferDateField.invalid &&
               (transferDateField.touched || transferDateField.dirty)
             "
+            >Date is required</mat-error
           >
-            Date is required
-          </mat-error>
-          <mat-error *ngIf="transferDateField.errors?.['futureDate']">
-            Date must be in the future
-          </mat-error>
+          <mat-error *ngIf="transferDateField.errors?.['futureDate']"
+            >Date must be in the future</mat-error
+          >
         </mat-form-field>
       </div>
 

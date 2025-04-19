@@ -8,9 +8,8 @@ describe('RequestEndorseCheckFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RequestEndorseCheckFormComponent]
-    })
-    .compileComponents();
+      imports: [RequestEndorseCheckFormComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RequestEndorseCheckFormComponent);
     component = fixture.componentInstance;

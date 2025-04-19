@@ -1,50 +1,8 @@
 <div class="filter-overlay">
   <div class="filter-box">
-    <h3>Filter Returned Checks</h3>
+    <h3>Filter Returned Digital Checks</h3>
 
     <div class="form-field-group">
-      <!-- Amount Field with Clear Button -->
-      <mat-form-field appearance="outline">
-        <mat-label>Amount</mat-label>
-        <input
-          matInput
-          type="number"
-          step="1"
-          placeholder="0"
-          min="0"
-          max="100000"
-          [(ngModel)]="filter.amount"
-          class="example-right-align"
-        />
-        <span matTextPrefix>₪&nbsp;</span>
-        <button mat-icon-button matSuffix *ngIf="filter.amount" (click)="filter.amount = null" class="clear-btn">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <!-- Issuer Field with Clear Button -->
-      <mat-form-field appearance="outline">
-        <mat-label>Issuer</mat-label>
-        <mat-select #issuerSelect [(ngModel)]="filter.issuer">
-          <mat-option>
-            <input
-              matInput
-              placeholder="Search issuer"
-              [formControl]="issuerSearchCtrl"
-            />
-          </mat-option>
-          <mat-option *ngFor="let user of filteredIssuers" [value]="user">
-            {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
-          </mat-option>
-        </mat-select>
-        <button mat-icon-button matSuffix *ngIf="filter.issuer && !issuerSelect.panelOpen" (click)="filter.issuer = null" class="clear-btn">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-
-    <div class="form-field-group">
-      <!-- Beneficiary Field with Clear Button -->
       <mat-form-field appearance="outline">
         <mat-label>Beneficiary</mat-label>
         <mat-select #beneficiarySelect [(ngModel)]="filter.beneficiary">
@@ -59,15 +17,24 @@
             *ngFor="let user of filteredIssuers"
             [value]="user.firstName + ' ' + user.lastName"
           >
-            {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
+            {{ user.firstName }} {{ user.lastName }} ({{
+              user.shayyikliAccountNumber
+            }})
           </mat-option>
         </mat-select>
-        <button mat-icon-button matSuffix *ngIf="filter.beneficiary && !beneficiarySelect.panelOpen" (click)="filter.beneficiary = null" class="clear-btn">
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.beneficiary && !beneficiarySelect.panelOpen"
+          (click)="filter.beneficiary = null"
+          class="clear-btn"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
+    </div>
 
-      <!-- Date Field with Calendar Icon ➡️ then X -->
+    <div class="form-field-group">
       <mat-form-field appearance="outline">
         <mat-label>Choose a date</mat-label>
         <input
@@ -77,9 +44,16 @@
           readonly
         />
         <div matSuffix class="suffix-group">
-          <mat-datepicker-toggle [for]="transactionPicker"></mat-datepicker-toggle>
-          <button mat-icon-button *ngIf="filter.date" (click)="filter.date = null" class="clear-btn">
-            <mat-icon>close</mat-icon> 
+          <mat-datepicker-toggle
+            [for]="transactionPicker"
+          ></mat-datepicker-toggle>
+          <button
+            mat-icon-button
+            *ngIf="filter.date"
+            (click)="filter.date = null"
+            class="clear-btn"
+          >
+            <mat-icon>close</mat-icon>
           </button>
         </div>
         <mat-datepicker #transactionPicker></mat-datepicker>

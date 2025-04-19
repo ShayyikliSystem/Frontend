@@ -1,0 +1,118 @@
+<div class="filter-overlay">
+  <div class="filter-box">
+    <h3>Filter Outcoming Digital Endorsements</h3>
+
+    <div class="form-field-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="filter.status">
+          <mat-option *ngFor="let stat of statusOptions" [value]="stat">
+            {{ stat }}
+          </mat-option>
+        </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.status"
+          (click)="filter.status = ''"
+          class="clear-btn"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Issuer</mat-label>
+        <input
+          matInput
+          placeholder="Search issuer"
+          [formControl]="issuerSearchCtrl"
+          [matAutocomplete]="autoIssuer"
+          (click)="openIssuerPanel()"
+        />
+        <mat-autocomplete
+          #autoIssuer="matAutocomplete"
+          [displayWith]="displayUser"
+          (optionSelected)="onIssuerSelected($event)"
+        >
+          <mat-option *ngFor="let user of filteredIssuers" [value]="user">
+            {{ user.firstName }} {{ user.lastName }} ({{
+              user.shayyikliAccountNumber
+            }})
+          </mat-option>
+        </mat-autocomplete>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.issuer"
+          (click)="clearIssuer()"
+          class="clear-btn"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Beneficiary</mat-label>
+        <input
+          matInput
+          placeholder="Search beneficiary"
+          [formControl]="beneficiarySearchCtrl"
+          [matAutocomplete]="autoBen"
+          (click)="openBeneficiaryPanel()"
+        />
+        <mat-autocomplete
+          #autoBen="matAutocomplete"
+          [displayWith]="displayUser"
+          (optionSelected)="onBeneficiarySelected($event)"
+        >
+          <mat-option *ngFor="let user of filteredBeneficiaries" [value]="user">
+            {{ user.firstName }} {{ user.lastName }} ({{
+              user.shayyikliAccountNumber
+            }})
+          </mat-option>
+        </mat-autocomplete>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.beneficiary"
+          (click)="clearBeneficiary()"
+          class="clear-btn"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Choose a date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="transactionPicker"
+          [(ngModel)]="filter.date"
+          readonly
+        />
+        <div matSuffix class="suffix-group">
+          <mat-datepicker-toggle
+            [for]="transactionPicker"
+          ></mat-datepicker-toggle>
+          <button
+            mat-icon-button
+            *ngIf="filter.date"
+            (click)="filter.date = null"
+            class="clear-btn"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <mat-datepicker #transactionPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="button-group">
+      <button class="btn-secondary" (click)="onCancel()">Cancel</button>
+      <button class="btn-primary" (click)="onSubmit()">Apply</button>
+    </div>
+  </div>
+</div>

@@ -25,7 +25,8 @@ p {
 
 .container {
   height: fit-content;
-  padding: 20px;
+  min-width: 220px;
+  padding: 18px;
   border-radius: 10px;
   border-right: 2px;
   border-bottom: 2px;
@@ -34,6 +35,17 @@ p {
 
 .header {
   align-items: center;
+  height: 100%;
+}
+.header p {
+  white-space: nowrap;
+  word-break: keep-all;
+  hyphens: auto;
+}
+
+.header strong {
+  white-space: nowrap;
+  display: inline-block;
 }
 
 h3 {
@@ -61,7 +73,7 @@ img {
 
 .checkbook-info {
   display: flex;
-  gap: 30px;
+  gap: 28px;
 }
 
 .limited-info {

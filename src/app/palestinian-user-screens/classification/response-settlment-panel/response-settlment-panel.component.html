@@ -1,9 +1,9 @@
-<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+<mat-expansion-panel style="width: 1100px; margin-bottom: 20px" expanded="true">
   <mat-expansion-panel-header>
     <div class="security-header">
       <img
-        src="assets/history.png"
-        alt="history-icon"
+        src="assets/claim.png"
+        alt="claim-icon"
         class="user"
         style="display: inline-block"
       />
@@ -13,70 +13,127 @@
 
   <div style="margin-top: 10px">
     <div *ngIf="beneficiaryRequestsDataSource.data.length > 0; else noRequests">
-      <div class="table-container">
-        <table mat-table [dataSource]="beneficiaryRequestsDataSource" matSort>
-          <ng-container matColumnDef="checkId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Check Number
-            </th>
-            <td mat-cell *matCellDef="let tx">{{ tx.checkId }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="initiatorName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Initiator</th>
-            <td mat-cell *matCellDef="let tx">{{ tx.initiatorName }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="transferDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Date Requested
-            </th>
-            <td mat-cell *matCellDef="let tx">
-              {{ formatDate(tx.transferDate) }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="amount">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
-            <td mat-cell *matCellDef="let tx">
-              <strong>{{ tx.amount | number : "1.2-2" }}₪</strong>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-            <td mat-cell *matCellDef="let tx">{{ tx.status }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let tx" class="filter-buttons">
-              <ng-container
-                *ngIf="tx.status?.toLowerCase() === 'pending'; else showStatus"
-              >
-                <button class="btn-accept" (click)="respond(tx.checkId, true)">
-                  Accept
-                </button>
-                <button class="btn-reject" (click)="respond(tx.checkId, false)">
-                  Reject
-                </button>
-              </ng-container>
-              <ng-template #showStatus>
-                <span class="status-label"> Replied </span>
-              </ng-template>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let r; columns: displayedColumns"></tr>
-        </table>
+      <div class="filter-buttons" style="margin-bottom: 10px">
+        <button
+          mat-button
+          (click)="openFilter()"
+          matTooltip="Click to apply filters and update the table"
+        >
+          <i class="bi bi-filter" style="color: white"></i> Add Filter
+        </button>
+        <span
+          matTooltip="Disabled because there is no filter applied"
+          [matTooltipDisabled]="hasActiveFilter()"
+        >
+          <button
+            mat-button
+            (click)="clearFilter()"
+            [disabled]="!hasActiveFilter()"
+            [ngStyle]="{ 'background-color': !hasActiveFilter() ? 'grey' : '' }"
+          >
+            Clear Filter
+          </button>
+        </span>
       </div>
 
-      <mat-paginator
-        [pageSizeOptions]="dynamicPageSizeOptions"
-        showFirstLastButtons
+      <app-requested-settlement-filter
+        *ngIf="showFilter"
+        [filter]="currentFilter"
+        (applyFilter)="onFilterApply($event)"
+        (cancelFilter)="showFilter = false"
+      ></app-requested-settlement-filter>
+
+      <ng-container
+        *ngIf="
+          (beneficiaryRequestsDataSource.filteredData ?? []).length > 0;
+          else noFilteredRequests
+        "
       >
-      </mat-paginator>
+        <div class="table-container">
+          <table mat-table [dataSource]="beneficiaryRequestsDataSource" matSort>
+            <ng-container matColumnDef="checkId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Check Number
+              </th>
+              <td mat-cell *matCellDef="let tx">{{ tx.checkId }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="initiatorName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Initiator
+              </th>
+              <td mat-cell *matCellDef="let tx">{{ tx.initiatorName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="transferDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                Date Requested
+              </th>
+              <td mat-cell *matCellDef="let tx">
+                {{ formatDate(tx.transferDate) }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+              <td mat-cell *matCellDef="let tx">
+                <strong>{{ tx.amount | number : "1.2-2" }}₪</strong>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+              <td mat-cell *matCellDef="let tx">{{ tx.status }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let tx" class="request-buttons">
+                <ng-container
+                  *ngIf="
+                    tx.status?.toLowerCase() === 'pending';
+                    else showStatus
+                  "
+                >
+                  <button
+                    class="btn-accept"
+                    (click)="respond(tx.checkId, true)"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    class="btn-reject"
+                    (click)="respond(tx.checkId, false)"
+                  >
+                    Reject
+                  </button>
+                </ng-container>
+                <ng-template #showStatus>
+                  <span class="status-label"> Replied </span>
+                </ng-template>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let r; columns: displayedColumns"></tr>
+          </table>
+        </div>
+
+        <mat-paginator
+          [pageSizeOptions]="dynamicPageSizeOptions"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+      </ng-container>
+      <ng-template #noFilteredRequests>
+        <div class="limited-info" style="text-align: center">
+          <h3>No Requested Settlements Match Your Filter</h3>
+          <p>
+            The filter criteria you applied did not return any requested
+            settlement records.
+          </p>
+        </div>
+      </ng-template>
     </div>
 
     <ng-template #noRequests>

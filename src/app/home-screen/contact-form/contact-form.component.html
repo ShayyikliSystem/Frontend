@@ -3,47 +3,73 @@
     <mat-form-field appearance="outline" class="custom-form-field">
       <mat-label>First Name</mat-label>
       <input matInput formControlName="firstName" required />
-      <mat-error *ngIf="firstName?.hasError('required') && (firstName?.dirty || firstName?.touched)">
+      <mat-error
+        *ngIf="
+          firstName?.hasError('required') &&
+          (firstName?.dirty || firstName?.touched)
+        "
+      >
         First Name is required
       </mat-error>
-      <mat-error *ngIf="firstName?.hasError('pattern') && (firstName?.dirty || firstName?.touched)">
+      <mat-error
+        *ngIf="
+          firstName?.hasError('pattern') &&
+          (firstName?.dirty || firstName?.touched)
+        "
+      >
         First Name must contain only letters
       </mat-error>
     </mat-form-field>
-    
+
     <mat-form-field appearance="outline" class="custom-form-field">
       <mat-label>Last Name</mat-label>
       <input matInput formControlName="lastName" required />
-      <mat-error *ngIf="lastName?.hasError('required') && (lastName?.dirty || lastName?.touched)">
+      <mat-error
+        *ngIf="
+          lastName?.hasError('required') &&
+          (lastName?.dirty || lastName?.touched)
+        "
+      >
         Last Name is required
       </mat-error>
-      <mat-error *ngIf="lastName?.hasError('pattern') && (lastName?.dirty || lastName?.touched)">
+      <mat-error
+        *ngIf="
+          lastName?.hasError('pattern') &&
+          (lastName?.dirty || lastName?.touched)
+        "
+      >
         Last Name must contain only letters
       </mat-error>
     </mat-form-field>
-    
-    
   </div>
 
   <mat-form-field appearance="outline" class="custom-form-field">
     <mat-label>Email</mat-label>
     <input matInput formControlName="email" type="email" required />
-    <mat-error *ngIf="email?.hasError('required') && (email?.dirty || email?.touched)">
+    <mat-error
+      *ngIf="email?.hasError('required') && (email?.dirty || email?.touched)"
+    >
       Email is required
     </mat-error>
-    <mat-error *ngIf="email?.hasError('email') && (email?.dirty || email?.touched)">
+    <mat-error
+      *ngIf="email?.hasError('email') && (email?.dirty || email?.touched)"
+    >
       Please enter a valid email address
     </mat-error>
   </mat-form-field>
-  
-  
+
   <mat-form-field appearance="outline" class="custom-form-field">
     <mat-label>Phone Number</mat-label>
     <span matPrefix>
       <img
         src="assets/palestine-flag.png"
         alt="Palestine"
-        style="height: 1rem; width: 1.6rem; margin-right: 0.5rem; margin-left: 0.7rem;"
+        style="
+          height: 1rem;
+          width: 1.6rem;
+          margin-right: 0.5rem;
+          margin-left: 0.7rem;
+        "
       />+970&nbsp;
     </span>
     <input
@@ -55,23 +81,35 @@
       maxlength="9"
       required
     />
-    <mat-error *ngIf="phoneNumber?.hasError('required') && (phoneNumber?.dirty || phoneNumber?.touched)">
+    <mat-error
+      *ngIf="
+        phoneNumber?.hasError('required') &&
+        (phoneNumber?.dirty || phoneNumber?.touched)
+      "
+    >
       Phone Number is required
     </mat-error>
-    <mat-error *ngIf="phoneNumber?.hasError('pattern') && (phoneNumber?.dirty || phoneNumber?.touched)">
+    <mat-error
+      *ngIf="
+        phoneNumber?.hasError('pattern') &&
+        (phoneNumber?.dirty || phoneNumber?.touched)
+      "
+    >
       Phone Number must be 9 digits
     </mat-error>
   </mat-form-field>
-  
 
   <mat-form-field appearance="outline" class="custom-form-field">
     <mat-label>Message</mat-label>
     <textarea matInput formControlName="message" required></textarea>
-    <mat-error *ngIf="message?.hasError('required') && (message?.dirty || message?.touched)">
+    <mat-error
+      *ngIf="
+        message?.hasError('required') && (message?.dirty || message?.touched)
+      "
+    >
       Message is required
     </mat-error>
   </mat-form-field>
-  
 
   <button type="submit">Send Message</button>
 

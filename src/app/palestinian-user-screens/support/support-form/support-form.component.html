@@ -1,4 +1,4 @@
-<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+<mat-expansion-panel style="width: 1100px; margin-bottom: 20px" expanded="true">
   <mat-expansion-panel-header>
     <div class="support-header">
       <img
@@ -27,12 +27,11 @@
           *ngIf="
             supportForm.get('supportArea')!.hasError('required') &&
             (supportForm.get('supportArea')!.touched ||
-             supportForm.get('supportArea')!.dirty)
+              supportForm.get('supportArea')!.dirty)
           "
         >
           Please select a support area.
         </mat-error>
-      
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="custom-form-field">
@@ -47,7 +46,7 @@
           *ngIf="
             supportForm.get('supportDescription')!.hasError('required') &&
             (supportForm.get('supportDescription')!.touched ||
-             supportForm.get('supportDescription')!.dirty)
+              supportForm.get('supportDescription')!.dirty)
           "
         >
           Support description is required.

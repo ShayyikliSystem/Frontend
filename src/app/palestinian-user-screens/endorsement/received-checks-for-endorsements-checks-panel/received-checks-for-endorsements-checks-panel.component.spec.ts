@@ -8,11 +8,12 @@ describe('ReceivedChecksForEndorsementsChecksPanelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReceivedChecksForEndorsementsChecksPanelComponent]
-    })
-    .compileComponents();
+      imports: [ReceivedChecksForEndorsementsChecksPanelComponent],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(ReceivedChecksForEndorsementsChecksPanelComponent);
+    fixture = TestBed.createComponent(
+      ReceivedChecksForEndorsementsChecksPanelComponent
+    );
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

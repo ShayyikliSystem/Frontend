@@ -8,9 +8,8 @@ describe('RequestIssueCheckFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RequestIssueCheckFormComponent]
-    })
-    .compileComponents();
+      imports: [RequestIssueCheckFormComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RequestIssueCheckFormComponent);
     component = fixture.componentInstance;

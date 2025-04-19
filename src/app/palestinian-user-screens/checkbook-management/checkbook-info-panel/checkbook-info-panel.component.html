@@ -1,4 +1,4 @@
-<mat-expansion-panel style="width: 1000px; margin-bottom: 20px" expanded="true">
+<mat-expansion-panel style="width: 1100px; margin-bottom: 20px" expanded="true">
   <mat-expansion-panel-header>
     <div class="security-header" style="margin-top: 10px">
       <img
@@ -15,15 +15,16 @@
     @if(classification == 'A' || classification == 'B' ) {
     @if(hasActiveCheckbook){
     <div class="checkbook-info">
-      <div class="container" style="width: 25%; height: 15vh">
+      <div class="container" style="width: 30%; height: 13vh">
         <div class="header">
           <img src="assets/number.png" alt="number" class="number" />
           <p>
-            Checkbook ID : <br /><strong>{{ checkbookId }}</strong>
+            Checkbook ID : <br />
+            <strong>{{ checkbookId }}</strong>
           </p>
         </div>
       </div>
-      <div class="container" style="width: 25%; height: 15vh">
+      <div class="container" style="width: 30%; height: 13vh">
         <div class="header">
           <img
             src="assets/quality-check.png"
@@ -31,11 +32,11 @@
             class="quality-check"
           />
           <p>
-            Issued Checks: <strong>{{ totalChecks }}</strong>
+            Issued Digital Checks: <strong>{{ totalChecks }}</strong>
           </p>
         </div>
       </div>
-      <div class="container" style="width: 25%; height: 15vh">
+      <div class="container" style="width: 30%; height: 13vh">
         <div class="header">
           <img
             src="assets/return-on-investment.png"
@@ -43,15 +44,15 @@
             class="return-on-investment"
           />
           <p>
-            Returned Checks: <strong>{{ returnedchecks }}</strong>
+            Returned Digital Checks: <strong>{{ returnedchecks }}</strong>
           </p>
         </div>
       </div>
-      <div class="container" style="width: 25%; height: 15vh">
+      <div class="container" style="width: 30%; height: 13vh">
         <div class="header">
           <img src="assets/remain.png" alt="remain" class="remain" />
           <p>
-            Remaining Checks: <strong>{{ ramainingChecks }}</strong>
+            Remaining Digital Checks: <strong>{{ ramainingChecks }}</strong>
           </p>
         </div>
       </div>

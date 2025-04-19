@@ -13,138 +13,120 @@ mat-expansion-panel {
   font-family: Georgia, serif;
 }
 
-.settings-container {
-  height: 85%;
-  width: 245%;
-  margin-top: 30px;
-  padding: 20px;
-  border-radius: 10px;
-  border-right: 2px;
-  border-bottom: 2px;
-  box-shadow: 5px 5px 10px #cdcdcd;
-}
-
-.settings-header {
-  align-items: center;
-  margin-bottom: 20px;
-}
-
 h3 {
   font-size: 2em;
   margin-bottom: 20px;
 }
 
-p {
-  font-size: 14px;
+.settings-container {
+  max-width: 600px;
+  margin: 30px auto;
+  border-radius: 8px;
 }
 
-.user {
+.settings-form {
+  padding: 0;
+  max-width: 100%;
+  margin: auto;
+}
+
+.custom-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.security-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.security-header .icon {
   margin-bottom: -10px;
+  margin-right: 10px;
   width: 40px;
   height: 40px;
-  margin-right: 10px;
   background-color: #eee;
   padding: 8px;
   border-radius: 8px;
 }
 
-.form-group {
+button[type="submit"],
+.reset-password button {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #2e3648;
+  color: #fff;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover,
+.reset-password button:hover {
+  background-color: #0a354f;
+}
+.reset-password {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
+
+  button {
+    padding: 10px;
+    background-color: #141d33;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 20%;
+  }
 }
 
-.form-group label {
-  font-size: 14px;
-  text-align: right;
-}
-
-.form-group input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-#email {
-  width: 40%;
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .phone-input-group {
   display: flex;
   align-items: center;
-  gap: 1px;
+  margin-bottom: 5px;
 }
 
 .phone-prefix {
   display: inline-flex;
   align-items: center;
-  background: #f3f3f3;
-  padding: 7px 10px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #1a202c;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-right: 5px;
+  margin-right: 4px;
+  padding: 0 10px;
+  height: 50px;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
 }
 
-.phone-prefix img {
-  height: 1rem;
-  width: 1.6rem;
-  margin-right: 0.5rem;
+.flag-icon {
+  width: 24px;
+  height: auto;
+  margin-right: 4px;
 }
 
-.error {
-  color: red;
-  font-size: 0.9em;
-  margin-top: 20px;
-}
-
-.btn-primary,
-.btn-secondary {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #141d33;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn-secondary {
-  padding: 8px 12px;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #0a354f;
-}
-
-.separator {
-  border: none;
-  height: 1px;
-  background-color: #e8e8e8;
-  margin: 20px 0;
-}
-
-.reset-password {
-  align-items: flex-start;
-}
-
-.note-label {
-  font-size: 14px;
-  margin-right: 10px;
-}
-
-.button-group {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: auto;
-}
-
-.btn-primary:disabled {
+button[type="submit"]:disabled {
   background-color: #b0b0b0;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+button[type="submit"]:not(:disabled):hover {
+  background-color: #0a354f;
+}
+
+mat-error {
+  font-size: 12px;
+  margin-top: -3px;
+  margin-bottom: 10px;
+}
+
+.btn-submit {
+  margin-top: 20px;
 }

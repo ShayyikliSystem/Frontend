@@ -8,9 +8,8 @@ describe('CheckbookInfoPanelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CheckbookInfoPanelComponent]
-    })
-    .compileComponents();
+      imports: [CheckbookInfoPanelComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CheckbookInfoPanelComponent);
     component = fixture.componentInstance;
