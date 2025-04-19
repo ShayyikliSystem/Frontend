@@ -226,7 +226,7 @@
           </mat-form-field>
         </div>
 
-        <div class="condition-form-group">
+        <!-- <div class="condition-form-group">
           <mat-checkbox
             name="terms"
             [(ngModel)]="signupData.agreedToTerms"
@@ -239,7 +239,7 @@
           <mat-error *ngIf="termsField.hasError('required') && (termsField.dirty || termsField.touched)">
     You must agree to the terms
   </mat-error>
-        </div>
+        </div> -->
         <button type="submit" class="btn-primary" [disabled]="signupForm.invalid || cardInUse">Create account</button>
 
         <div *ngIf="signupError" class="error">
