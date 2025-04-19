@@ -24,8 +24,6 @@ p {
 }
 
 .container {
-  height: fit-content;
-  min-width: 220px;
   padding: 20px;
   border-radius: 10px;
   border-right: 2px;
@@ -54,10 +52,12 @@ img {
   padding: 8px;
   border-radius: 8px;
 }
+
 .general-info {
   display: flex;
   gap: 30px;
 }
+
 .container {
   background-color: white;
 }
