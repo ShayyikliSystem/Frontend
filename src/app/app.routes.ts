@@ -24,6 +24,10 @@ import { SettingsComponent } from './palestinian-user-screens/settings/settings.
 import { TransactionComponent } from './palestinian-user-screens/transaction/transaction.component';
 import { SupportComponent } from './palestinian-user-screens/support/support.component';
 import { CheckbookManagementComponent } from './palestinian-user-screens/checkbook-management/checkbook-management.component';
+import { AdminLayoutComponent } from './admin-screens/admin-layout/admin-layout.component';
+import { ContactRequestsComponent } from './admin-screens/contact-requests/contact-requests.component';
+import { PalestinianManagementComponent } from './admin-screens/palestinian-management/palestinian-management.component';
+import { SupportMessagesComponent } from './admin-screens/support-messages/support-messages.component';
 
 export const routes: Routes = [
   { path: '', component: SplashScreenComponent },
@@ -47,7 +51,7 @@ export const routes: Routes = [
   {
     path: '',
     component: UserLayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RoleGuard],
     children: [
       { path: 'dashboard', component: DashboardScreenComponent },
       { path: 'checkbook-management', component: CheckbookManagementComponent },
@@ -62,12 +66,17 @@ export const routes: Routes = [
     data: { roles: ['ROLE_PALESTINIAN'] },
   },
   {
-    path: 'admin/dashboard',
-    component: DashboardAdminScreenComponent,
+    path: 'admin',
+    component: AdminLayoutComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['ROLE_ADMIN'] },
+    children: [
+      { path: 'dashboard', component: DashboardAdminScreenComponent },
+      { path: 'palestinian', component: PalestinianManagementComponent },
+      { path: 'support', component: SupportMessagesComponent },
+      { path: 'contacts', component: ContactRequestsComponent },
+    ],
   },
-
   { path: '**', component: PageNotFoundScreenComponent },
 ];
 

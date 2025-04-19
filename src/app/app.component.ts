@@ -1,9 +1,9 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, OnDestroy, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { LoadingComponentComponent } from './loading-component/loading-component.component';
 import { AuthService } from './services/auth.service';
-import { interval, Subscription, switchMap } from 'rxjs';
+import { filter, fromEvent, merge, Subject, switchMap, takeUntil } from 'rxjs';
 import { SessionTimeoutComponent } from './session-timeout/session-timeout.component';
 
 @Component({
@@ -18,34 +18,44 @@ import { SessionTimeoutComponent } from './session-timeout/session-timeout.compo
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit, OnDestroy {
-  title = 'Shayyikli-System';
-  showTimeout = false;
-  private tokenCheckSub!: Subscription;
+export class AppComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
+  showTimeout = signal(false);
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {
+    const hasToken = !!localStorage.getItem('authToken');
+    const hasRoles = !!localStorage.getItem('userRoles');
 
-  ngOnInit(): void {
-    if (
-      localStorage.getItem('authToken') &&
-      localStorage.getItem('userRoles')
-    ) {
-      this.tokenCheckSub = interval(1)
-        .pipe(switchMap(() => this.authService.validateToken()))
+    if (hasToken && hasRoles) {
+      const navigation$ = this.router.events.pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd)
+      );
+
+      const userEvents$ = merge(
+        fromEvent(document, 'click'),
+        fromEvent(document, 'keydown'),
+        fromEvent(document, 'mousemove')
+      );
+
+      merge(navigation$, userEvents$)
+        .pipe(
+          takeUntil(this.destroy$),
+          switchMap(() => this.authService.validateToken())
+        )
         .subscribe({
-          next: () => {},
+          next: () => console.log('Token is valid'),
           error: () => {
-            this.tokenCheckSub.unsubscribe();
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('userRoles');
+            console.log('Token expired');
+            localStorage.clear();
             sessionStorage.clear();
-            this.showTimeout = true;
+            this.showTimeout.set(true);
           },
         });
     }
   }
 
   ngOnDestroy(): void {
-    this.tokenCheckSub?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
