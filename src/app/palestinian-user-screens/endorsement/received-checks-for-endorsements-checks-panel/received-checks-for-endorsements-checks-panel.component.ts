@@ -20,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RequestEndorseCheckFormComponent } from '../request-endorse-check-form/request-endorse-check-form.component';
+import { AlertComponent } from '../../../alert/alert.component';
 
 @Component({
   selector: 'app-received-checks-for-endorsements-checks-panel',
@@ -38,6 +39,7 @@ import { RequestEndorseCheckFormComponent } from '../request-endorse-check-form/
     MatAutocompleteModule,
     MatTooltipModule,
     RequestEndorseCheckFormComponent,
+    AlertComponent,
   ],
   templateUrl: './received-checks-for-endorsements-checks-panel.component.html',
   styleUrl: './received-checks-for-endorsements-checks-panel.component.scss',
@@ -54,14 +56,19 @@ export class ReceivedChecksForEndorsementsChecksPanelComponent
   showFilter: boolean = false;
 
   selectedCheckId: string | null = null;
-
+  alertMessage: string = '';
+  alertType: 'success' | 'error' = 'success';
   constructor(
     private userService: UserService,
     private digitalCheckService: DigitalCheckService,
     private loadingService: LoadingService,
     private checkRefreshService: CheckRefreshService
   ) {}
-
+  handleAlert(event: { message: string; type: 'success' | 'error' }): void {
+    this.alertMessage = event.message;
+    this.alertType = event.type;
+    setTimeout(() => (this.alertMessage = ''), 5000);
+  }
   ngOnInit(): void {
     this.shayyikliAccountNumber = localStorage.getItem(
       'shayyikliAccountNumber'

@@ -1,3 +1,11 @@
+
+
+<app-alert
+  *ngIf="alertMessage"
+  [message]="alertMessage"
+  [type]="alertType"
+></app-alert>
+
 <mat-expansion-panel style="width: 1100px; margin-bottom: 20px" expanded="true">
   <mat-expansion-panel-header>
     <div class="security-header" style="margin-top: 10px">
@@ -113,6 +121,7 @@
             <td mat-cell *matCellDef="let tx">
               {{ formatDate(tx.transferDate) }}
             </td>
+            
           </ng-container>
           <ng-container matColumnDef="amount">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
@@ -165,5 +174,6 @@
   *ngIf="showSettlementForm"
   (cancelRequest)="closeSettlementForm()"
   (requestCompleted)="onSettlementCompleted()"
+  (alertMessageEvent)="handleAlert($event)">
 >
 </app-create-settlement-form>

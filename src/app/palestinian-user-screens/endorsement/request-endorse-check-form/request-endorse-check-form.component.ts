@@ -49,7 +49,10 @@ export class RequestEndorseCheckFormComponent implements OnInit {
   @Output() applyFilter = new EventEmitter<any>();
   @Output() cancelFilter = new EventEmitter<void>();
   @Output() closeForm = new EventEmitter<void>();
-
+  @Output() alertMessageEvent = new EventEmitter<{
+    message: string;
+    type: 'success' | 'error';
+  }>();
   allUsers: User[] = [];
   filteredBeneficiaries: User[] = [];
   beneficiaryControl = new FormControl<string | User>('');
@@ -150,6 +153,7 @@ export class RequestEndorseCheckFormComponent implements OnInit {
       if (!this.selectedBeneficiary) {
         this.beneficiaryControl.markAsTouched();
       }
+
       this.loadingService.loadingOff();
       return;
     }
@@ -163,14 +167,24 @@ export class RequestEndorseCheckFormComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.applyFilter.emit(res);
+
           this.checkRefreshService.refreshTables();
+          this.showAlert('Check endorsed successfully!', 'success'); 
           setTimeout(() => this.loadingService.loadingOff(), 400);
         },
-        error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
+        error: (err) => {
+          console.error('Endorse failed:', err);
+          this.showAlert('Failed to endorse the check. Please try again.', 'error'); 
+          setTimeout(() => this.loadingService.loadingOff(), 400);
+        },
       });
   }
 
   onCancel(): void {
     this.closeForm.emit();
+  }
+
+  showAlert(message: string, type: 'success' | 'error' = 'success'): void {
+    this.alertMessageEvent.emit({ message, type });
   }
 }

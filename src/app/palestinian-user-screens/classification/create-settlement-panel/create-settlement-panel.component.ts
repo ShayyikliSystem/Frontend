@@ -15,6 +15,7 @@ import { SettlementService } from '../../../services/settlement.service';
 import { CreateSettlementFormComponent } from '../create-settlement-form/create-settlement-form.component';
 import { CurrentSettlementFilterComponent } from '../current-settlement-filter/current-settlement-filter.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AlertComponent } from '../../../alert/alert.component';
 
 @Component({
   selector: 'app-create-settlement-panel',
@@ -33,6 +34,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CreateSettlementFormComponent,
     CurrentSettlementFilterComponent,
     MatTooltipModule,
+    AlertComponent,
   ],
   templateUrl: './create-settlement-panel.component.html',
   styleUrl: './create-settlement-panel.component.scss',
@@ -42,7 +44,8 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
 
   isSettlementActive = false;
   showSettlementForm = false;
-
+  alertMessage: string = '';
+  alertType: 'success' | 'error' = 'success';
   dynamicPageSizeOptions: number[] = [5, 10, 15, 20, 25];
 
   displayedColumns = [
@@ -77,6 +80,12 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
     this.initiatorDetailsDataSource.paginator = mp;
   }
 
+
+  handleAlert(event: { message: string; type: 'success' | 'error' }): void {
+    this.alertMessage = event.message;
+    this.alertType = event.type;
+    setTimeout(() => (this.alertMessage = ''), 5000);
+  }
   ngAfterViewInit(): void {
     this.initiatorDetailsDataSource.sort = this.sort;
     this.initiatorDetailsDataSource.paginator = this.paginator;
@@ -173,6 +182,14 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
     this.loadingService.loadingOn();
     this.settlementService.getSettlementDetailsForInitiator().subscribe({
       next: (data: any[]) => {
+        console.log('RAW API DATA:', JSON.stringify(data, null, 2));
+        // Check the first few items if array is large
+      if (data.length > 0) {
+        console.log('First item details:', {
+          transferDate: data[0].transferDate,
+          typeof: typeof data[0].transferDate
+        });
+      }
         data.sort((a, b) => {
           const aRejected = a.status === 'Rejected';
           const bRejected = b.status === 'Rejected';
@@ -200,17 +217,15 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
     });
   }
 
- // ⬇️ IssuedChecksPanelComponent
- formatDate(dateString: string): string {
-  if (!dateString) return 'Invalid Date';
-  const date = new Date(dateString);
 
-  // day‑month‑year, no time
+
+formatDate(dateString: string): string {
+  const dt = new Date(dateString);
   return new Intl.DateTimeFormat('en-GB', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
-  }).format(date);
+  }).format(dt);
 }
 
 

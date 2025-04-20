@@ -37,7 +37,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
   @Output() requestCompleted = new EventEmitter<void>();
   @Output() cancelRequest = new EventEmitter<void>();
-
+  @Output() alertMessageEvent = new EventEmitter<{
+    message: string;
+    type: 'success' | 'error';
+  }>();
   displayedColumns = [
     'checkId',
     'returnedDate',
@@ -153,6 +156,7 @@ export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
     this.loadingService.loadingOn();
     this.settlementService.submitSettlement().subscribe({
       next: () => {
+        this.showAlert('Settlement submitted successfully!', 'success');
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -160,6 +164,7 @@ export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
       },
       error: (err: HttpErrorResponse) => {
         console.error('Settlement failed:', err.error);
+        this.showAlert('Failed to submit settlement. Please try again.', 'error');
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -169,5 +174,9 @@ export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
 
   cancel(): void {
     this.cancelRequest.emit();
+  }
+
+  showAlert(message: string, type: 'success' | 'error' = 'success'): void {
+    this.alertMessageEvent.emit({ message, type });
   }
 }

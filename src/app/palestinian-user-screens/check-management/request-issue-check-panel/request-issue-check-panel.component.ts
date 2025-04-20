@@ -14,6 +14,7 @@ import { CheckbookService } from '../../../services/checkbook.service';
 import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
 import { CheckRefreshService } from '../../../services/check-refresh.service';
+import { AlertComponent } from '../../../alert/alert.component';
 
 @Component({
   selector: 'app-request-issue-check-panel',
@@ -30,6 +31,7 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
     MatDatepickerModule,
     MatExpansionModule,
     RequestIssueCheckFormComponent,
+    AlertComponent,
   ],
   templateUrl: './request-issue-check-panel.component.html',
   styleUrl: './request-issue-check-panel.component.scss',
@@ -39,7 +41,8 @@ export class RequestIssueCheckPanelComponent implements OnInit {
   hasActiveCheckbook: boolean = false;
 
   classification: any = 'N/A';
-
+  alertMessage: string = '';
+  alertType: 'success' | 'error' = 'success';
   constructor(
     private checkbookService: CheckbookService,
     private loadingService: LoadingService,
@@ -47,6 +50,12 @@ export class RequestIssueCheckPanelComponent implements OnInit {
     private checkRefreshService: CheckRefreshService
   ) {}
 
+
+  handleAlert(event: { message: string; type: 'success' | 'error' }): void {
+    this.alertMessage = event.message;
+    this.alertType = event.type;
+    setTimeout(() => (this.alertMessage = ''), 5000);
+  }
   ngOnInit(): void {
     this.loadingService.loadingOn();
     this.checkRefreshService.refresh$.subscribe(() => {

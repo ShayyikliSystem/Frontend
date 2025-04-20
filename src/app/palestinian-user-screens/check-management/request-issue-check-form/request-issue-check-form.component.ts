@@ -54,7 +54,10 @@ import { Observable, startWith, map } from 'rxjs';
 export class RequestIssueCheckFormComponent implements OnInit {
   @Output() applyFilter = new EventEmitter<any>();
   @Output() cancelFilter = new EventEmitter<void>();
-
+  @Output() alertMessageEvent = new EventEmitter<{
+    message: string;
+    type: 'success' | 'error';
+  }>();
   allUsers: User[] = [];
   filteredBeneficiaries: User[] = [];
   selectedBeneficiary: User | null = null;
@@ -190,11 +193,21 @@ export class RequestIssueCheckFormComponent implements OnInit {
     this.digitalCheckService.createDigitalCheck(newCheckRequest).subscribe({
       next: (response) => {
         this.applyFilter.emit(response);
+        this.showAlert(
+          'Check issued successfully!!',
+          'success'
+        );
+        
         this.checkRefreshService.refreshTables();
         setTimeout(() => this.loadingService.loadingOff(), 400);
       },
-      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
+      error: (err) => {                             
+        console.error('Error issuing check:', err);
+        this.showAlert('Failed to issue the check. Please try again.', 'error');
+        setTimeout(() => this.loadingService.loadingOff(), 400);
+      },
     });
+    
   }
 
   onCancel(): void {
@@ -203,5 +216,9 @@ export class RequestIssueCheckFormComponent implements OnInit {
 
   allowOnlyIntegers(event: KeyboardEvent): void {
     if (!/^[0-9]$/.test(event.key)) event.preventDefault();
+  }
+
+  showAlert(message: string, type: 'success' | 'error' = 'success'): void {
+    this.alertMessageEvent.emit({ message, type });
   }
 }
