@@ -112,16 +112,16 @@
             ></i>
           </button>
 
-          <mat-error
-            *ngIf="
-                passwordField.errors?.['required'] &&
-                (passwordField.dirty ||
-                 passwordField.touched ||
-                 loginForm.submitted)
-              "
-          >
-            Password is required
-          </mat-error>
+          <mat-error *ngIf="
+    passwordField.errors?.['required'] &&
+    (passwordField.dirty ||
+     passwordField.touched ||
+     loginForm.submitted)
+  ">
+  Password is required
+</mat-error>
+
+          
         </mat-form-field>
 
         <a routerLink="/forgot-password" class="forgot-password"
