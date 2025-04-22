@@ -23,6 +23,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { DigitalCheck } from '../../../models/digital.model';
 import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-request-endorse-check-form',
   standalone: true,
@@ -50,17 +51,13 @@ export class RequestEndorseCheckFormComponent implements OnInit {
   @Output() cancelFilter = new EventEmitter<void>();
   @Output() closeForm = new EventEmitter<void>();
 
- 
-  // Or keep both and decide which one to use
   allUsers: User[] = [];
   filteredBeneficiaries: User[] = [];
-  beneficiarySearchCtrl = new FormControl('');
+  beneficiaryInput: string = '';
   selectedBeneficiary: User | null = null;
   checkNumber: string = '';
   amount: number | null = null;
   transferDate: Date | null = null;
-
-
   endorseCheck: DigitalCheck | undefined;
 
   constructor(
@@ -89,34 +86,13 @@ export class RequestEndorseCheckFormComponent implements OnInit {
       },
     });
 
-    this.beneficiarySearchCtrl.valueChanges.subscribe(
-      (searchTerm: string | null) => {
-        this.filteredBeneficiaries = this.filterUsers(
-          searchTerm || '',
-          this.allUsers
-        );
-      }
-    );
-
     this.loadingService.loadingOn();
-    this.checkbookService.getRandomInactiveCheck().subscribe({
-      next: (data: any) => {
-        this.checkNumber = data;
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
-      error: (error) => {
-        console.error('Error fetching random check number', error);
-        setTimeout(() => {
-          this.loadingService.loadingOff();
-        }, 400);
-      },
-    });
-
     this.digitalCheckService.readCheck(this.checkId).subscribe({
       next: (response) => {
         this.endorseCheck = response;
+        this.checkNumber = response.checkId;
+        this.amount = response.amount;
+        this.transferDate = new Date(response.transferDate);
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -130,44 +106,56 @@ export class RequestEndorseCheckFormComponent implements OnInit {
     });
   }
 
-  filterUsers(search: string, users: User[]): User[] {
+  private filterUsers(search: string): User[] {
     if (!search) {
-      return users;
+      return this.allUsers;
     }
     const lowerSearch = search.toLowerCase();
-    return users.filter(
+    return this.allUsers.filter(
       (user) =>
         user.firstName.toLowerCase().includes(lowerSearch) ||
         user.lastName.toLowerCase().includes(lowerSearch) ||
-        user.shayyikliAccountNumber
-          .toString()
-          .toLowerCase()
-          .includes(lowerSearch)
+        user.shayyikliAccountNumber.toString().toLowerCase().includes(lowerSearch) ||
+        `${user.firstName} ${user.lastName}`.toLowerCase().includes(lowerSearch)
     );
   }
 
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  onBeneficiaryInput(): void {
+    this.filteredBeneficiaries = this.filterUsers(this.beneficiaryInput);
+    
+    // Try to find an exact match
+    const exactMatch = this.allUsers.find(user => 
+      `${user.firstName} ${user.lastName}`.toLowerCase() === this.beneficiaryInput.toLowerCase() ||
+      user.shayyikliAccountNumber.toString() === this.beneficiaryInput
+    );
+    
+    this.selectedBeneficiary = exactMatch || null;
+  }
+
+  displayBeneficiary(user: User): string {
+    return user ? `${user.firstName} ${user.lastName} (${user.shayyikliAccountNumber})` : '';
+  }
+
+  clearBeneficiary(): void {
+    this.beneficiaryInput = '';
+    this.selectedBeneficiary = null;
+    this.filteredBeneficiaries = this.allUsers;
   }
 
   onSubmit(form: NgForm): void {
-    if (form.invalid) {
-      Object.values(form.controls).forEach((control) =>
-        control.markAsTouched()
-      );
+    if (form.invalid || !this.selectedBeneficiary) {
+      Object.values(form.controls).forEach(control => control.markAsTouched());
+      if (!this.selectedBeneficiary) {
+        form.controls['beneficiary'].setErrors({ required: true });
+      }
       this.loadingService.loadingOff();
       return;
     }
 
     this.loadingService.loadingOn();
-    this.digitalCheckService;
     this.digitalCheckService
       .endorseCheck(this.checkId, {
-        newBeneficiary:
-          this.selectedBeneficiary!.shayyikliAccountNumber.toString(),
+        newBeneficiary: this.selectedBeneficiary.shayyikliAccountNumber.toString(),
       })
       .subscribe({
         next: (response) => {
@@ -178,7 +166,7 @@ export class RequestEndorseCheckFormComponent implements OnInit {
           }, 400);
         },
         error: (error) => {
-          console.error('Error creating digital check:', error);
+          console.error('Error endorsing check:', error);
           setTimeout(() => {
             this.loadingService.loadingOff();
           }, 400);
@@ -186,16 +174,7 @@ export class RequestEndorseCheckFormComponent implements OnInit {
       });
   }
 
-  // onCancel(): void {
-  //   console.log('Cancel clicked'); // ✅ Confirm this shows in browser console
-  //   this.cancelFilter.emit();
-  // }
- // Then either:
- onCancel(): void {
-  this.closeForm.emit();
+  onCancel(): void {
+    this.closeForm.emit();
+  }
 }
-
-}
-
-  
-

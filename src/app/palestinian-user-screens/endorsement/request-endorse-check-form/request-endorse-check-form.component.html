@@ -21,42 +21,36 @@
           />
         </mat-form-field>
 
-        <!-- Beneficiary Select + Clear X Button -->
+        <!-- Beneficiary Input with Autocomplete and Clear Button -->
         <mat-form-field appearance="outline">
           <mat-label>Beneficiary</mat-label>
-          <mat-select
+          <input
+            matInput
+            type="text"
             name="beneficiary"
-            [(ngModel)]="selectedBeneficiary"
+            [(ngModel)]="beneficiaryInput"
             #beneficiaryField="ngModel"
+            [matAutocomplete]="auto"
             required
-            #beneficiarySelect
-          >
-            <mat-option>
-              <input
-                matInput
-                placeholder="Search beneficiary"
-                [formControl]="beneficiarySearchCtrl"
-                required
-              />
-            </mat-option>
+            (input)="onBeneficiaryInput()"
+          />
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayBeneficiary">
             <mat-option
               *ngFor="let user of filteredBeneficiaries"
               [value]="user"
             >
               {{ user.firstName }} {{ user.lastName }} ({{ user.shayyikliAccountNumber }})
             </mat-option>
-          </mat-select>
-
-          <!-- Clear button next to the dropdown -->
-          <button 
-            mat-icon-button 
-            matSuffix 
-            *ngIf="selectedBeneficiary && !beneficiarySelect.panelOpen" 
-            (click)="selectedBeneficiary = null" 
-            class="clear-btn">
+          </mat-autocomplete>
+          <button
+            mat-icon-button
+            matSuffix
+            *ngIf="beneficiaryInput"
+            (click)="clearBeneficiary()"
+            class="clear-btn"
+          >
             <mat-icon>close</mat-icon>
           </button>
-
           <mat-error
             *ngIf="beneficiaryField.invalid && (beneficiaryField.touched || beneficiaryField.dirty)"
           >
@@ -118,7 +112,6 @@
 
       <div class="button-group">
         <button class="btn-secondary" type="button" (click)="onCancel()">Cancel</button>
-
         <button class="btn-primary" type="submit">Apply</button>
       </div>
     </div>
