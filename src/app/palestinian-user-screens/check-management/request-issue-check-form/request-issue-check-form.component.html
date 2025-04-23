@@ -47,13 +47,11 @@
             <mat-icon>close</mat-icon>
           </button>
           <mat-error
-            *ngIf="
-              !selectedBeneficiary &&
-              (beneficiaryControl.touched || beneficiaryControl.dirty)
-            "
-          >
-            Beneficiary is required
-          </mat-error>
+          *ngIf="beneficiaryControl.hasError('required') && (beneficiaryControl.touched || beneficiaryControl.dirty)"
+        >
+          Beneficiary is required
+        </mat-error>
+        
         </mat-form-field>
       </div>
 

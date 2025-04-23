@@ -71,15 +71,20 @@ import { AgreeTermsPolicyRequestComponent } from './agree-terms-policy-request/a
   }
 
   resetAccountField(form: NgForm) {
-    this.loginData.shayyikliAccountNumberOrUsername = '';
-    this.loginData.password = '';
-    Object.values(form.controls).forEach(c => {
-      c.setErrors(null);
-      c.markAsPristine();
-      c.markAsUntouched();
-    });
+  
+    const currentRole = this.loginData.role;
+  
+ 
+    this.loginData = {
+      role: currentRole,
+      shayyikliAccountNumberOrUsername: '',
+      password: ''
+    };
+  
+    
+    form.resetForm({ role: currentRole });
   }
-
+  
   onSubmit(form: NgForm) {
     this.loadingService.loadingOn();
     if (form.invalid) {

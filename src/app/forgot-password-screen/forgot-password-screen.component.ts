@@ -29,8 +29,11 @@ export class ForgotPasswordScreenComponent {
     private loadingService: LoadingService
   ) {}
 
+  
   onSubmit(form: NgForm): void {
     this.loadingService.loadingOn();
+
+  
     if (form.invalid) {
       Object.values(form.controls).forEach((control) =>
         control.markAsTouched()
