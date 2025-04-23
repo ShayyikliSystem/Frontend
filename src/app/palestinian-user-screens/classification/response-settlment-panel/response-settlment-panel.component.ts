@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { LoadingService } from '../../../services/loading.service';
 import { SettlementService } from '../../../services/settlement.service';
 import { RequestedSettlementFilterComponent } from '../requested-settlement-filter/requested-settlement-filter.component';
+import { AlertComponent } from '../../../alert/alert.component';
 
 @Component({
   selector: 'app-response-settlment-panel',
@@ -32,6 +33,7 @@ import { RequestedSettlementFilterComponent } from '../requested-settlement-filt
     MatAutocompleteModule,
     MatTooltipModule,
     RequestedSettlementFilterComponent,
+    AlertComponent,
   ],
   templateUrl: './response-settlment-panel.component.html',
   styleUrl: './response-settlment-panel.component.scss',
@@ -54,7 +56,8 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
   dynamicPageSizeOptions: number[] = [5, 10, 15];
   classification: any = 'N/A';
   hasActiveCheckbook: boolean = false;
-
+  alertMessage: string = '';
+  alertType: 'success' | 'error' = 'success';
   @ViewChild(MatSort) set sort(ms: MatSort) {
     this.beneficiaryRequestsDataSource.sort = ms;
     if (this.beneficiaryRequestsDataSource.paginator) {
@@ -70,7 +73,11 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
     private settlementService: SettlementService,
     private loadingService: LoadingService
   ) {}
-
+  handleAlert(event: { message: string; type: 'success' | 'error' }): void {
+    this.alertMessage = event.message;
+    this.alertType = event.type;
+    setTimeout(() => (this.alertMessage = ''), 5000);
+  }
   ngOnInit(): void {
     this.loadRequests();
   }
@@ -109,9 +116,28 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
     this.settlementService
       .respondToSettlement({ checkId, accepted })
       .subscribe({
-        next: () => this.loadRequests(),
-        error: (err) => console.error('Failed to send response', err),
-        complete: () => this.loadingService.loadingOff(),
+        next: () => {
+          
+          this.loadRequests();
+  
+          this.handleAlert({
+            message: accepted
+              ? 'Settlement request accepted successfully!'
+              : 'Settlement request rejected successfully!',
+            type: 'success',
+          }); setTimeout(() => this.loadingService.loadingOff(), 400);
+        },
+  
+        error: (err) => {
+          console.error('Failed to send response', err);
+  
+          this.handleAlert({
+            message: 'Failed to respond to settlement. Please try again.',
+            type: 'error',
+          });
+  
+          setTimeout(() => this.loadingService.loadingOff(), 400);
+        },
       });
   }
 

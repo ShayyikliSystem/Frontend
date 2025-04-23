@@ -55,12 +55,10 @@ import { Validators } from '@angular/forms';
 export class RequestIssueCheckFormComponent implements OnInit {
   @Output() applyFilter = new EventEmitter<any>();
   @Output() cancelFilter = new EventEmitter<void>();
- 
-
-
-
-
-
+  @Output() alertMessageEvent = new EventEmitter<{
+    message: string;
+    type: 'success' | 'error';
+  }>();
   allUsers: User[] = [];
   filteredBeneficiaries: User[] = [];
   selectedBeneficiary: User | null = null;
@@ -174,7 +172,6 @@ export class RequestIssueCheckFormComponent implements OnInit {
         return;
       }
     }
-    
 
     if (form.invalid || !this.selectedBeneficiary) {
       Object.values(form.controls).forEach((c) => c.markAsTouched());
@@ -197,10 +194,16 @@ export class RequestIssueCheckFormComponent implements OnInit {
     this.digitalCheckService.createDigitalCheck(newCheckRequest).subscribe({
       next: (response) => {
         this.applyFilter.emit(response);
+        this.showAlert('Check issued successfully!!', 'success');
+
         this.checkRefreshService.refreshTables();
         setTimeout(() => this.loadingService.loadingOff(), 400);
       },
-      error: () => setTimeout(() => this.loadingService.loadingOff(), 400),
+      error: (err) => {
+        console.error('Error issuing check:', err);
+        this.showAlert('Failed to issue the check. Please try again.', 'error');
+        setTimeout(() => this.loadingService.loadingOff(), 400);
+      },
     });
   }
 
@@ -208,21 +211,22 @@ export class RequestIssueCheckFormComponent implements OnInit {
     this.cancelFilter.emit();
   }
 
- 
-allowOnlyIntegers(event: KeyboardEvent) {
-  const char = event.key;
-  const isDigit = /^[0-9]$/.test(char);
-  const input = event.target as HTMLInputElement;
+  allowOnlyIntegers(event: KeyboardEvent) {
+    const char = event.key;
+    const isDigit = /^[0-9]$/.test(char);
+    const input = event.target as HTMLInputElement;
 
+    if (!isDigit) {
+      event.preventDefault();
+      return;
+    }
 
-  if (!isDigit) {
-    event.preventDefault();
-    return;
+    if (input.value.length >= 6) {
+      event.preventDefault();
+    }
   }
 
-  if (input.value.length >= 6) {
-    event.preventDefault();
+  showAlert(message: string, type: 'success' | 'error' = 'success'): void {
+    this.alertMessageEvent.emit({ message, type });
   }
-}
-
 }
