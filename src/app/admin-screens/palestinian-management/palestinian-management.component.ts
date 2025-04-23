@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './palestinian-management.component.html',
-  styleUrl: './palestinian-management.component.scss'
+  styleUrl: './palestinian-management.component.scss',
 })
-export class PalestinianManagementComponent {
-
-}
+export class PalestinianManagementComponent {}

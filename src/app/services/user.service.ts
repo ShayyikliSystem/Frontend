@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface CurrentUser {
-  shayyikliAccountNumber: number;
-  // add more fields here if needed
-}
+import { CurrentUser } from '../models/currentUser.model';
 
 @Injectable({
   providedIn: 'root',
@@ -36,10 +32,9 @@ export class UserService {
   }
 
   isAllowedCheckManagement(): Observable<any> {
-    return this.http.get<any>(
-      `${this.baseUrl}/check-management/allowed`,
-      { headers: this.getAuthHeaders() }
-    );
+    return this.http.get<any>(`${this.baseUrl}/check-management/allowed`, {
+      headers: this.getAuthHeaders(),
+    });
   }
 
   getAllUsers(): Observable<any> {
@@ -67,58 +62,54 @@ export class UserService {
   }
 
   getUserDetailsByAccountNumber(accountNumber: number): Observable<any> {
-    const params = new HttpParams().set('accountNumber', accountNumber.toString());
+    const params = new HttpParams().set(
+      'accountNumber',
+      accountNumber.toString()
+    );
     return this.http.get<any>(`${this.baseUrl}/details-by-account-number`, {
       headers: this.getAuthHeaders(),
       params,
     });
   }
 
-  /** Record that the user agreed to terms */
   agreeToTerms(accountNumber: number): Observable<string> {
-    const params = new HttpParams().set('accountNumber', accountNumber.toString());
-    return this.http.post(
-      `${this.baseUrl}/agree`,
-      null,
-      {
-        headers: this.getAuthHeaders(),
-        params,
-        responseType: 'text'    // ← HERE: treat server response as text
-      }
+    const params = new HttpParams().set(
+      'accountNumber',
+      accountNumber.toString()
     );
+    return this.http.post(`${this.baseUrl}/agree`, null, {
+      headers: this.getAuthHeaders(),
+      params,
+      responseType: 'text',
+    });
   }
 
-  /** Fetch whether the user has already agreed */
   getAgreeStatus(accountNumber: number): Observable<boolean> {
-    const params = new HttpParams().set('accountNumber', accountNumber.toString());
-    return this.http.get<boolean>(
-      `${this.baseUrl}/agree-status`,
-      { headers: this.getAuthHeaders(), params }
+    const params = new HttpParams().set(
+      'accountNumber',
+      accountNumber.toString()
     );
+    return this.http.get<boolean>(`${this.baseUrl}/agree-status`, {
+      headers: this.getAuthHeaders(),
+      params,
+    });
   }
 
-  /** Fetch the logged‑in user’s info */
   getCurrentUser(): Observable<CurrentUser> {
-    return this.http.get<CurrentUser>(
-      `${this.baseUrl}/me`,
+    return this.http.get<CurrentUser>(`${this.baseUrl}/me`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  getAllUsersExcludingBeneficiaryAndIssuer(
+    beneficiaryAccountNumber: number,
+    issuerAccountNumber: number
+  ): Observable<any> {
+    const body = { beneficiaryAccountNumber, issuerAccountNumber };
+    return this.http.post<any>(
+      `${this.baseUrl}/all/exclude-beneficiary-issuer`,
+      body,
       { headers: this.getAuthHeaders() }
     );
   }
-
-
-  /**
- * Get all users except the current beneficiary and the issuer.
- */
-getAllUsersExcludingBeneficiaryAndIssuer(
-  beneficiaryAccountNumber: number,
-  issuerAccountNumber: number
-): Observable<any> {
-  const body = { beneficiaryAccountNumber, issuerAccountNumber };
-  return this.http.post<any>(
-    `${this.baseUrl}/all/exclude-beneficiary-issuer`,
-    body,
-    { headers: this.getAuthHeaders() }
-  );
-}
-
 }

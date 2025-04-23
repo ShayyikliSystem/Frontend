@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './support-messages.component.html',
-  styleUrl: './support-messages.component.scss'
+  styleUrl: './support-messages.component.scss',
 })
-export class SupportMessagesComponent {
-
-}
+export class SupportMessagesComponent {}

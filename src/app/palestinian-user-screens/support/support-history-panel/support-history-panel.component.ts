@@ -198,7 +198,6 @@ export class SupportHistoryPanelComponent {
     if (!dateString) return 'Invalid Date';
     const date = new Date(dateString);
   
-    // day‑month‑year, no time
     return new Intl.DateTimeFormat('en-GB', {
       day: '2-digit',
       month: 'short',

@@ -369,19 +369,16 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
- // ⬇️ IssuedChecksPanelComponent
- formatDate(dateString: string): string {
-  if (!dateString) return 'Invalid Date';
-  const date = new Date(dateString);
+  formatDate(dateString: string): string {
+    if (!dateString) return 'Invalid Date';
+    const date = new Date(dateString);
 
-  // day‑month‑year, no time
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(date);
-}
-
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(date);
+  }
 
   hasActiveFilter(): boolean {
     return !!(

@@ -14,8 +14,6 @@ import { DashboardScreenComponent } from './palestinian-user-screens/dashboard-s
 import { AuthGuard } from './services/auth.guard';
 import { DashboardAdminScreenComponent } from './admin-screens/dashboard-admin-screen/dashboard-admin-screen.component';
 import { RoleGuard } from './services/role.guard';
-import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
-import { TermsConditionsComponent } from './terms-conditions/terms-conditions.component';
 import { CheckManagementComponent } from './palestinian-user-screens/check-management/check-management.component';
 import { ClassificationComponent } from './palestinian-user-screens/classification/classification.component';
 import { EndorsementComponent } from './palestinian-user-screens/endorsement/endorsement.component';
@@ -45,9 +43,6 @@ export const routes: Routes = [
     path: 'authorization-failed',
     component: AuthorizationFailedScreenComponent,
   },
-  { path: 'terms', component: TermsConditionsComponent },
-  { path: 'privacy', component: PrivacyPolicyComponent },
-
   {
     path: '',
     component: UserLayoutComponent,

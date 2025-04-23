@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { Observable, tap } from 'rxjs';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-loading-component',

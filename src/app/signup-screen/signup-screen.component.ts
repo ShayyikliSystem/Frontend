@@ -54,6 +54,7 @@ export class SignupScreenComponent {
   submitted: boolean = false;
   signupError: string = '';
   cardInUse = false;
+
   public signupData: SignupRequest = {
     firstName: '',
     lastName: '',
@@ -80,6 +81,7 @@ export class SignupScreenComponent {
     this.date.setValue(selectedDate);
     datepicker.close();
   }
+
   onCardBlur(): void {
     const raw = this.signupData.cardNumber.replace(/\s+/g, '');
     if (raw.length === 16) {
@@ -90,7 +92,16 @@ export class SignupScreenComponent {
       this.cardInUse = false;
     }
   }
+
   public onCreateAccount(form: NgForm): void {
+    if (form.invalid) {
+      Object.values(form.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+      this.signupError = 'Please fill out all required fields.';
+      return;
+    }
+
     if (this.cardInUse) {
       this.signupError = 'Card number already has an account in Shayyikli!';
       setTimeout(() => {
@@ -119,14 +130,6 @@ export class SignupScreenComponent {
       !this.signupData.securityCode
     ) {
       this.signupError = 'Please fill out all required fields.';
-      setTimeout(() => {
-        this.loadingService.loadingOff();
-      }, 400);
-      return;
-    }
-
-    if (!this.signupData.agreedToTerms) {
-      this.signupError = 'You must agree to the terms.';
       setTimeout(() => {
         this.loadingService.loadingOff();
       }, 400);

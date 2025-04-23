@@ -19,7 +19,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { IssuedCheckFilterComponent } from '../../check-management/issued-check-filter/issued-check-filter.component';
 import { IncomingEndorsementsChecksFilterComponent } from '../incoming-endorsements-checks-filter/incoming-endorsements-checks-filter.component';
 
 @Component({
@@ -384,19 +383,16 @@ export class IncomingEndorsementsChecksPanelComponent
     }
   }
 
- // ⬇️ IssuedChecksPanelComponent
- formatDate(dateString: string): string {
-  if (!dateString) return 'Invalid Date';
-  const date = new Date(dateString);
+  formatDate(dateString: string): string {
+    if (!dateString) return 'Invalid Date';
+    const date = new Date(dateString);
 
-  // day‑month‑year, no time
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(date);
-}
-
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(date);
+  }
 
   hasActiveFilter(): boolean {
     return !!(
