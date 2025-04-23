@@ -4,6 +4,7 @@ import {
   FormsModule,
   NgForm,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { CheckRefreshService } from '../../../services/check-refresh.service';
 import { DigitalCheckService } from '../../../services/digital-check.service';
@@ -55,7 +56,8 @@ export class RequestEndorseCheckFormComponent implements OnInit {
   }>();
   allUsers: User[] = [];
   filteredBeneficiaries: User[] = [];
-  beneficiaryControl = new FormControl<string | User>('');
+  beneficiaryControl = new FormControl<string | User>('', Validators.required);
+
   selectedBeneficiary: User | null = null;
 
   endorseCheck?: DigitalCheck;
