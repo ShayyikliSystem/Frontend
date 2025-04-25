@@ -48,9 +48,6 @@ export class LoginScreenComponent {
     locationName: '',
     latitude: '',
     longitude: ''
-    // private String locationName;
-    // private Double latitude;
-    // private Double longitude;
   };
 
   constructor(
@@ -84,10 +81,6 @@ export class LoginScreenComponent {
       latitude: '',
       longitude: ''
     };
-    // private String password;
-    // private String locationName;
-    // private Double latitude;
-    // private Double longitude;
 
     form.resetForm({ role: currentRole });
     this.loginData.shayyikliAccountNumberOrUsername = '';
