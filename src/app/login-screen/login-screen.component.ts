@@ -45,6 +45,12 @@ export class LoginScreenComponent {
     role: 'user',
     shayyikliAccountNumberOrUsername: '',
     password: '',
+    locationName: '',
+    latitude: '',
+    longitude: ''
+    // private String locationName;
+    // private Double latitude;
+    // private Double longitude;
   };
 
   constructor(
@@ -52,7 +58,7 @@ export class LoginScreenComponent {
     private userService: UserService,
     private router: Router,
     private loadingService: LoadingService
-  ) {}
+  ) { }
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
@@ -74,7 +80,14 @@ export class LoginScreenComponent {
       role: currentRole,
       shayyikliAccountNumberOrUsername: '',
       password: '',
+      locationName: '',
+      latitude: '',
+      longitude: ''
     };
+    // private String password;
+    // private String locationName;
+    // private Double latitude;
+    // private Double longitude;
 
     form.resetForm({ role: currentRole });
     this.loginData.shayyikliAccountNumberOrUsername = '';
@@ -88,16 +101,81 @@ export class LoginScreenComponent {
 
   onSubmit(form: NgForm) {
     this.loadingService.loadingOn();
+
     if (form.invalid) {
       this.incompleteFormError = 'Check all the required fields.';
       Object.values(form.controls).forEach((c) => c.markAsTouched());
       setTimeout(() => this.loadingService.loadingOff(), 400);
       return;
     }
+
     this.incompleteFormError = '';
     this.loginError = '';
 
-    this.authService.login(this.loginData).subscribe({
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          console.log(`Latitude: ${latitude}`);
+          console.log(`Longitude: ${longitude}`);
+
+          // 👉 Fetch human-readable location (city/region)
+          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+            .then(response => response.json())
+            .then(data => {
+              const address = data.address;
+              const countryCode = (address.country_code || '').toUpperCase(); // → "PS"
+              const region = address.region || address.state || '';
+              const area = address.city ||address.county ||  address.town || address.village || '';
+
+              const a=address
+              // Join the parts, filter out empty strings
+              const locationName = [countryCode, region, area].filter(part => part).join(', ');
+
+              console.log('✅ User Location Area:');
+              console.log(address);
+              console.log(`Location: ${locationName}`);
+              console.log(`Country: ${address.country}`);
+
+              // 👉 NOW BUILD THE LOGIN REQUEST OBJECT
+              const loginRequest = {
+                ...this.loginData,
+                latitude,
+                longitude,
+                locationName, // 👈 add locationName from reverse geocoding
+              };
+
+              // 👉 NOW submit login
+              this.submitLogin(loginRequest);
+            })
+            .catch(error => {
+              console.error('❌ Error fetching location details:', error);
+
+              // If reverse geocoding fails, proceed with basic lat/lon
+              const loginRequest = {
+                ...this.loginData,
+                latitude,
+                longitude,
+              };
+              this.submitLogin(loginRequest);
+            });
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          // If user blocks location, login without location info
+          this.submitLogin(this.loginData);
+        }
+      );
+    } else {
+      console.error('Geolocation not supported');
+      this.submitLogin(this.loginData);
+    }
+  }
+
+  private submitLogin(loginRequest: any) {
+    this.authService.login(loginRequest).subscribe({
       next: (response: JwtResponse) => {
         if (response.roles.includes('ROLE_ADMIN')) {
           this.router.navigate(['/admin/dashboard']);
