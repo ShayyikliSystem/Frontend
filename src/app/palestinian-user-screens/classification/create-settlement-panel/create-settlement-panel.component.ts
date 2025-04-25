@@ -218,6 +218,9 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
 
   formatDate(dateString: string): string {
     const dt = new Date(dateString);
+    if (!dateString) return 'Invalid Date';
+    const date = new Date(dateString);
+
     return new Intl.DateTimeFormat('en-GB', {
       day: '2-digit',
       month: 'short',
