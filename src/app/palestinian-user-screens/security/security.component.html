@@ -123,9 +123,9 @@
             <td mat-cell *matCellDef="let log">{{ log.date }}</td>
           </ng-container>
 
-          <ng-container matColumnDef="ip_address">
-            <th mat-header-cell *matHeaderCellDef>IP Address</th>
-            <td mat-cell *matCellDef="let log">{{ log.ip_address }}</td>
+          <ng-container matColumnDef="location_name">
+            <th mat-header-cell *matHeaderCellDef>location</th>
+            <td mat-cell *matCellDef="let log">{{ log.location_name }}</td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

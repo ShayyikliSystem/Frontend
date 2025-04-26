@@ -48,7 +48,7 @@ export class SecurityComponent implements OnInit, AfterViewInit {
   alertMessage = '';
   alertType: 'success' | 'error' = 'success';
 
-  displayedColumns: string[] = ['status', 'date', 'ip_address'];
+  displayedColumns: string[] = ['status', 'date', 'location_name'];
   dataSource = new MatTableDataSource<any>();
   loginHistory: any[] = [];
 
