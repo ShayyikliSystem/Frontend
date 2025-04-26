@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SettleChecksFilterComponent } from '../settle-checks-filter/settle-checks-filter.component';
 import {
   DigitalCheckExtended,
   DigitalCheck,
@@ -19,10 +20,9 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
 import { DigitalCheckService } from '../../../services/digital-check.service';
 import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
-import { ReturnedChecksFilterComponent } from '../returned-checks-filter/returned-checks-filter.component';
 
 @Component({
-  selector: 'app-returned-checks-panel',
+  selector: 'app-settle-checks-panel',
   standalone: true,
   imports: [
     CommonModule,
@@ -36,17 +36,17 @@ import { ReturnedChecksFilterComponent } from '../returned-checks-filter/returne
     MatDatepickerModule,
     MatExpansionModule,
     MatAutocompleteModule,
-    ReturnedChecksFilterComponent,
+    SettleChecksFilterComponent,
     MatTooltipModule,
   ],
-  templateUrl: './returned-checks-panel.component.html',
-  styleUrl: './returned-checks-panel.component.scss',
+  templateUrl: './settle-checks-panel.component.html',
+  styleUrl: './settle-checks-panel.component.scss',
 })
-export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
-  returnedCheckFilterStatus: string = '';
-  returnedCheckFilterAmount: number | null = null;
-  returnedCheckFilterIssuer: string = '';
-  returnedCheckFilterBeneficiary: string = '';
+export class SettleChecksPanelComponent implements OnInit, AfterViewInit {
+  settleCheckFilterStatus: string = '';
+  settleCheckFilterAmount: number | null = null;
+  settleCheckFilterIssuer: string = '';
+  settleCheckFilterBeneficiary: string = '';
   userFullName: string = 'N/A';
 
   showFilter: boolean = false;
@@ -63,10 +63,10 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
       'shayyikliAccountNumber'
     );
 
-    this.fetchReturnedChecks();
+    this.fetchSettleChecks();
 
     this.checkRefreshService.refresh$.subscribe(() => {
-      this.fetchReturnedChecks();
+      this.fetchSettleChecks();
       this.updatePageSizeOptions();
       this.resetPaginator();
     });
@@ -90,9 +90,7 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
       });
     }
 
-    this.fetchReturnedChecks();
-
-    this.returnedCheckDataSource.filterPredicate = (
+    this.settleCheckDataSource.filterPredicate = (
       data: DigitalCheckExtended,
       filter: string
     ): boolean => {
@@ -109,7 +107,7 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
       return dateMatch;
     };
 
-    this.returnedCheckDataSource.filterPredicate = (
+    this.settleCheckDataSource.filterPredicate = (
       data: DigitalCheckExtended,
       filter: string
     ): boolean => {
@@ -168,34 +166,34 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
   }
 
   clearFilter(): void {
-    this.returnedCheckFilterDate = null;
-    this.returnedCheckFilterAmount = null;
-    this.returnedCheckFilterStatus = '';
-    this.returnedCheckFilterIssuer = '';
-    this.returnedCheckFilterBeneficiary = '';
-    this.applyReturnedCheckFilter();
+    this.settleCheckFilterDate = null;
+    this.settleCheckFilterAmount = null;
+    this.settleCheckFilterStatus = '';
+    this.settleCheckFilterIssuer = '';
+    this.settleCheckFilterBeneficiary = '';
+    this.applySettleCheckFilter();
   }
 
   onFilterApply(filter: any): void {
-    this.returnedCheckFilterDate = filter.date;
-    this.returnedCheckFilterAmount = filter.amount;
-    this.returnedCheckFilterStatus = filter.status;
-    this.returnedCheckFilterIssuer =
+    this.settleCheckFilterDate = filter.date;
+    this.settleCheckFilterAmount = filter.amount;
+    this.settleCheckFilterStatus = filter.status;
+    this.settleCheckFilterIssuer =
       typeof filter.issuer === 'object' && filter.issuer
         ? `${filter.issuer.firstName} ${filter.issuer.lastName}`
         : filter.issuer;
-    this.returnedCheckFilterBeneficiary = filter.beneficiary;
-    this.applyReturnedCheckFilter();
+    this.settleCheckFilterBeneficiary = filter.beneficiary;
+    this.applySettleCheckFilter();
     this.closeFilter();
   }
 
-  statusOptions: string[] = ['Active', 'Transfer', 'Settle'];
+  statusOptions: string[] = ['Active', 'Transfer', 'Return'];
 
   allUsers: any[] = [];
   filteredIssuers: any[] = [];
   filteredBeneficiaries: any[] = [];
 
-  returnedCheckDisplayedColumns: string[] = [
+  settleCheckDisplayedColumns: string[] = [
     'checkId',
     'issuerName',
     'beneficiaryName',
@@ -204,34 +202,34 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
     'status',
     'transferDate',
   ];
-  returnedCheckDataSource = new MatTableDataSource<DigitalCheckExtended>();
+  settleCheckDataSource = new MatTableDataSource<DigitalCheckExtended>();
 
   shayyikliAccountNumber: string | null = null;
 
-  returnedCheckFilterDate: Date | null = null;
+  settleCheckFilterDate: Date | null = null;
   dynamicPageSizeOptions: number[] = [5, 10, 15, 20, 25];
 
   @ViewChild(MatSort) set sort(ms: MatSort) {
-    this.returnedCheckDataSource.sort = ms;
-    if (this.returnedCheckDataSource.paginator) {
-      this.returnedCheckDataSource.paginator.firstPage();
+    this.settleCheckDataSource.sort = ms;
+    if (this.settleCheckDataSource.paginator) {
+      this.settleCheckDataSource.paginator.firstPage();
     }
   }
 
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
-    this.returnedCheckDataSource.paginator = mp;
+    this.settleCheckDataSource.paginator = mp;
   }
 
   ngAfterViewInit(): void {
-    this.returnedCheckDataSource.sort = this.sort;
-    this.returnedCheckDataSource.paginator = this.paginator;
+    this.settleCheckDataSource.sort = this.sort;
+    this.settleCheckDataSource.paginator = this.paginator;
   }
 
-  fetchReturnedChecks(): void {
+  fetchSettleChecks(): void {
     this.loadingService.loadingOn();
-    this.digitalCheckService.getReturnedChecksForUser().subscribe({
+    this.digitalCheckService.getSetteledChecksForUser().subscribe({
       next: (data: DigitalCheck[]) => {
-        const returnedChecks: DigitalCheckExtended[] = data.map(
+        const settleChecks: DigitalCheckExtended[] = data.map(
           (tx: DigitalCheck) => ({
             ...tx,
             transferDate: this.formatDate(tx.transferDate),
@@ -239,7 +237,7 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
           })
         );
 
-        returnedChecks.forEach((tx) => {
+        settleChecks.forEach((tx) => {
           this.loadingService.loadingOn();
           this.userService
             .getUserDetailsByAccountNumber(tx.shyyiklinumberOfUsers)
@@ -299,12 +297,12 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
           }
         });
 
-        returnedChecks.sort(
+        settleChecks.sort(
           (a, b) =>
             new Date(b.rawTransferDate).getTime() -
             new Date(a.rawTransferDate).getTime()
         );
-        this.returnedCheckDataSource.data = returnedChecks;
+        this.settleCheckDataSource.data = settleChecks;
         this.updatePageSizeOptions();
         this.resetPaginator();
         setTimeout(() => {
@@ -312,7 +310,7 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
         }, 400);
       },
       error: (error) => {
-        console.error('Error fetching recent returnedChecks:', error);
+        console.error('Error fetching recent settleChecks:', error);
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -320,31 +318,25 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
     });
   }
 
-  applyReturnedCheckFilter(): void {
+  applySettleCheckFilter(): void {
     const filterValue = {
-      date: this.returnedCheckFilterDate
-        ? this.returnedCheckFilterDate.toISOString()
+      date: this.settleCheckFilterDate
+        ? this.settleCheckFilterDate.toISOString()
         : '',
-      status: this.returnedCheckFilterStatus
-        ? this.returnedCheckFilterStatus
-        : '',
-      amount: this.returnedCheckFilterAmount
-        ? this.returnedCheckFilterAmount
-        : '',
-      issuer: this.returnedCheckFilterIssuer
-        ? this.returnedCheckFilterIssuer
-        : '',
-      beneficiary: this.returnedCheckFilterBeneficiary
-        ? this.returnedCheckFilterBeneficiary
+      status: this.settleCheckFilterStatus ? this.settleCheckFilterStatus : '',
+      amount: this.settleCheckFilterAmount ? this.settleCheckFilterAmount : '',
+      issuer: this.settleCheckFilterIssuer ? this.settleCheckFilterIssuer : '',
+      beneficiary: this.settleCheckFilterBeneficiary
+        ? this.settleCheckFilterBeneficiary
         : '',
     };
-    this.returnedCheckDataSource.filter = JSON.stringify(filterValue);
+    this.settleCheckDataSource.filter = JSON.stringify(filterValue);
     this.updatePageSizeOptions();
     this.resetPaginator();
   }
 
   updatePageSizeOptions(): void {
-    const count = this.returnedCheckDataSource.filteredData.length;
+    const count = this.settleCheckDataSource.filteredData.length;
 
     if (count < 5) {
       this.dynamicPageSizeOptions = [count];
@@ -382,11 +374,11 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
 
   hasActiveFilter(): boolean {
     return !!(
-      this.returnedCheckFilterDate ||
-      this.returnedCheckFilterAmount ||
-      this.returnedCheckFilterStatus ||
-      this.returnedCheckFilterIssuer ||
-      this.returnedCheckFilterBeneficiary
+      this.settleCheckFilterDate ||
+      this.settleCheckFilterAmount ||
+      this.settleCheckFilterStatus ||
+      this.settleCheckFilterIssuer ||
+      this.settleCheckFilterBeneficiary
     );
   }
 }

@@ -30,7 +30,11 @@
         >
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-            <td mat-cell *matCellDef="let s">{{ s.id }}</td>
+            <td mat-cell *matCellDef="let s">
+              <a href="#" (click)="openDetails(s.id); $event.preventDefault()">
+                {{ s.id }}
+              </a>
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="previousClassification">
@@ -94,3 +98,10 @@
     </ng-template>
   </div>
 </mat-expansion-panel>
+
+<app-settlement-details
+  *ngIf="showDetailsOverlay"
+  [settlementId]="selectedSettlementId"
+  (close)="closeDetails()"
+>
+</app-settlement-details>

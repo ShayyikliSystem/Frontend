@@ -1,0 +1,67 @@
+.settlement-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.settlement-box {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  width: 720px;
+  max-width: 95%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  h3 {
+    margin: 0 0 16px;
+  }
+}
+
+table th,
+table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  background-color: #ffffff;
+}
+
+mat-paginator {
+  border-top: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.table-container {
+  max-height: 330px;
+  overflow-y: auto;
+}
+
+.action-buttons {
+  text-align: right;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #141d33;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0a354f;
+}

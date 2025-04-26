@@ -1,0 +1,68 @@
+<div class="filter-overlay">
+  <div class="filter-box">
+    <h3>Filter Returned Digital Checks</h3>
+
+    <div class="form-field-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Beneficiary</mat-label>
+        <mat-select #beneficiarySelect [(ngModel)]="filter.beneficiary">
+          <mat-option>
+            <input
+              matInput
+              placeholder="Search beneficiary"
+              [formControl]="beneficiarySearchCtrl"
+            />
+          </mat-option>
+          <mat-option
+            *ngFor="let user of filteredIssuers"
+            [value]="user.firstName + ' ' + user.lastName"
+          >
+            {{ user.firstName }} {{ user.lastName }} ({{
+              user.shayyikliAccountNumber
+            }})
+          </mat-option>
+        </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.beneficiary && !beneficiarySelect.panelOpen"
+          (click)="filter.beneficiary = null"
+          class="clear-btn"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Choose a date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="transactionPicker"
+          [(ngModel)]="filter.date"
+          readonly
+        />
+        <div matSuffix class="suffix-group">
+          <mat-datepicker-toggle
+            [for]="transactionPicker"
+          ></mat-datepicker-toggle>
+          <button
+            mat-icon-button
+            *ngIf="filter.date"
+            (click)="filter.date = null"
+            class="clear-btn"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <mat-datepicker #transactionPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="button-group">
+      <button class="btn-secondary" (click)="onCancel()">Cancel</button>
+      <button class="btn-primary" (click)="onSubmit()">Apply</button>
+    </div>
+  </div>
+</div>

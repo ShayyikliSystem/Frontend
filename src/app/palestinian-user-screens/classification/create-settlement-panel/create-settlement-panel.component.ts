@@ -16,6 +16,7 @@ import { CreateSettlementFormComponent } from '../create-settlement-form/create-
 import { CurrentSettlementFilterComponent } from '../current-settlement-filter/current-settlement-filter.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AlertComponent } from '../../../alert/alert.component';
+import { SettlementRefreshService } from '../../../services/settlement-refresh.service';
 
 @Component({
   selector: 'app-create-settlement-panel',
@@ -85,6 +86,7 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
     this.alertType = event.type;
     setTimeout(() => (this.alertMessage = ''), 5000);
   }
+
   ngAfterViewInit(): void {
     this.initiatorDetailsDataSource.sort = this.sort;
     this.initiatorDetailsDataSource.paginator = this.paginator;
@@ -93,7 +95,8 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
   constructor(
     private settlementService: SettlementService,
     private userService: UserService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private settlementRefreshService: SettlementRefreshService
   ) {}
 
   loadUserData(): void {
@@ -117,6 +120,29 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadUserData();
+
+    this.settlementRefreshService.refresh$.subscribe(() => {
+      this.settlementService.isSettlementActive().subscribe({
+        next: (res) => {
+          this.isSettlementActive = res;
+          if (this.isSettlementActive) {
+            this.loadInitiatorDetails();
+          }
+          console.log('Settlement active status:', res);
+        },
+        error: (err) => {
+          console.error('Failed to fetch settlement status', err);
+        },
+        complete: () => {
+          setTimeout(() => {
+            this.loadingService.loadingOff();
+          }, 400);
+        },
+      });
+      this.loadInitiatorDetails();
+      this.updatePageSizeOptions();
+      this.resetPaginator();
+    });
 
     this.loadingService.loadingOn();
     this.settlementService.isSettlementActive().subscribe({
@@ -182,7 +208,6 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
     this.settlementService.getSettlementDetailsForInitiator().subscribe({
       next: (data: any[]) => {
         console.log('RAW API DATA:', JSON.stringify(data, null, 2));
-        // Check the first few items if array is large
         if (data.length > 0) {
           console.log('First item details:', {
             transferDate: data[0].transferDate,
@@ -233,14 +258,21 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
     this.settlementService.resettle({ checkId: tx.checkId }).subscribe({
       next: () => {
         this.loadInitiatorDetails();
+        this.alertMessage = 'Check resettled successfully.';
+        this.alertType = 'success';
       },
       error: (err) => {
         console.error('Error resettling', err);
+        this.alertMessage = 'Failed to resettle the check.';
+        this.alertType = 'error';
       },
       complete: () => {
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
+        setTimeout(() => {
+          this.alertMessage = '';
+        }, 5000);
       },
     });
   }

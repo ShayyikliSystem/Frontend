@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SettlementResponseRequest } from '../models/settlement.model';
+import {
+  SettlementInitiatorDetailsDTO,
+  SettlementResponseRequest,
+} from '../models/settlement.model';
 
 @Injectable({
   providedIn: 'root',
@@ -70,6 +73,15 @@ export class SettlementService {
     return this.http.post(`${this.baseUrl}/resettle`, request, {
       headers: this.getAuthHeaders(),
       responseType: 'text' as 'text',
+    });
+  }
+
+  getSettlementDetailsForInitiatorById(
+    settlementId: number
+  ): Observable<SettlementInitiatorDetailsDTO[]> {
+    const url = `${this.baseUrl}/initiator/${settlementId}/details`;
+    return this.http.get<SettlementInitiatorDetailsDTO[]>(url, {
+      headers: this.getAuthHeaders(),
     });
   }
 }

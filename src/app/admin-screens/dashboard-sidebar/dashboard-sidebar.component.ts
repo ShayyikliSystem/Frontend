@@ -17,13 +17,13 @@ export class DashboardSidebarComponent {
     {
       name: 'Palestinian Management',
       route: 'admin/palestinian',
-      icon: 'group.png',
+      icon: 'bank-teller.png',
     },
     { name: 'Support', route: 'admin/support', icon: 'technical-support.png' },
     {
       name: 'Contact Requests',
       route: 'admin/contacts',
-      icon: 'call-center.png',
+      icon: 'contact.png',
     },
     { name: 'Logout', route: 'login', icon: 'logout1.png' },
   ];

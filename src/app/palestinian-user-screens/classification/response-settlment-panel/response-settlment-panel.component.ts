@@ -15,6 +15,7 @@ import { LoadingService } from '../../../services/loading.service';
 import { SettlementService } from '../../../services/settlement.service';
 import { RequestedSettlementFilterComponent } from '../requested-settlement-filter/requested-settlement-filter.component';
 import { AlertComponent } from '../../../alert/alert.component';
+import { SettlementRefreshService } from '../../../services/settlement-refresh.service';
 
 @Component({
   selector: 'app-response-settlment-panel',
@@ -58,6 +59,7 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
   hasActiveCheckbook: boolean = false;
   alertMessage: string = '';
   alertType: 'success' | 'error' = 'success';
+
   @ViewChild(MatSort) set sort(ms: MatSort) {
     this.beneficiaryRequestsDataSource.sort = ms;
     if (this.beneficiaryRequestsDataSource.paginator) {
@@ -71,8 +73,10 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
 
   constructor(
     private settlementService: SettlementService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private settlementRefreshService: SettlementRefreshService
   ) {}
+
   handleAlert(event: { message: string; type: 'success' | 'error' }): void {
     this.alertMessage = event.message;
     this.alertType = event.type;
@@ -80,11 +84,22 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
   }
   ngOnInit(): void {
     this.loadRequests();
+
+    this.settlementRefreshService.refresh$.subscribe(() => {
+      this.loadRequests();
+    });
   }
 
   ngAfterViewInit(): void {
     this.beneficiaryRequestsDataSource.sort = this.sort;
     this.beneficiaryRequestsDataSource.paginator = this.paginator;
+  }
+
+  resetPaginator(): void {
+    if (this.paginator) {
+      this.paginator.firstPage();
+      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
+    }
   }
 
   private loadRequests(): void {
@@ -102,6 +117,7 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
         this.beneficiaryRequestsDataSource.data = data;
 
         this.updatePageSizeOptions();
+        this.resetPaginator();
         if (this.paginator) {
           this.paginator.firstPage();
         }
@@ -117,25 +133,25 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
       .respondToSettlement({ checkId, accepted })
       .subscribe({
         next: () => {
-          
           this.loadRequests();
-  
+
           this.handleAlert({
             message: accepted
               ? 'Settlement request accepted successfully!'
               : 'Settlement request rejected successfully!',
             type: 'success',
-          }); setTimeout(() => this.loadingService.loadingOff(), 400);
+          });
+          setTimeout(() => this.loadingService.loadingOff(), 400);
         },
-  
+
         error: (err) => {
           console.error('Failed to send response', err);
-  
+
           this.handleAlert({
             message: 'Failed to respond to settlement. Please try again.',
             type: 'error',
           });
-  
+
           setTimeout(() => this.loadingService.loadingOff(), 400);
         },
       });
@@ -188,6 +204,7 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
     );
     this.updatePageSizeOptions();
     if (this.paginator) this.paginator.firstPage();
+    this.resetPaginator();
   }
 
   onFilterApply(filter: any): void {

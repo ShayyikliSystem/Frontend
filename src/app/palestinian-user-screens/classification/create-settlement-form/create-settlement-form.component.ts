@@ -20,6 +20,7 @@ import {
 import { DigitalCheckService } from '../../../services/digital-check.service';
 import { UserService } from '../../../services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SettlementRefreshService } from '../../../services/settlement-refresh.service';
 
 @Component({
   selector: 'app-create-settlement-form',
@@ -61,7 +62,8 @@ export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
     private settlementService: SettlementService,
     private loadingService: LoadingService,
     private digitalCheckService: DigitalCheckService,
-    private userService: UserService
+    private userService: UserService,
+    private settlementRefreshService: SettlementRefreshService
   ) {}
 
   ngOnInit(): void {
@@ -161,10 +163,14 @@ export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
           this.loadingService.loadingOff();
         }, 400);
         this.requestCompleted.emit();
+        this.settlementRefreshService.triggerRefresh();
       },
       error: (err: HttpErrorResponse) => {
         console.error('Settlement failed:', err.error);
-        this.showAlert('Failed to submit settlement. Please try again.', 'error');
+        this.showAlert(
+          'Failed to submit settlement. Please try again.',
+          'error'
+        );
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);

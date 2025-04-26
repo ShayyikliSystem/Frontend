@@ -14,6 +14,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SettlementRefreshService } from '../../../services/settlement-refresh.service';
+import { SettlementDetailsComponent } from '../settlement-details/settlement-details.component';
 
 @Component({
   selector: 'app-history-settlment-panel',
@@ -31,6 +33,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatExpansionModule,
     MatAutocompleteModule,
     MatTooltipModule,
+    SettlementDetailsComponent,
   ],
   templateUrl: './history-settlment-panel.component.html',
   styleUrl: './history-settlment-panel.component.scss',
@@ -60,14 +63,23 @@ export class HistorySettlmentPanelComponent implements OnInit, AfterViewInit {
     this.settlementDataSource.paginator = mp;
   }
 
+  showDetailsOverlay = false;
+  selectedSettlementId!: number;
+
   constructor(
     private settlementService: SettlementService,
     private loadingService: LoadingService,
-    private userService: UserService
+    private userService: UserService,
+    private settlementRefreshService: SettlementRefreshService
   ) {}
 
   ngOnInit(): void {
     this.fetchSettlementHistory();
+
+    this.settlementRefreshService.refresh$.subscribe(() => {
+      this.fetchSettlementHistory();
+      this.updatePageSizeOptions();
+    });
   }
 
   loadUserData(): void {
@@ -141,5 +153,14 @@ export class HistorySettlmentPanelComponent implements OnInit, AfterViewInit {
       month: 'short',
       year: 'numeric',
     }).format(date);
+  }
+
+  openDetails(id: number): void {
+    this.selectedSettlementId = id;
+    this.showDetailsOverlay = true;
+  }
+
+  closeDetails(): void {
+    this.showDetailsOverlay = false;
   }
 }

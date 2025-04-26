@@ -96,4 +96,10 @@ export class DigitalCheckService {
       headers: this.getAuthHeaders(),
     });
   }
+
+  getSetteledChecksForUser(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/setteled`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 }

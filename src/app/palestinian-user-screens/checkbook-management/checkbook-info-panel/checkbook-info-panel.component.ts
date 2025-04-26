@@ -13,7 +13,11 @@ import { CheckbookService } from '../../../services/checkbook.service';
 import { UserService } from '../../../services/user.service';
 import { RequestCheckbookComponent } from '../request-checkbook/request-checkbook.component';
 import { LoadingService } from '../../../services/loading.service';
+<<<<<<< Updated upstream
 import { AlertComponent } from '../../../alert/alert.component';
+=======
+import { CheckRefreshService } from '../../../services/check-refresh.service';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-checkbook-info-panel',
@@ -48,7 +52,8 @@ export class CheckbookInfoPanelComponent implements OnInit {
   constructor(
     private userService: UserService,
     private checkbookService: CheckbookService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private checkRefreshService: CheckRefreshService
   ) {}
 
   handleAlert(event: { message: string; type: 'success' | 'error' }): void {
@@ -59,6 +64,10 @@ export class CheckbookInfoPanelComponent implements OnInit {
 
   loadUserData(): void {
     this.loadingService.loadingOn();
+
+    this.checkRefreshService.refresh$.subscribe(() => {
+      this.loadCheckbookData();
+    });
 
     this.userService.getUserClassification().subscribe({
       next: (data) => {
