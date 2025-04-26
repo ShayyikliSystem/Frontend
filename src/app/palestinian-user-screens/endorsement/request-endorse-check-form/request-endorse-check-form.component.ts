@@ -10,7 +10,6 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
 import { DigitalCheckService } from '../../../services/digital-check.service';
 import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
-import { User } from '../../dashboard-screen/transaction-filter/transaction-filter.component';
 import { CommonModule } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -23,6 +22,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { DigitalCheck } from '../../../models/digital.model';
 import { MatIconModule } from '@angular/material/icon';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-request-endorse-check-form',
@@ -149,12 +149,15 @@ export class RequestEndorseCheckFormComponent implements OnInit {
           this.applyFilter.emit(res);
 
           this.checkRefreshService.refreshTables();
-          this.showAlert('Check endorsed successfully!', 'success'); 
+          this.showAlert('Check endorsed successfully!', 'success');
           setTimeout(() => this.loadingService.loadingOff(), 400);
         },
         error: (err) => {
           console.error('Endorse failed:', err);
-          this.showAlert('Failed to endorse the check. Please try again.', 'error'); 
+          this.showAlert(
+            'Failed to endorse the check. Please try again.',
+            'error'
+          );
           setTimeout(() => this.loadingService.loadingOff(), 400);
         },
       });

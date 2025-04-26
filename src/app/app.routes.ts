@@ -12,7 +12,6 @@ import { AuthorizationFailedScreenComponent } from './authorization-failed-scree
 import { PageNotFoundScreenComponent } from './page-not-found-screen/page-not-found-screen.component';
 import { DashboardScreenComponent } from './palestinian-user-screens/dashboard-screen/dashboard-screen.component';
 import { AuthGuard } from './services/auth.guard';
-import { DashboardAdminScreenComponent } from './admin-screens/dashboard-admin-screen/dashboard-admin-screen.component';
 import { RoleGuard } from './services/role.guard';
 import { CheckManagementComponent } from './palestinian-user-screens/check-management/check-management.component';
 import { ClassificationComponent } from './palestinian-user-screens/classification/classification.component';
@@ -66,7 +65,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['ROLE_ADMIN'] },
     children: [
-      { path: 'dashboard', component: DashboardAdminScreenComponent },
       { path: 'palestinian', component: PalestinianManagementComponent },
       { path: 'support', component: SupportMessagesComponent },
       { path: 'contacts', component: ContactRequestsComponent },

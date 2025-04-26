@@ -13,7 +13,6 @@ import {
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import { UserService } from '../../../services/user.service';
-import { User } from '../../dashboard-screen/transaction-filter/transaction-filter.component';
 import { CommonModule } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -24,6 +23,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-incoming-endorsements-checks-filter',

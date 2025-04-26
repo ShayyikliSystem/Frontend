@@ -1,0 +1,87 @@
+.response-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.response-box {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.response-box h3 {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #141d33;
+}
+.original {
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #555;
+}
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+  .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+  .mat-form-field-flex {
+    background: #f9f9f9;
+    border-radius: 4px;
+  }
+  .mat-form-field-infix {
+    padding: 12px 0;
+  }
+}
+textarea[matInput] {
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  min-height: 120px;
+  resize: vertical;
+}
+.mat-error {
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+button[mat-button] {
+  min-width: 100px;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 6px;
+  text-transform: none;
+}
+button[mat-button][color="primary"] {
+  background-color: #141d33;
+  color: #fff;
+}
+button[mat-button][color="primary"]:hover {
+  background-color: #0a354f;
+}
+.btn-secondary {
+  background-color: #e2e2e2;
+  color: #141d33;
+}
+.btn-secondary:hover {
+  background-color: rgba(46, 54, 72, 0.08);
+}

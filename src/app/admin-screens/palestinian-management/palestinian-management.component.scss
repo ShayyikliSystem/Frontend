@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+  font-family: Georgia, serif;
+  color: #201e43;
+}
+
+h3 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.management-chips {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .mat-mdc-chip {
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 8px 16px;
+
+    &.mdc-evolution-chip--selected {
+      background-color: #141d33;
+      color: white;
+    }
+  }
+}
+
+/* Remove max-width constraint */
+.mat-mdc-chip-set {
+  max-width: none;
+}
+
+.pdf-summary {
+  font-size: 1rem;
+  color: #201e43;
+  button {
+    padding: 10px;
+    background-color: #141d33;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 10%;
+  }
+}

@@ -42,7 +42,7 @@ export class HomeScreenComponent {
       if (!roles) {
         this.router.navigate(['/login']);
       } else if (roles.includes('ROLE_ADMIN')) {
-        this.router.navigate(['/admin/dashboard']);
+        this.router.navigate(['/admin/palestinian']);
       } else if (roles.includes('ROLE_PALESTINIAN')) {
         this.router.navigate(['/dashboard']);
       }

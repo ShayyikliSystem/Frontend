@@ -189,7 +189,7 @@ export class ReturnedChecksPanelComponent implements OnInit, AfterViewInit {
     this.closeFilter();
   }
 
-  statusOptions: string[] = ['Active', 'Transfer', 'Settle'];
+  statusOptions: string[] = ['Active', 'Transfer', 'Return', 'Settle'];
 
   allUsers: any[] = [];
   filteredIssuers: any[] = [];

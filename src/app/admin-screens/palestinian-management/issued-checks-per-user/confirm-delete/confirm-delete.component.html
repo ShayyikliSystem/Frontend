@@ -1,0 +1,13 @@
+<div class="confirm-delete-overlay">
+  <div class="confirm-delete-box">
+    <h3>Delete Check</h3>
+    <p>
+      Are you sure you want to delete check <strong>#{{ checkId }}</strong
+      >?
+    </p>
+    <div class="button-group">
+      <button class="btn-secondary" (click)="onCancel()">Cancel</button>
+      <button class="btn-primary" (click)="onConfirm()">Delete</button>
+    </div>
+  </div>
+</div>

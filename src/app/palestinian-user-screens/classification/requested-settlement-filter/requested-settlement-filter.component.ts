@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { UserService } from '../../../services/user.service';
-import { User } from '../../dashboard-screen/transaction-filter/transaction-filter.component';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-requested-settlement-filter',

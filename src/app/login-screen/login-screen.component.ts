@@ -47,7 +47,7 @@ export class LoginScreenComponent {
     password: '',
     locationName: '',
     latitude: '',
-    longitude: ''
+    longitude: '',
   };
 
   constructor(
@@ -55,7 +55,7 @@ export class LoginScreenComponent {
     private userService: UserService,
     private router: Router,
     private loadingService: LoadingService
-  ) { }
+  ) {}
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
@@ -79,7 +79,7 @@ export class LoginScreenComponent {
       password: '',
       locationName: '',
       latitude: '',
-      longitude: ''
+      longitude: '',
     };
 
     form.resetForm({ role: currentRole });
@@ -114,18 +114,26 @@ export class LoginScreenComponent {
           console.log(`Latitude: ${latitude}`);
           console.log(`Longitude: ${longitude}`);
 
-          // 👉 Fetch human-readable location (city/region)
-          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
-            .then(response => response.json())
-            .then(data => {
+          fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          )
+            .then((response) => response.json())
+            .then((data) => {
               const address = data.address;
               const countryCode = (address.country_code || '').toUpperCase(); // → "PS"
               const region = address.region || address.state || '';
-              const area = address.city ||address.county ||  address.town || address.village || '';
+              const area =
+                address.city ||
+                address.town ||
+                address.county ||
+                address.village ||
+                '';
 
-              const a=address
+              const a = address;
               // Join the parts, filter out empty strings
-              const locationName = [countryCode, region, area].filter(part => part).join(', ');
+              const locationName = [countryCode, region, area]
+                .filter((part) => part)
+                .join(', ');
 
               console.log('✅ User Location Area:');
               console.log(address);
@@ -143,7 +151,7 @@ export class LoginScreenComponent {
               // 👉 NOW submit login
               this.submitLogin(loginRequest);
             })
-            .catch(error => {
+            .catch((error) => {
               console.error('❌ Error fetching location details:', error);
 
               // If reverse geocoding fails, proceed with basic lat/lon
@@ -171,7 +179,7 @@ export class LoginScreenComponent {
     this.authService.login(loginRequest).subscribe({
       next: (response: JwtResponse) => {
         if (response.roles.includes('ROLE_ADMIN')) {
-          this.router.navigate(['/admin/dashboard']);
+          this.router.navigate(['/admin/palestinian']);
           this.loadingService.loadingOff();
           return;
         }

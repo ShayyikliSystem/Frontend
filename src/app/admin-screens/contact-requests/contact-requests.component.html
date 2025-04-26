@@ -1,1 +1,107 @@
-<p>contact-requests works!</p>
+<app-alert
+  *ngIf="showAlert"
+  [message]="alertMessage"
+  [type]="alertType"
+  [duration]="4000"
+></app-alert>
+
+<h3>Contact Requests</h3>
+<mat-expansion-panel style="width: 1230px; margin-bottom: 20px" expanded>
+  <mat-expansion-panel-header>
+    <div class="security-header">
+      <img src="assets/history.png" alt="contact-icon" class="icon" />
+      <p>Contact Requests</p>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div *ngIf="dataSource.data.length > 0; else noContacts">
+    <div class="table-container">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="mat-elevation-z8"
+      >
+        <!-- ID -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td mat-cell *matCellDef="let x">{{ x.id }}</td>
+        </ng-container>
+
+        <!-- Name (first + last) -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let x">
+            {{ x.firstName }} {{ x.lastName }}
+          </td>
+        </ng-container>
+
+        <!-- Email -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+          <td mat-cell *matCellDef="let x">{{ x.email }}</td>
+        </ng-container>
+
+        <!-- Phone -->
+        <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
+          <td mat-cell *matCellDef="let x">{{ x.phoneNumber }}</td>
+        </ng-container>
+
+        <!-- Message -->
+        <ng-container matColumnDef="message">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Message</th>
+          <td mat-cell *matCellDef="let x">{{ x.message }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+          <td mat-cell *matCellDef="let x">
+            {{ transformEnumValue(x.status) }}
+          </td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let x">
+            <button
+              mat-button
+              *ngIf="x.status === 'PENDING'"
+              (click)="onReply(x)"
+            >
+              Reply
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [ngClass]="{ 'resolved-row': row.status === 'RESOLVED' }"
+        ></tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [pageSizeOptions]="dynamicPageSizeOptions"
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+
+  <ng-template #noContacts>
+    <div class="no-data">
+      <h3>No Contact Requests Found</h3>
+      <p>There are no contact messages to display.</p>
+    </div>
+  </ng-template>
+</mat-expansion-panel>
+
+<app-reply-to-contact
+  *ngIf="showResponse"
+  [contactId]="currentId"
+  [message]="currentMessage"
+  (closed)="onClosed()"
+  (replied)="onReplied()"
+></app-reply-to-contact>

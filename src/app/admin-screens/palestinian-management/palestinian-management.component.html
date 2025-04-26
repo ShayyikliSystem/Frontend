@@ -1,1 +1,116 @@
-<p>palestinian-management works!</p>
+<app-alert
+  *ngIf="alertVisible"
+  [message]="alertMessage"
+  [type]="alertType"
+  [duration]="5000"
+></app-alert>
+
+<h3>Palestinian User Management</h3>
+<div class="palestinian-management">
+  <mat-form-field appearance="outline" style="width: 1230px">
+    <mat-label>Select User</mat-label>
+    <input
+      matInput
+      placeholder="Search user by name or account number"
+      [formControl]="userSearchCtrl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      (optionSelected)="onUserSelected($event)"
+      [displayWith]="displayUser"
+    >
+      <mat-option *ngFor="let user of filteredUsers" [value]="user">
+        {{ user.firstName }} {{ user.lastName }} ({{
+          user.shayyikliAccountNumber
+        }})
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <div
+    class="pdf-summary"
+    *ngIf="selectedAccountNumber"
+    style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px"
+  >
+    <span>If you want to get a summary of this user , click</span>
+    <button mat-raised-button color="primary" (click)="onGeneratePdf()">
+      Download PDF
+    </button>
+  </div>
+
+  <mat-chip-listbox
+    class="management-chips"
+    [multiple]="false"
+    (change)="onChipSelectionChange($event)"
+  >
+    <mat-chip-option
+      *ngFor="let tab of managementTabs"
+      [value]="tab.value"
+      [selected]="activeView === tab.value"
+    >
+      {{ tab.label }}
+    </mat-chip-option>
+  </mat-chip-listbox>
+
+  <div *ngIf="selectedAccountNumber">
+    <!-- Content sections -->
+    <app-general-info-per-user
+      *ngIf="activeView === 'general'"
+      [accountNumber]="selectedAccountNumber"
+    >
+    </app-general-info-per-user>
+
+    <app-checkbook-history-per-user
+      *ngIf="activeView === 'checkbook'"
+      [accountNumber]="selectedAccountNumber"
+    >
+    </app-checkbook-history-per-user>
+
+    <app-issued-checks-per-user
+      *ngIf="activeView === 'checks'"
+      [accountNumber]="selectedAccountNumber"
+    >
+    </app-issued-checks-per-user>
+
+    <app-received-checks-per-user
+      *ngIf="activeView === 'checks'"
+      [accountNumber]="selectedAccountNumber"
+    >
+    </app-received-checks-per-user>
+
+    <app-returned-checks-per-user
+      *ngIf="activeView === 'checks'"
+      [accountNumber]="selectedAccountNumber"
+    >
+    </app-returned-checks-per-user>
+
+    <app-settle-checks-per-user
+      *ngIf="activeView === 'checks'"
+      [accountNumber]="selectedAccountNumber"
+    >
+    </app-settle-checks-per-user>
+
+    <app-incoming-checks-per-user
+      *ngIf="activeView === 'endorsement'"
+      [accountNumber]="selectedAccountNumber"
+    >
+    </app-incoming-checks-per-user>
+
+    <app-outcoming-checks-per-user
+      *ngIf="activeView === 'endorsement'"
+      [accountNumber]="selectedAccountNumber"
+    >
+    </app-outcoming-checks-per-user>
+    <app-settlement-history-per-user
+      *ngIf="activeView === 'classification'"
+      [accountNumber]="selectedAccountNumber"
+    >
+    </app-settlement-history-per-user>
+
+    <app-transaction-per-user
+      *ngIf="activeView === 'transaction'"
+      [accountNumber]="selectedAccountNumber"
+    ></app-transaction-per-user>
+  </div>
+</div>

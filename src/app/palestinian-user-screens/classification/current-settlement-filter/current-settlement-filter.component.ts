@@ -6,12 +6,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { User } from '../../dashboard-screen/transaction-filter/transaction-filter.component';
 import { UserService } from '../../../services/user.service';
 import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-current-settlement-filter',

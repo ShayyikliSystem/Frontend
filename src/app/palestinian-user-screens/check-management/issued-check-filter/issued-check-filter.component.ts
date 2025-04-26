@@ -21,9 +21,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { UserService } from '../../../services/user.service';
-import { User } from '../../dashboard-screen/transaction-filter/transaction-filter.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-issued-check-filter',

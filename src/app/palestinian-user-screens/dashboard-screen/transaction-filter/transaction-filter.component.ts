@@ -1,7 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output ,ViewChild} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
+import {
+  MatAutocomplete,
+  MatAutocompleteModule,
+} from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,13 +23,7 @@ import { MatTableModule } from '@angular/material/table';
 import { UserService } from '../../../services/user.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-
-export interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  shayyikliAccountNumber: any;
-}
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-transaction-filter',
@@ -56,7 +60,7 @@ export class TransactionFilterComponent implements OnInit {
   @Output() cancelFilter = new EventEmitter<void>();
 
   @ViewChild('auto') matAutocomplete!: MatAutocomplete;
-  
+
   filter = { ...this.currentFilter };
 
   allUsers: User[] = [];
@@ -81,10 +85,7 @@ export class TransactionFilterComponent implements OnInit {
     this.issuerSearchCtrl.valueChanges.subscribe(
       (searchTerm: string | User | null) => {
         if (typeof searchTerm === 'string') {
-          this.filteredIssuers = this.filterUsers(
-            searchTerm,
-            this.allUsers
-          );
+          this.filteredIssuers = this.filterUsers(searchTerm, this.allUsers);
         } else if (searchTerm === null) {
           this.filteredBeneficiaries = this.allUsers;
         }
@@ -139,20 +140,20 @@ export class TransactionFilterComponent implements OnInit {
   }
 
   filterUsers(search: string, users: User[]): User[] {
-      if (!search) {
-        return users;
-      }
-      const lowerSearch = search.toLowerCase();
-      return users.filter(
-        (user) =>
-          user.firstName.toLowerCase().includes(lowerSearch) ||
-          user.lastName.toLowerCase().includes(lowerSearch) ||
-          user.shayyikliAccountNumber
-            .toString()
-            .toLowerCase()
-            .includes(lowerSearch)
-      );
+    if (!search) {
+      return users;
     }
+    const lowerSearch = search.toLowerCase();
+    return users.filter(
+      (user) =>
+        user.firstName.toLowerCase().includes(lowerSearch) ||
+        user.lastName.toLowerCase().includes(lowerSearch) ||
+        user.shayyikliAccountNumber
+          .toString()
+          .toLowerCase()
+          .includes(lowerSearch)
+    );
+  }
 
   onSubmit(): void {
     this.applyFilter.emit(this.filter);

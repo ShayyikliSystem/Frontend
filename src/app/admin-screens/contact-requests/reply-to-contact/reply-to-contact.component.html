@@ -1,0 +1,48 @@
+<form
+  #replyForm="ngForm"
+  (ngSubmit)="sendReply(replyForm)"
+  class="response-overlay"
+>
+  <div class="response-box">
+    <h3>Reply to Contact Request</h3>
+
+    <p class="original">
+      <strong>Original message:</strong><br />
+      {{ message }}
+    </p>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Your reply</mat-label>
+      <textarea
+        matInput
+        rows="5"
+        name="adminMessage"
+        [(ngModel)]="adminMessage"
+        #adminMessageCtrl="ngModel"
+        required
+        placeholder="Type your reply here..."
+      ></textarea>
+      <mat-error *ngIf="adminMessageCtrl.invalid && adminMessageCtrl.touched">
+        Reply cannot be empty.
+      </mat-error>
+      <mat-error *ngIf="error && !adminMessageCtrl.invalid">{{
+        error
+      }}</mat-error>
+    </mat-form-field>
+
+    <div class="button-group">
+      <button
+        mat-button
+        class="btn-secondary"
+        type="button"
+        (click)="cancel()"
+        [disabled]="loading"
+      >
+        Cancel
+      </button>
+      <button mat-button color="primary" type="submit" [disabled]="loading">
+        {{ loading ? "Sending…" : "Send Reply" }}
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,98 @@
+<mat-expansion-panel style="width: 1230px; margin-bottom: 20px" expanded="true">
+  <mat-expansion-panel-header>
+    <div class="security-header">
+      <img
+        src="assets/history.png"
+        alt="history-icon"
+        class="user"
+        style="display: inline-block"
+      />
+      <p style="display: inline; margin-left: 5px">Checkbook History</p>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div style="margin-top: 10px">
+    <div
+      *ngIf="
+        checkbookDataSource.data && checkbookDataSource.data.length > 0;
+        else noCheckbooks
+      "
+    >
+      <div class="table-container">
+        <table
+          mat-table
+          [dataSource]="checkbookDataSource"
+          matSort
+          class="mat-elevation-z8"
+        >
+          <ng-container matColumnDef="checkbookid">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Checkbook ID
+            </th>
+            <td mat-cell *matCellDef="let item">{{ item.checkbookid }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="issuedTotalChecks">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Issued Total Digital Checks
+            </th>
+            <td mat-cell *matCellDef="let item">
+              {{ item.issuedTotalChecks }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="returnedchecks">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Returned Digital Checks
+            </th>
+            <td mat-cell *matCellDef="let item">{{ item.returnedchecks }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="remainingChecks">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Remaining Digital Checks
+            </th>
+            <td mat-cell *matCellDef="let item">{{ item.remainingChecks }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="issuedAt">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Issued At</th>
+            <td mat-cell *matCellDef="let item">
+              {{ formatDate(item.issuedAt) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-cell *matCellDef="let item">
+              {{
+                !(classification == "A" || classification == "B") &&
+                hasActiveCheckbook &&
+                item.status == "ACTIVE"
+                  ? "PENDING"
+                  : item.status
+              }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="checkbookDisplayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: checkbookDisplayedColumns"
+          ></tr>
+        </table>
+      </div>
+      <mat-paginator
+        [pageSizeOptions]="dynamicPageSizeOptions"
+        showFirstLastButtons
+      ></mat-paginator>
+    </div>
+
+    <ng-template #noCheckbooks>
+      <div class="limited-info" style="text-align: center">
+        <h3>No Checkbook History Found</h3>
+        <p>You have not used any checkbooks yet.</p>
+      </div>
+    </ng-template>
+  </div>
+</mat-expansion-panel>
