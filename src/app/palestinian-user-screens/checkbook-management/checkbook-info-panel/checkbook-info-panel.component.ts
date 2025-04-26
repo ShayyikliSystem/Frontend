@@ -13,11 +13,8 @@ import { CheckbookService } from '../../../services/checkbook.service';
 import { UserService } from '../../../services/user.service';
 import { RequestCheckbookComponent } from '../request-checkbook/request-checkbook.component';
 import { LoadingService } from '../../../services/loading.service';
-<<<<<<< Updated upstream
 import { AlertComponent } from '../../../alert/alert.component';
-=======
 import { CheckRefreshService } from '../../../services/check-refresh.service';
->>>>>>> Stashed changes
 
 @Component({
   selector: 'app-checkbook-info-panel',
