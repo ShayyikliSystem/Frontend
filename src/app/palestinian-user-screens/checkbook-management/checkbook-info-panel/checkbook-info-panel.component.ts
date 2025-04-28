@@ -13,6 +13,7 @@ import { CheckbookService } from '../../../services/checkbook.service';
 import { UserService } from '../../../services/user.service';
 import { RequestCheckbookComponent } from '../request-checkbook/request-checkbook.component';
 import { LoadingService } from '../../../services/loading.service';
+import { AlertComponent } from '../../../alert/alert.component';
 
 @Component({
   selector: 'app-checkbook-info-panel',
@@ -29,6 +30,7 @@ import { LoadingService } from '../../../services/loading.service';
     MatDatepickerModule,
     MatExpansionModule,
     RequestCheckbookComponent,
+    AlertComponent,
   ],
   templateUrl: './checkbook-info-panel.component.html',
   styleUrl: './checkbook-info-panel.component.scss',
@@ -41,12 +43,19 @@ export class CheckbookInfoPanelComponent implements OnInit {
   checkbookId: string = 'N/A';
   hasActiveCheckbook: boolean = false;
   showRequestCheckbookOverlay: boolean = false;
-
+  alertMessage: string = '';
+  alertType: 'success' | 'error' = 'success';
   constructor(
     private userService: UserService,
     private checkbookService: CheckbookService,
     private loadingService: LoadingService
   ) {}
+
+  handleAlert(event: { message: string; type: 'success' | 'error' }): void {
+    this.alertMessage = event.message;
+    this.alertType = event.type;
+    setTimeout(() => (this.alertMessage = ''), 5000);
+  }
 
   loadUserData(): void {
     this.loadingService.loadingOn();

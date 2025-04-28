@@ -13,7 +13,10 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
 export class RequestCheckbookComponent {
   @Output() requestCompleted = new EventEmitter<void>();
   @Output() cancelRequest = new EventEmitter<void>();
-
+  @Output() alertMessageEvent = new EventEmitter<{
+    message: string;
+    type: 'success' | 'error';
+  }>();
   constructor(
     private checkbookService: CheckbookService,
     private loadingService: LoadingService,
@@ -28,6 +31,7 @@ export class RequestCheckbookComponent {
           this.loadingService.loadingOff();
         }, 400);
         this.checkRefreshService.refreshTables();
+        this.showAlert('Checkbook requested successfully', 'success');
         this.requestCompleted.emit();
       },
       error: (err) => {
@@ -35,11 +39,17 @@ export class RequestCheckbookComponent {
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
+        this.showAlert('Failed to request checkbook', 'error');
+
       },
     });
   }
 
   cancel(): void {
     this.cancelRequest.emit();
+  }
+
+  showAlert(message: string, type: 'success' | 'error' = 'success'): void {
+    this.alertMessageEvent.emit({ message, type });
   }
 }
