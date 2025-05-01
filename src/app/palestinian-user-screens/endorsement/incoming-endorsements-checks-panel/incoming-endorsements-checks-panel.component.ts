@@ -99,65 +99,49 @@ export class IncomingEndorsementsChecksPanelComponent
       data: DigitalCheckExtended,
       filter: string
     ): boolean => {
-      const searchTerms = JSON.parse(filter);
-      let dateMatch = true;
-      if (searchTerms.date && data.rawTransferDate) {
-        const filterDate = new Date(searchTerms.date);
-        const dataDate = new Date(data.rawTransferDate);
-        dateMatch =
-          filterDate.getDate() === dataDate.getDate() &&
-          filterDate.getMonth() === dataDate.getMonth() &&
-          filterDate.getFullYear() === dataDate.getFullYear();
-      }
-      return dateMatch;
-    };
-
-    this.incomingEndorsementsCheckDataSource.filterPredicate = (
-      data: DigitalCheckExtended,
-      filter: string
-    ): boolean => {
-      const searchTerms = JSON.parse(filter);
+      const s = JSON.parse(filter);
       let dateMatch = true,
         statusMatch = true,
         amountMatch = true,
         issuerMatch = true,
-        beneficiaryMatch = true;
+        endorserMatch = true;
 
-      if (searchTerms.date && data.rawTransferDate) {
-        const filterDate = new Date(searchTerms.date);
-        const dataDate = new Date(data.rawTransferDate);
+      // date
+      if (s.date && data.rawTransferDate) {
+        const fd = new Date(s.date),
+          dd = new Date(data.rawTransferDate);
         dateMatch =
-          filterDate.getDate() === dataDate.getDate() &&
-          filterDate.getMonth() === dataDate.getMonth() &&
-          filterDate.getFullYear() === dataDate.getFullYear();
+          fd.getFullYear() === dd.getFullYear() &&
+          fd.getMonth() === dd.getMonth() &&
+          fd.getDate() === dd.getDate();
       }
 
-      if (searchTerms.status) {
-        statusMatch = data.status === searchTerms.status;
+      // status
+      if (s.status) {
+        statusMatch = data.status === s.status;
       }
 
-      if (searchTerms.amount) {
-        amountMatch = data.amount === searchTerms.amount;
+      // amount
+      if (s.amount) {
+        amountMatch = data.amount === s.amount;
       }
 
-      if (searchTerms.issuer && data.issuerName) {
-        issuerMatch = data.issuerName
-          .toLowerCase()
-          .includes(searchTerms.issuer.toLowerCase());
+      // issuer
+      if (s.issuer) {
+        issuerMatch =
+          data.issuerName?.toLowerCase().includes(s.issuer.toLowerCase()) ??
+          false;
       }
 
-      if (searchTerms.beneficiary && data.beneficiaryName) {
-        beneficiaryMatch = data.beneficiaryName
-          .toLowerCase()
-          .includes(searchTerms.beneficiary.toLowerCase());
+      if (s.endorser) {
+        endorserMatch =
+          data.endorsersNames
+            ?.toLowerCase()
+            .includes(s.endorser.toLowerCase()) ?? false;
       }
 
       return (
-        dateMatch &&
-        statusMatch &&
-        amountMatch &&
-        issuerMatch &&
-        beneficiaryMatch
+        dateMatch && statusMatch && amountMatch && issuerMatch && endorserMatch
       );
     };
   }
@@ -176,6 +160,7 @@ export class IncomingEndorsementsChecksPanelComponent
     this.incomingEndorsementsCheckFilterStatus = '';
     this.incomingEndorsementsCheckFilterIssuer = '';
     this.incomingEndorsementsCheckFilterBeneficiary = '';
+    this.incomingEndorsementsCheckFilterEndorser = '';
     this.applyIncomingEndorsementsCheckFilter();
   }
 
@@ -187,6 +172,10 @@ export class IncomingEndorsementsChecksPanelComponent
       typeof filter.issuer === 'object' && filter.issuer
         ? `${filter.issuer.firstName} ${filter.issuer.lastName}`
         : filter.issuer;
+    this.incomingEndorsementsCheckFilterEndorser =
+      typeof filter.endorser === 'object'
+        ? `${filter.endorser.firstName} ${filter.endorser.lastName}`
+        : filter.endorser;
     this.incomingEndorsementsCheckFilterBeneficiary = filter.beneficiary;
     this.applyIncomingEndorsementsCheckFilter();
     this.closeFilter();
@@ -336,14 +325,12 @@ export class IncomingEndorsementsChecksPanelComponent
 
   applyIncomingEndorsementsCheckFilter(): void {
     const filterValue = {
-      date: this.incomingEndorsementsCheckFilterDate
-        ? this.incomingEndorsementsCheckFilterDate.toISOString()
-        : '',
+      date: this.incomingEndorsementsCheckFilterDate?.toISOString() || '',
       status: this.incomingEndorsementsCheckFilterStatus || '',
       issuer: this.incomingEndorsementsCheckFilterIssuer || '',
       endorser: this.incomingEndorsementsCheckFilterEndorser || '',
+      amount: this.incomingEndorsementsCheckFilterAmount || '',
     };
-
     this.incomingEndorsementsCheckDataSource.filter =
       JSON.stringify(filterValue);
     this.resetPaginator();
@@ -393,7 +380,8 @@ export class IncomingEndorsementsChecksPanelComponent
       this.incomingEndorsementsCheckFilterAmount ||
       this.incomingEndorsementsCheckFilterStatus ||
       this.incomingEndorsementsCheckFilterIssuer ||
-      this.incomingEndorsementsCheckFilterBeneficiary
+      this.incomingEndorsementsCheckFilterBeneficiary ||
+      this.incomingEndorsementsCheckFilterEndorser
     );
   }
 }
