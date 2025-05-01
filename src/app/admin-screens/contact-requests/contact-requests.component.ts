@@ -1,3 +1,4 @@
+import { LoadingService } from './../../services/loading.service';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -68,7 +69,10 @@ export class ContactRequestsComponent implements OnInit {
     this.dataSource.paginator = mp;
   }
 
-  constructor(private contactService: ContactService) {}
+  constructor(
+    private contactService: ContactService,
+    private loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
     this.loadContacts();
@@ -103,14 +107,23 @@ export class ContactRequestsComponent implements OnInit {
   private loadContacts(): void {
     this.contactService.getAllContacts().subscribe({
       next: (data) => {
+        this.loadingService.loadingOn();
         // newest first
         data.sort((a, b) => b.id - a.id);
 
         this.dataSource.data = data;
         this.updatePageSizeOptions();
         this.resetPaginator();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
-      error: (err) => console.error('Error loading contacts', err),
+      error: (err) => {
+        console.error('Error loading contacts', err);
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
+      },
     });
   }
 

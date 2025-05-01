@@ -12,6 +12,7 @@ import { AlertComponent } from '../../alert/alert.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SupportMessagesFilterComponent } from './support-messages-filter/support-messages-filter.component';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-support-messages',
@@ -21,7 +22,6 @@ import { SupportMessagesFilterComponent } from './support-messages-filter/suppor
     MatExpansionModule,
     MatTableModule,
     MatSortModule,
-    MatPaginatorModule,
     MatButtonModule,
     ReplyPerUserComponent,
     SupportMessagesFilterComponent,
@@ -84,11 +84,15 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = mp;
   }
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
     this.adminService.getAllSupportRequests().subscribe({
       next: (data: Support[]) => {
+        this.loadingService.loadingOn();
         console.log(data);
         data.sort(
           (a, b) =>
@@ -96,12 +100,16 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
         );
         this.dataSource.data = data;
 
-        this.updatePageSizeOptions();
-
         this.setupFilterPredicate();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
       error: (err) => {
         console.error('Error loading support requests', err);
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
   }
@@ -137,20 +145,17 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
 
   private setupFilterPredicate() {
     this.dataSource.filterPredicate = (data: Support, filter: string) => {
-      // parse the JSON; f.date will be a string if set, or null
       const f = JSON.parse(filter) as {
         supportArea: string;
         status: string;
         date: string | null;
       };
 
-      // area & status
       const areaMatch = f.supportArea
         ? data.supportArea === f.supportArea
         : true;
       const statusMatch = f.status ? data.status === f.status : true;
 
-      // date:
       let dateMatch = true;
       if (f.date) {
         const filterDate = new Date(f.date);
@@ -168,22 +173,6 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-  }
-
-  private updatePageSizeOptions(): void {
-    const total = this.dataSource.data.length;
-    if (total < 5) {
-      this.dynamicPageSizeOptions = [total];
-      return;
-    }
-    const opts: number[] = [];
-    for (let i = 5; i <= total; i += 5) {
-      opts.push(i);
-    }
-    if (opts[opts.length - 1] !== total) {
-      opts.push(total);
-    }
-    this.dynamicPageSizeOptions = opts;
   }
 
   transformEnumValue(value: string): string {
@@ -215,7 +204,6 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
     this.alertMessage = 'Reply sent successfully.';
     this.alertType = 'success';
     this.showAlert = true;
-
     this.showResponse = false;
     this.ngOnInit();
   }
