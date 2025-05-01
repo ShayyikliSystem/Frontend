@@ -85,7 +85,7 @@ export class ContactFormComponent {
     this.loadingService.loadingOn();
     this.contactService.createContact(submissionData).subscribe({
       next: () => {
-        this.showAlert('Your message has been sent successfully!', 'success');
+        this.showAlert('Your message has been sent successfully.', 'success');
         this.contactForm.reset();
         Object.keys(this.contactForm.controls).forEach((key) => {
           const control = this.contactForm.get(key);
@@ -101,7 +101,7 @@ export class ContactFormComponent {
 
       error: (error) => {
         console.error('Error submitting contact:', error);
-        this.showAlert('Failed to send message. Please try again.', 'error');
+        this.showAlert('Failed to send message, Please try again.', 'error');
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);

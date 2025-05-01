@@ -194,14 +194,14 @@ export class RequestIssueCheckFormComponent implements OnInit {
     this.digitalCheckService.createDigitalCheck(newCheckRequest).subscribe({
       next: (response) => {
         this.applyFilter.emit(response);
-        this.showAlert('Check issued successfully!!', 'success');
+        this.showAlert('Check issued successfully.', 'success');
 
         this.checkRefreshService.refreshTables();
         setTimeout(() => this.loadingService.loadingOff(), 400);
       },
       error: (err) => {
         console.error('Error issuing check:', err);
-        this.showAlert('Failed to issue the check. Please try again.', 'error');
+        this.showAlert('Failed to issue the check, Please try again.', 'error');
         setTimeout(() => this.loadingService.loadingOff(), 400);
       },
     });

@@ -149,13 +149,13 @@ export class RequestEndorseCheckFormComponent implements OnInit {
           this.applyFilter.emit(res);
 
           this.checkRefreshService.refreshTables();
-          this.showAlert('Check endorsed successfully!', 'success');
+          this.showAlert('Check endorsed successfully.', 'success');
           setTimeout(() => this.loadingService.loadingOff(), 400);
         },
         error: (err) => {
           console.error('Endorse failed:', err);
           this.showAlert(
-            'Failed to endorse the check. Please try again.',
+            'Failed to endorse the check, Please try again.',
             'error'
           );
           setTimeout(() => this.loadingService.loadingOff(), 400);

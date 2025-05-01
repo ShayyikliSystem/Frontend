@@ -120,7 +120,7 @@ export class SecurityComponent implements OnInit, AfterViewInit {
     this.authService.resetPasswordForProfile().subscribe({
       next: () => {
         this.showAlert(
-          'Your password has been reset successfully! Logging out in 5 seconds...',
+          'Your password has been reset successfully, Logging out in 5 seconds...',
           'success'
         );
         this.loadingService.loadingOff();

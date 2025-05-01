@@ -158,7 +158,7 @@ export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
     this.loadingService.loadingOn();
     this.settlementService.submitSettlement().subscribe({
       next: () => {
-        this.showAlert('Settlement submitted successfully!', 'success');
+        this.showAlert('Settlement submitted successfully.', 'success');
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -168,7 +168,7 @@ export class CreateSettlementFormComponent implements OnInit, AfterViewInit {
       error: (err: HttpErrorResponse) => {
         console.error('Settlement failed:', err.error);
         this.showAlert(
-          'Failed to submit settlement. Please try again.',
+          'Failed to submit settlement, Please try again.',
           'error'
         );
         setTimeout(() => {

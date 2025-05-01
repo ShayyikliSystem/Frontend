@@ -90,7 +90,7 @@ export class SupportFormComponent {
           control?.markAsUntouched();
         });
         this.showAlert(
-          'Your support request has been submitted successfully!',
+          'Your support request has been submitted successfully.',
           'success'
         );
         this.submitted = false;
@@ -103,7 +103,7 @@ export class SupportFormComponent {
       error: (error) => {
         console.error('Error submitting support request:', error);
         this.showAlert(
-          'Error submitting support request. Please try again later.',
+          'Error submitting support request, Please try again later.',
           'error'
         );
         setTimeout(() => {

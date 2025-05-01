@@ -85,7 +85,7 @@ export class SettingsComponent {
     this.authService.resetPasswordForProfile().subscribe({
       next: () => {
         this.showAlert(
-          'Your password has been reset successfully! Logging out in 5 seconds...',
+          'Your password has been reset successfully, Logging out in 5 seconds...',
           'success'
         );
         this.loadingService.loadingOff();
@@ -126,7 +126,7 @@ export class SettingsComponent {
       },
       error: (err) => {
         console.error('Failed to load user profile', err);
-        this.showAlert('Failed to load user profile', 'error');
+        this.showAlert('Failed to load user profile.', 'error');
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -188,7 +188,7 @@ export class SettingsComponent {
       .updateProfile(this.settingsData.email, formattedPhoneNumber)
       .subscribe({
         next: (response) => {
-          this.showAlert('Profile updated successfully!', 'success');
+          this.showAlert('Profile updated successfully.', 'success');
           if (response.newToken) {
             localStorage.setItem('authToken', response.newToken);
           }

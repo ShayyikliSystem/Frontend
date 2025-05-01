@@ -422,11 +422,11 @@ export class IssuedChecksPerUserComponent implements AfterViewInit, OnChanges {
     this.adminService.clearCheck(checkId.toString()).subscribe({
       next: () => {
         this.fetchIssuedChecks();
-        this.showAlert('Check deleted successfully', 'success');
+        this.showAlert('Check deleted successfully.', 'success');
       },
       error: (err) => {
         console.error('Delete failed', err);
-        this.showAlert('Failed to delete check', 'error');
+        this.showAlert('Failed to delete check.', 'error');
       },
       complete: () => this.loadingService.loadingOff(),
     });
