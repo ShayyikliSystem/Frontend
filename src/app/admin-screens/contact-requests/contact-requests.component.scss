@@ -83,3 +83,18 @@ button:hover {
 .resolved-row td {
   text-decoration: line-through;
 }
+
+.filter-buttons {
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+}
+
+button {
+  padding: 10px;
+  background-color: #141d33;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

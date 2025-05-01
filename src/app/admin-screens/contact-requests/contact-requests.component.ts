@@ -9,6 +9,9 @@ import { AlertComponent } from '../../alert/alert.component';
 import { AdminService } from '../../services/admin.service';
 import { ContactService } from '../../services/contact.service';
 import { ReplyToContactComponent } from './reply-to-contact/reply-to-contact.component';
+import { ContactRequestsFilterComponent } from './contact-requests-filter/contact-requests-filter.component';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-contact-requests',
@@ -22,6 +25,9 @@ import { ReplyToContactComponent } from './reply-to-contact/reply-to-contact.com
     MatButtonModule,
     AlertComponent,
     ReplyToContactComponent,
+    ContactRequestsFilterComponent,
+    MatTooltipModule,
+    MatIconModule,
   ],
   templateUrl: './contact-requests.component.html',
   styleUrl: './contact-requests.component.scss',
@@ -47,6 +53,10 @@ export class ContactRequestsComponent implements OnInit {
   alertMessage = '';
   alertType: 'success' | 'error' = 'success';
 
+  showFilter = false;
+  filterStatus = '';
+  statusOptions = ['PENDING', 'RESOLVED'];
+
   // whenever the MatSort is available, hook it up and reset page:
   @ViewChild(MatSort) set sort(ms: MatSort) {
     this.dataSource.sort = ms;
@@ -62,6 +72,32 @@ export class ContactRequestsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadContacts();
+
+    this.dataSource.filterPredicate = (row: any, filter: string) =>
+      !filter || row.status === filter;
+  }
+
+  toggleFilter() {
+    this.showFilter = !this.showFilter;
+  }
+
+  onFilterApply(status: string) {
+    this.filterStatus = status;
+    this.dataSource.filter = status;
+    this.showFilter = false;
+  }
+
+  onFilterCancel() {
+    this.showFilter = false;
+  }
+
+  clearFilter() {
+    this.filterStatus = '';
+    this.dataSource.filter = '';
+  }
+
+  hasActiveFilter(): boolean {
+    return !!this.filterStatus;
   }
 
   private loadContacts(): void {
