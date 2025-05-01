@@ -212,7 +212,7 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
   }
 
   onReplied() {
-    this.alertMessage = 'Reply sent successfully!';
+    this.alertMessage = 'Reply sent successfully.';
     this.alertType = 'success';
     this.showAlert = true;
 

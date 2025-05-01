@@ -86,7 +86,7 @@ export class ContactRequestsComponent implements OnInit {
   }
 
   onReplied() {
-    this.alertMessage = 'Reply sent successfully!';
+    this.alertMessage = 'Reply sent successfully.';
     this.alertType = 'success';
     this.showAlert = true;
     this.showResponse = false;

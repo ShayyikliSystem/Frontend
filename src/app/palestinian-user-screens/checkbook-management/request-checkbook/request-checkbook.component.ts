@@ -31,7 +31,7 @@ export class RequestCheckbookComponent {
           this.loadingService.loadingOff();
         }, 400);
         this.checkRefreshService.refreshTables();
-        this.showAlert('Checkbook requested successfully', 'success');
+        this.showAlert('Checkbook requested successfully.', 'success');
         this.requestCompleted.emit();
       },
       error: (err) => {
@@ -39,7 +39,7 @@ export class RequestCheckbookComponent {
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
-        this.showAlert('Failed to request checkbook', 'error');
+        this.showAlert('Failed to request checkbook.', 'error');
 
       },
     });

@@ -194,7 +194,7 @@ export class PalestinianManagementComponent implements OnInit {
             this.loadingService.loadingOff();
           }, 400);
           this.alertType = 'error';
-          this.alertMessage = 'Failed to download PDF. Please try again.';
+          this.alertMessage = 'Failed to download PDF, Please try again.';
           this.alertVisible = true;
         },
       });
