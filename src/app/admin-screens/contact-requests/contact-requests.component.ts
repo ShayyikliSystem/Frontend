@@ -26,14 +26,14 @@ import { ReplyToContactComponent } from './reply-to-contact/reply-to-contact.com
   templateUrl: './contact-requests.component.html',
   styleUrl: './contact-requests.component.scss',
 })
-export class ContactRequestsComponent implements OnInit, AfterViewInit {
+export class ContactRequestsComponent implements OnInit {
   displayedColumns = [
     'id',
     'name',
     'email',
     'phoneNumber',
     'message',
-    'status', // ← added
+    'status',
     'actions',
   ];
   dataSource = new MatTableDataSource<any>([]);
@@ -47,10 +47,13 @@ export class ContactRequestsComponent implements OnInit, AfterViewInit {
   alertMessage = '';
   alertType: 'success' | 'error' = 'success';
 
+  // whenever the MatSort is available, hook it up and reset page:
   @ViewChild(MatSort) set sort(ms: MatSort) {
     this.dataSource.sort = ms;
-    this.dataSource.paginator?.firstPage();
+    this.resetPaginator();
   }
+
+  // whenever the MatPaginator is available, hook it up:
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
     this.dataSource.paginator = mp;
   }
@@ -58,49 +61,25 @@ export class ContactRequestsComponent implements OnInit, AfterViewInit {
   constructor(private contactService: ContactService) {}
 
   ngOnInit(): void {
+    this.loadContacts();
+  }
+
+  private loadContacts(): void {
     this.contactService.getAllContacts().subscribe({
       next: (data) => {
-        console.log(data);
+        // newest first
         data.sort((a, b) => b.id - a.id);
+
         this.dataSource.data = data;
         this.updatePageSizeOptions();
+        this.resetPaginator();
       },
-      error: (err) => {
-        console.error('Error loading contacts', err);
-      },
+      error: (err) => console.error('Error loading contacts', err),
     });
   }
 
-  ngAfterViewInit(): void {}
-
-  private updatePageSizeOptions(): void {
-    const total = this.dataSource.data.length;
-    if (total < 5) {
-      this.dynamicPageSizeOptions = [total];
-      return;
-    }
-    const opts: number[] = [];
-    for (let i = 5; i <= total; i += 5) {
-      opts.push(i);
-    }
-    if (opts[opts.length - 1] !== total) {
-      opts.push(total);
-    }
-    this.dynamicPageSizeOptions = opts;
-  }
-
-  transformEnumValue(value?: string): string {
-    if (!value) return '';
-    return value
-      .replace(/_/g, ' ')
-      .toLowerCase()
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-  }
-
   onReply(row: any) {
-    if (row.status !== 'PENDING') {
-      return;
-    }
+    if (row.status !== 'PENDING') return;
     this.currentId = row.id;
     this.currentMessage = row.message;
     this.showResponse = true;
@@ -111,10 +90,40 @@ export class ContactRequestsComponent implements OnInit, AfterViewInit {
     this.alertType = 'success';
     this.showAlert = true;
     this.showResponse = false;
-    this.ngOnInit();
+    this.loadContacts();
   }
 
   onClosed() {
     this.showResponse = false;
+  }
+
+  private updatePageSizeOptions(): void {
+    const count = this.dataSource.filteredData.length;
+    if (count < 5) {
+      this.dynamicPageSizeOptions = [count];
+      return;
+    }
+    const opts: number[] = [];
+    for (let i = 5; i <= count; i += 5) {
+      opts.push(i);
+    }
+    if (opts[opts.length - 1] !== count) {
+      opts.push(count);
+    }
+    this.dynamicPageSizeOptions = opts;
+  }
+
+  private resetPaginator(): void {
+    if (!this.dataSource.paginator) return;
+    this.dataSource.paginator.pageSize = this.dynamicPageSizeOptions[0];
+    this.dataSource.paginator.firstPage();
+  }
+
+  transformEnumValue(value?: string): string {
+    if (!value) return '';
+    return value
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase());
   }
 }

@@ -14,7 +14,7 @@
     </div>
   </mat-expansion-panel-header>
 
-  <div *ngIf="dataSource.data.length > 0; else noContacts">
+  <div *ngIf="dataSource.filteredData.length > 0; else noContacts">
     <div class="table-container">
       <table
         mat-table
@@ -83,11 +83,6 @@
         ></tr>
       </table>
     </div>
-
-    <mat-paginator
-      [pageSizeOptions]="dynamicPageSizeOptions"
-      showFirstLastButtons
-    ></mat-paginator>
   </div>
 
   <ng-template #noContacts>

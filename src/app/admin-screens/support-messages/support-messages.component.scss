@@ -1,3 +1,13 @@
+@use "@angular/material" as mat;
+
+mat-expansion-panel {
+  @include mat.expansion-overrides(
+    (
+      header-collapsed-state-height: 7vh,
+    )
+  );
+}
+
 * {
   box-sizing: border-box;
   font-family: Georgia, serif;
@@ -23,7 +33,7 @@ h3 {
 }
 
 .table-container {
-  max-height: 350px;
+  max-height: fit-content;
   overflow-y: auto;
 }
 
@@ -69,4 +79,19 @@ button:hover {
   td {
     text-decoration: line-through;
   }
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: end;
+  gap: 5px;
+}
+
+button {
+  padding: 10px;
+  background-color: #141d33;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

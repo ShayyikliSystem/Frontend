@@ -9,6 +9,9 @@ import { AdminService } from '../../services/admin.service';
 import { Support } from '../../models/support.model';
 import { ReplyPerUserComponent } from './reply-per-user/reply-per-user.component';
 import { AlertComponent } from '../../alert/alert.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SupportMessagesFilterComponent } from './support-messages-filter/support-messages-filter.component';
 
 @Component({
   selector: 'app-support-messages',
@@ -21,7 +24,10 @@ import { AlertComponent } from '../../alert/alert.component';
     MatPaginatorModule,
     MatButtonModule,
     ReplyPerUserComponent,
+    SupportMessagesFilterComponent,
     AlertComponent,
+    MatTooltipModule,
+    MatIconModule,
   ],
   templateUrl: './support-messages.component.html',
   styleUrl: './support-messages.component.scss',
@@ -45,6 +51,23 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
   showAlert = false;
   alertMessage = '';
   alertType: 'success' | 'error' = 'success';
+
+  showFilter = false;
+  filterValues = {
+    supportArea: '',
+    status: '',
+    date: null as Date | null,
+  };
+
+  supportAreaOptions = [
+    'CHECKBOOK',
+    'CHECK',
+    'ENDORSMENT',
+    'SETTLEMENT',
+    'GENERAL_SETTING',
+  ];
+
+  statusOptions = ['PENDING', 'RESOLVED'];
 
   dataSource = new MatTableDataSource<Support>([]);
 
@@ -74,11 +97,72 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
         this.dataSource.data = data;
 
         this.updatePageSizeOptions();
+
+        this.setupFilterPredicate();
       },
       error: (err) => {
         console.error('Error loading support requests', err);
       },
     });
+  }
+
+  onFilterCancel() {
+    this.showFilter = false;
+  }
+
+  toggleFilter() {
+    this.showFilter = !this.showFilter;
+  }
+
+  onFilterApply(f: typeof this.filterValues) {
+    const serialized = {
+      supportArea: f.supportArea,
+      status: f.status,
+      date: f.date ? f.date.toISOString() : null,
+    };
+
+    this.filterValues = { ...f };
+    this.dataSource.filter = JSON.stringify(serialized);
+    this.showFilter = false;
+  }
+
+  clearFilter() {
+    this.filterValues = { supportArea: '', status: '', date: null };
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }
+  hasActiveFilter(): boolean {
+    const f = this.filterValues;
+    return !!(f.supportArea || f.status || f.date);
+  }
+
+  private setupFilterPredicate() {
+    this.dataSource.filterPredicate = (data: Support, filter: string) => {
+      // parse the JSON; f.date will be a string if set, or null
+      const f = JSON.parse(filter) as {
+        supportArea: string;
+        status: string;
+        date: string | null;
+      };
+
+      // area & status
+      const areaMatch = f.supportArea
+        ? data.supportArea === f.supportArea
+        : true;
+      const statusMatch = f.status ? data.status === f.status : true;
+
+      // date:
+      let dateMatch = true;
+      if (f.date) {
+        const filterDate = new Date(f.date);
+        const dataDate = new Date(data.createdAt);
+        dateMatch =
+          filterDate.getFullYear() === dataDate.getFullYear() &&
+          filterDate.getMonth() === dataDate.getMonth() &&
+          filterDate.getDate() === dataDate.getDate();
+      }
+
+      return areaMatch && statusMatch && dateMatch;
+    };
   }
 
   ngAfterViewInit(): void {
