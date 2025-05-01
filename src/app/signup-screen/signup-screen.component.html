@@ -168,7 +168,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="custom-form-field">
+          <!-- <mat-form-field appearance="outline" class="custom-form-field">
             <mat-label>Card Number</mat-label>
             <input
               matInput
@@ -205,7 +205,36 @@
               This card is already registered.
             </mat-error>
           </mat-form-field>
+        </div> -->
+
+        <mat-form-field appearance="outline" class="custom-form-field">
+            <mat-label>Card Number</mat-label>
+            <input
+              matInput
+              type="text"
+              id="cardNumber"
+              name="cardNumber"
+              required
+              maxlength="19"
+              [(ngModel)]="signupData.cardNumber"
+              #cardField="ngModel"
+              inputmode="numeric"
+              (keypress)="allowOnlyNumbers($event)"
+              (input)="formatCardNumber($event)"
+              (blur)="onCardBlur()"
+            />
+            <mat-error *ngIf="cardField.hasError('required') && (cardField.dirty || cardField.touched)">
+              Card number is required
+            </mat-error>
+            <mat-error *ngIf="cardField.hasError('pattern') || cardField.hasError('minlength')">
+              Card number must be exactly 16 digits.
+            </mat-error>
+            <mat-error *ngIf="cardInUse">
+              This card is already registered.
+            </mat-error>
+          </mat-form-field>
         </div>
+
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="custom-form-field">
