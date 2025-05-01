@@ -35,7 +35,6 @@ import { AgreeTermsPolicyRequestComponent } from './agree-terms-policy-request/a
 export class LoginScreenComponent {
   isPasswordVisible = false;
   loginError = '';
-  incompleteFormError = '';
   emailError = '';
 
   showTermsModal = false;
@@ -86,7 +85,6 @@ export class LoginScreenComponent {
     this.loginData.shayyikliAccountNumberOrUsername = '';
     this.loginData.password = '';
     Object.values(form.controls).forEach((c) => {
-      c.setErrors(null);
       c.markAsPristine();
       c.markAsUntouched();
     });
@@ -96,13 +94,11 @@ export class LoginScreenComponent {
     this.loadingService.loadingOn();
 
     if (form.invalid) {
-      this.incompleteFormError = 'Check all the required fields.';
       Object.values(form.controls).forEach((c) => c.markAsTouched());
       setTimeout(() => this.loadingService.loadingOff(), 400);
       return;
     }
 
-    this.incompleteFormError = '';
     this.loginError = '';
 
     if (navigator.geolocation) {

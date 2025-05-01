@@ -47,11 +47,13 @@
             <mat-icon>close</mat-icon>
           </button>
           <mat-error
-          *ngIf="beneficiaryControl.hasError('required') && (beneficiaryControl.touched || beneficiaryControl.dirty)"
-        >
-          Beneficiary is required
-        </mat-error>
-        
+            *ngIf="
+              beneficiaryControl.hasError('required') &&
+              (beneficiaryControl.touched || beneficiaryControl.dirty)
+            "
+          >
+            Beneficiary is required
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -72,7 +74,7 @@
             class="example-right-align"
             placeholder="0"
             min="0"
-            max="100000"
+            max="10000"
           />
           <span matTextPrefix>₪&nbsp;</span>
           <button
@@ -84,17 +86,21 @@
           >
             <mat-icon>close</mat-icon>
           </button>
+
+          <mat-error *ngIf="amountField.hasError('required')">
+            Amount is required
+          </mat-error>
+          <mat-error *ngIf="amountField.hasError('pattern')">
+            Only whole number amounts are allowed
+          </mat-error>
+
           <mat-error
             *ngIf="
-              amountField.invalid && (amountField.touched || amountField.dirty)
+              amountField.hasError('max') &&
+              (amountField.touched || amountField.dirty)
             "
           >
-            <ng-container *ngIf="amountField.hasError('required')"
-              >Amount is required</ng-container
-            >
-            <ng-container *ngIf="amountField.hasError('pattern')"
-              >Only whole number amounts are allowed</ng-container
-            >
+            Maximum amount is 10,000 NIS
           </mat-error>
         </mat-form-field>
 

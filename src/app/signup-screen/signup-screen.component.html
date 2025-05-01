@@ -20,7 +20,6 @@
               name="firstName"
               required
               maxlength="50"
-              pattern="[a-zA-Z _-]*"
               [(ngModel)]="signupData.firstName"
               #firstNameField="ngModel"
               (keypress)="allowOnlyLetters($event)"
@@ -33,14 +32,6 @@
             >
               First name is required
             </mat-error>
-            <mat-error
-              *ngIf="
-                firstNameField.hasError('pattern') &&
-                (firstNameField.dirty || firstNameField.touched)
-              "
-            >
-              Only letters allowed
-            </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" class="custom-form-field">
             <mat-label>Last Name</mat-label>
@@ -49,7 +40,6 @@
               name="lastName"
               required
               maxlength="50"
-              pattern="[a-zA-Z _-]*"
               [(ngModel)]="signupData.lastName"
               #lastNameField="ngModel"
               (keypress)="allowOnlyLetters($event)"
@@ -61,14 +51,6 @@
               "
             >
               Last name is required
-            </mat-error>
-            <mat-error
-              *ngIf="
-                lastNameField.hasError('pattern') &&
-                (lastNameField.dirty || lastNameField.touched)
-              "
-            >
-              Only letters allowed
             </mat-error>
           </mat-form-field>
         </div>
@@ -82,6 +64,7 @@
               name="email"
               required
               email
+              pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}"
               maxlength="50"
               [(ngModel)]="signupData.email"
               #emailField="ngModel"
@@ -97,10 +80,11 @@
             <mat-error
               *ngIf="
                 emailField.hasError('email') &&
+                emailField.hasError('pattern') &&
                 (emailField.dirty || emailField.touched)
               "
             >
-              Enter a valid email
+              Enter a valid email address
             </mat-error>
           </mat-form-field>
 
@@ -134,15 +118,19 @@
             />
             <mat-error
               *ngIf="
-                phoneField.invalid && (phoneField.dirty || phoneField.touched)
+                phoneField.hasError('required') &&
+                (phoneField.dirty || phoneField.touched)
               "
             >
-              <ng-container *ngIf="phoneField.hasError('required')">
-                Phone number is required
-              </ng-container>
-              <ng-container *ngIf="phoneField.hasError('pattern')">
-                Must be exactly 9 digits
-              </ng-container>
+              Phone number is required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                phoneField.hasError('pattern') &&
+                (phoneField.dirty || phoneField.touched)
+              "
+            >
+              Phone Number must be 9 digits
             </mat-error>
           </mat-form-field>
         </div>
@@ -153,16 +141,14 @@
             <input
               matInput
               type="text"
-              id="idNumber"
               name="idNumber"
               required
               pattern="^\d{9}$"
-              [(ngModel)]="signupData.idNumber"
-              #idNumberField="ngModel"
+              maxlength="9"
               inputmode="numeric"
               (keypress)="allowOnlyNumbers($event)"
-              placeholder=""
-              maxlength="9"
+              [(ngModel)]="signupData.idNumber"
+              #idNumberField="ngModel"
             />
             <mat-error
               *ngIf="
@@ -170,7 +156,15 @@
                 (idNumberField.dirty || idNumberField.touched)
               "
             >
-              ID is required
+              ID number is required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                idNumberField.hasError('pattern') &&
+                (idNumberField.dirty || idNumberField.touched)
+              "
+            >
+              ID number must be 9 digits
             </mat-error>
           </mat-form-field>
 
@@ -179,16 +173,17 @@
             <input
               matInput
               type="text"
-              id="cardNumber"
               name="cardNumber"
               required
+              minlength="19"
               maxlength="19"
+              pattern="^(\d{16}|(\d{4}\s){3}\d{4})$"
               [(ngModel)]="signupData.cardNumber"
               #cardField="ngModel"
               inputmode="numeric"
               (keypress)="allowOnlyNumbers($event)"
               (input)="formatCardNumber($event)"
-              (blur)="onCardBlur()"
+              (ngModelChange)="onCardInput($event)"
             />
             <mat-error
               *ngIf="
@@ -200,10 +195,11 @@
             </mat-error>
             <mat-error
               *ngIf="
-                cardField.hasError('pattern') || cardField.hasError('minlength')
+                cardField.hasError('pattern') &&
+                (cardField.dirty || cardField.touched)
               "
             >
-              Card number must be exactly 16 digits.
+              Card must be 16 digits
             </mat-error>
             <mat-error *ngIf="cardInUse">
               This card is already registered.
@@ -235,7 +231,10 @@
             </mat-datepicker>
 
             <mat-error
-              *ngIf="date.hasError('required') && (date.dirty || date.touched)"
+              *ngIf="
+                date.hasError('required') &&
+                (date.touched || signupForm.submitted)
+              "
             >
               Expiry date is required
             </mat-error>
@@ -260,16 +259,19 @@
             />
             <mat-error
               *ngIf="
-                securityField.invalid &&
+                securityField.hasError('required') &&
                 (securityField.dirty || securityField.touched)
               "
             >
-              <ng-container *ngIf="securityField.hasError('required')">
-                Security code is required
-              </ng-container>
-              <ng-container *ngIf="securityField.hasError('minlength')">
-                Must be 3 digits
-              </ng-container>
+              Security code is required
+            </mat-error>
+            <mat-error
+              *ngIf="
+                securityField.hasError('pattern') &&
+                (securityField.dirty || securityField.touched)
+              "
+            >
+              Security code must be 3 digits
             </mat-error>
           </mat-form-field>
         </div>

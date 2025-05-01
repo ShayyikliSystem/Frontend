@@ -49,6 +49,7 @@ export class IncomingEndorsementsChecksPanelComponent
   incomingEndorsementsCheckFilterAmount: number | null = null;
   incomingEndorsementsCheckFilterIssuer: string = '';
   incomingEndorsementsCheckFilterBeneficiary: string = '';
+  incomingEndorsementsCheckFilterEndorser = '';
   userFullName: string = 'N/A';
 
   showFilter: boolean = false;
@@ -338,23 +339,15 @@ export class IncomingEndorsementsChecksPanelComponent
       date: this.incomingEndorsementsCheckFilterDate
         ? this.incomingEndorsementsCheckFilterDate.toISOString()
         : '',
-      status: this.incomingEndorsementsCheckFilterStatus
-        ? this.incomingEndorsementsCheckFilterStatus
-        : '',
-      amount: this.incomingEndorsementsCheckFilterAmount
-        ? this.incomingEndorsementsCheckFilterAmount
-        : '',
-      issuer: this.incomingEndorsementsCheckFilterIssuer
-        ? this.incomingEndorsementsCheckFilterIssuer
-        : '',
-      beneficiary: this.incomingEndorsementsCheckFilterBeneficiary
-        ? this.incomingEndorsementsCheckFilterBeneficiary
-        : '',
+      status: this.incomingEndorsementsCheckFilterStatus || '',
+      issuer: this.incomingEndorsementsCheckFilterIssuer || '',
+      endorser: this.incomingEndorsementsCheckFilterEndorser || '',
     };
+
     this.incomingEndorsementsCheckDataSource.filter =
       JSON.stringify(filterValue);
-    this.updatePageSizeOptions();
     this.resetPaginator();
+    this.updatePageSizeOptions();
   }
 
   updatePageSizeOptions(): void {

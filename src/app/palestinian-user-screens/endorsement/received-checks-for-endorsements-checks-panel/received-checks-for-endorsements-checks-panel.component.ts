@@ -21,6 +21,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RequestEndorseCheckFormComponent } from '../request-endorse-check-form/request-endorse-check-form.component';
 import { AlertComponent } from '../../../alert/alert.component';
+import { ReceivedChecksFilterComponent } from '../../check-management/received-checks-filter/received-checks-filter.component';
 
 @Component({
   selector: 'app-received-checks-for-endorsements-checks-panel',
@@ -40,6 +41,7 @@ import { AlertComponent } from '../../../alert/alert.component';
     MatTooltipModule,
     RequestEndorseCheckFormComponent,
     AlertComponent,
+    ReceivedChecksFilterComponent,
   ],
   templateUrl: './received-checks-for-endorsements-checks-panel.component.html',
   styleUrl: './received-checks-for-endorsements-checks-panel.component.scss',

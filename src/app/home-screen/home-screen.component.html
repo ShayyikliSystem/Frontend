@@ -3,7 +3,7 @@
   [message]="alertMessage"
   [type]="alertType"
 ></app-alert>
-<div class="home-container">
+<div *ngIf="!showTermsModal" class="home-container">
   <header class="header-section">
     <img src="assets/logo.png" alt="Logo" class="header-logo" />
     <nav class="header-nav">
@@ -178,3 +178,8 @@
     <p>© 2025 Shayyikli Team. All rights reserved.</p>
   </footer>
 </div>
+
+<app-agree-terms-policy-request
+  *ngIf="showTermsModal"
+  (agreed)="onTermsAgreed()"
+></app-agree-terms-policy-request>

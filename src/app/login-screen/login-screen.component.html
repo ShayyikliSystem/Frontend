@@ -74,9 +74,12 @@
                 #shayyikliField="ngModel"
                 inputmode="numeric"
                 (keypress)="allowOnlyNumbers($event)"
+                minlength="6"
                 maxlength="6"
+                pattern="^[0-9]{6}$"
                 required
               />
+              <!-- Required -->
               <mat-error
                 *ngIf="
                   shayyikliField.errors?.['required'] &&
@@ -84,6 +87,17 @@
                 "
               >
                 Shayyikli Number is required
+              </mat-error>
+              <!-- Exact‐6‐digits -->
+              <mat-error
+                *ngIf="
+                  (shayyikliField.errors?.['minlength'] ||
+                   shayyikliField.errors?.['maxlength'] ||
+                   shayyikliField.errors?.['pattern']) &&
+                  (shayyikliField.dirty || shayyikliField.touched)
+                "
+              >
+                Shayyikli Number must be exactly 6 digits
               </mat-error>
             </mat-form-field>
           </ng-container>
@@ -98,7 +112,7 @@
             [(ngModel)]="loginData.password"
             #passwordField="ngModel"
             required
-            minlength="8"
+            minlength="10"
           />
           <button
             mat-icon-button
@@ -113,16 +127,29 @@
             ></i>
           </button>
 
-          <mat-error *ngIf="
-    passwordField.errors?.['required'] &&
-    (passwordField.dirty ||
-     passwordField.touched ||
-     loginForm.submitted)
-  ">
-  Password is required
-</mat-error>
-
-          
+          <!-- Required -->
+          <mat-error
+            *ngIf="
+              passwordField.errors?.['required'] &&
+              (passwordField.dirty ||
+               passwordField.touched ||
+               loginForm.submitted)
+            "
+          >
+            Password is required
+          </mat-error>
+          <!-- Exact‐10‐chars -->
+          <mat-error
+            *ngIf="
+              (passwordField.hasError('minlength') ||
+                passwordField.hasError('maxlength')) &&
+              (passwordField.dirty ||
+                passwordField.touched ||
+                loginForm.submitted)
+            "
+          >
+            Password must be more than 10 characters
+          </mat-error>
         </mat-form-field>
 
         <a routerLink="/forgot-password" class="forgot-password"
@@ -130,15 +157,7 @@
         >
 
         <button type="submit" class="btn-primary">Log In</button>
-
-        <div *ngIf="incompleteFormError" class="error" style="margin-top: 20px">
-          {{ incompleteFormError }}
-        </div>
-        <div
-          *ngIf="!incompleteFormError && loginError"
-          class="error"
-          style="margin-top: 20px"
-        >
+        <div *ngIf="loginError" class="error" style="margin-top: 20px">
           {{ loginError }}
         </div>
       </form>

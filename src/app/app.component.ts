@@ -22,22 +22,42 @@ export class AppComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   showTimeout = signal(false);
 
+  // list of all your private routes
+  private privatePaths = [
+    '/dashboard',
+    '/checkbook-management',
+    '/check-management',
+    '/endorsement',
+    '/classification',
+    '/transaction',
+    '/security',
+    '/support',
+    '/settings',
+    '/admin/palestinian',
+    '/admin/support',
+    '/admin/contacts',
+  ];
+
   constructor(private router: Router, private authService: AuthService) {
     const hasToken = !!localStorage.getItem('authToken');
     const hasRoles = !!localStorage.getItem('userRoles');
 
     if (hasToken && hasRoles) {
-      const navigation$ = this.router.events.pipe(
-        filter((e): e is NavigationEnd => e instanceof NavigationEnd)
+      // only NavigationEnd events that land on a private path
+      const navigationOnPrivate$ = this.router.events.pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        filter(() => this.isOnPrivateRoute())
       );
 
-      const userEvents$ = merge(
+      // only user events when we’re on a private path
+      const userEventsOnPrivate$ = merge(
         fromEvent(document, 'click'),
         fromEvent(document, 'keydown'),
         fromEvent(document, 'mousemove')
-      );
+      ).pipe(filter(() => this.isOnPrivateRoute()));
 
-      merge(navigation$, userEvents$)
+      // validate whenever either fires
+      merge(navigationOnPrivate$, userEventsOnPrivate$)
         .pipe(
           takeUntil(this.destroy$),
           switchMap(() => this.authService.validateToken())
@@ -48,7 +68,10 @@ export class AppComponent implements OnDestroy {
             console.log('Token expired');
             localStorage.clear();
             sessionStorage.clear();
-            this.showTimeout.set(true);
+            // only show the timeout dialog if we’re still on a private route
+            if (this.isOnPrivateRoute()) {
+              this.showTimeout.set(true);
+            }
           },
         });
     }
@@ -57,5 +80,10 @@ export class AppComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  /** helper: checks if the current URL starts with any of your private paths */
+  private isOnPrivateRoute(): boolean {
+    return this.privatePaths.some((p) => this.router.url.startsWith(p));
   }
 }

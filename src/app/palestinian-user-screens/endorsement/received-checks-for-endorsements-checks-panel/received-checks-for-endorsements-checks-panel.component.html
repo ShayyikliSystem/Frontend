@@ -1,11 +1,10 @@
-
 <app-alert
   *ngIf="alertMessage"
   [message]="alertMessage"
   [type]="alertType"
 ></app-alert>
 
-<mat-expansion-panel style="width: 1100px; margin-bottom: 20px" expanded="true">
+<mat-expansion-panel style="width: 1230px; margin-bottom: 20px" expanded="true">
   <mat-expansion-panel-header>
     <div class="security-header">
       <img
@@ -47,12 +46,28 @@
         </span>
       </div>
 
+      <app-received-checks-filter
+        *ngIf="showFilter"
+        [currentFilter]="{
+          date: receivedCheckFilterDate,
+          amount: receivedCheckFilterAmount,
+          status: receivedCheckFilterStatus,
+          issuer: receivedCheckFilterIssuer,
+          beneficiary: receivedCheckFilterBeneficiary
+        }"
+        [statusOptions]="statusOptions"
+        (applyFilter)="onFilterApply($event)"
+        (cancelFilter)="closeFilter()"
+      ></app-received-checks-filter>
+
       <app-request-endorse-check-form
         *ngIf="selectedCheckId"
         [checkId]="selectedCheckId"
-        (cancelFilter)="closeEndorseForm()"
+        (closeForm)="closeEndorseForm()"
         (applyFilter)="closeEndorseForm()"
+        (alertMessageEvent)="handleAlert($event)"
       >
+        >
       </app-request-endorse-check-form>
 
       <div
@@ -182,12 +197,3 @@
     </ng-template>
   </div>
 </mat-expansion-panel>
-
-<app-request-endorse-check-form
-  *ngIf="selectedCheckId"
-  [checkId]="selectedCheckId"
-  (closeForm)="closeEndorseForm()"
-  (applyFilter)="closeEndorseForm()"
-  (alertMessageEvent)="handleAlert($event)">
->
-</app-request-endorse-check-form>

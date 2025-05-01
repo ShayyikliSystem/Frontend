@@ -112,37 +112,4 @@
   </mat-form-field>
 
   <button type="submit">Send Message</button>
-
-  <div *ngIf="submitted && contactForm.invalid" class="error-message">
-    <span *ngIf="firstName?.invalid || lastName?.invalid || message?.invalid">
-      Check all the required fields.
-    </span>
-    <span
-      *ngIf="
-        !(firstName?.invalid || lastName?.invalid || message?.invalid) &&
-        email?.invalid &&
-        phoneNumber?.invalid
-      "
-    >
-      Invalid email format and phone number must be 9 digits.
-    </span>
-    <span
-      *ngIf="
-        !(firstName?.invalid || lastName?.invalid || message?.invalid) &&
-        email?.invalid &&
-        !phoneNumber?.invalid
-      "
-    >
-      Invalid email format.
-    </span>
-    <span
-      *ngIf="
-        !(firstName?.invalid || lastName?.invalid || message?.invalid) &&
-        !email?.invalid &&
-        phoneNumber?.invalid
-      "
-    >
-      Phone number must be 9 digits.
-    </span>
-  </div>
 </form>

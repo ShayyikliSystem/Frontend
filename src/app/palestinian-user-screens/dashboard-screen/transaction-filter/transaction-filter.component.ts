@@ -73,7 +73,7 @@ export class TransactionFilterComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.getAllUsersExcludingSelf().subscribe({
+    this.userService.getAllUsers().subscribe({
       next: (data: User[]) => {
         this.allUsers = data;
         this.filteredIssuers = data;
@@ -87,7 +87,7 @@ export class TransactionFilterComponent implements OnInit {
         if (typeof searchTerm === 'string') {
           this.filteredIssuers = this.filterUsers(searchTerm, this.allUsers);
         } else if (searchTerm === null) {
-          this.filteredBeneficiaries = this.allUsers;
+          this.filteredIssuers = this.allUsers;
         }
       }
     );

@@ -23,6 +23,13 @@ import { MY_FORMATS } from '../formats/my-date-formats';
 import _moment from 'moment';
 import { SignupRequest } from '../models/signup-request.model';
 import { LoadingService } from '../services/loading.service';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  Subject,
+  Subscription,
+} from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,6 +62,9 @@ export class SignupScreenComponent {
   signupError: string = '';
   cardInUse = false;
 
+  private _cardInput$ = new Subject<string>();
+  private _cardSub!: Subscription;
+
   public signupData: SignupRequest = {
     firstName: '',
     lastName: '',
@@ -72,6 +82,33 @@ export class SignupScreenComponent {
     private authService: AuthService,
     private loadingService: LoadingService
   ) {}
+
+  ngOnInit() {
+    // listen for changes, strip spaces, debounce, and only call when 16 digits
+    this._cardSub = this._cardInput$
+      .pipe(
+        map((val) => val.replace(/\s+/g, '')),
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe((raw) => {
+        if (raw.length === 16) {
+          this.authService
+            .checkCardNumber(raw)
+            .subscribe((resp) => (this.cardInUse = resp.exists));
+        } else {
+          this.cardInUse = false;
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this._cardSub.unsubscribe();
+  }
+
+  onCardInput(spacedValue: string) {
+    this._cardInput$.next(spacedValue);
+  }
 
   date = new FormControl();
 
@@ -98,7 +135,6 @@ export class SignupScreenComponent {
       Object.values(form.controls).forEach((control) => {
         control.markAsTouched();
       });
-      this.signupError = 'Please fill out all required fields.';
       return;
     }
 
@@ -129,52 +165,9 @@ export class SignupScreenComponent {
       !this.signupData.expiryDate ||
       !this.signupData.securityCode
     ) {
-      this.signupError = 'Please fill out all required fields.';
-      setTimeout(() => {
-        this.loadingService.loadingOff();
-      }, 400);
-      return;
-    }
-
-    const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    if (!emailPattern.test(this.signupData.email)) {
-      this.signupError = 'Please enter a valid email address.';
-      setTimeout(() => {
-        this.loadingService.loadingOff();
-      }, 400);
-      return;
-    }
-
-    const phonePattern = /^\d{9}$/;
-    const idPattern = /^\d{9}$/;
-    const cardPattern = /^\d{16}$/;
-    const securityPattern = /^\d{3}$/;
-
-    if (!phonePattern.test(this.signupData.phoneNumber)) {
-      this.signupError = 'Phone number must be exactly 9 digits.';
-      setTimeout(() => {
-        this.loadingService.loadingOff();
-      }, 400);
-      return;
-    }
-
-    if (!idPattern.test(this.signupData.idNumber.toString())) {
-      this.signupError = 'ID number must be exactly 9 digits.';
-      setTimeout(() => {
-        this.loadingService.loadingOff();
-      }, 400);
-      return;
-    }
-    if (!cardPattern.test(this.signupData.cardNumber.replace(/\s/g, ''))) {
-      this.signupError = 'Card number must be exactly 16 digits.';
-      setTimeout(() => {
-        this.loadingService.loadingOff();
-      }, 400);
-      return;
-    }
-
-    if (!securityPattern.test(this.signupData.securityCode.toString())) {
-      this.signupError = 'Security code must be exactly 3 digits.';
+      Object.values(form.controls).forEach((control) => {
+        control.markAsTouched();
+      });
       setTimeout(() => {
         this.loadingService.loadingOff();
       }, 400);
