@@ -20,6 +20,8 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
 import { DigitalCheckService } from '../../../services/digital-check.service';
 import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-settle-checks-panel',
@@ -38,6 +40,8 @@ import { UserService } from '../../../services/user.service';
     MatAutocompleteModule,
     SettleChecksFilterComponent,
     MatTooltipModule,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './settle-checks-panel.component.html',
   styleUrl: './settle-checks-panel.component.scss',
@@ -216,7 +220,10 @@ export class SettleChecksPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.settleCheckDataSource.paginator = mp;
   }
 
@@ -338,27 +345,31 @@ export class SettleChecksPanelComponent implements OnInit, AfterViewInit {
   updatePageSizeOptions(): void {
     const count = this.settleCheckDataSource.filteredData.length;
 
-    if (count < 5) {
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
 
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 
-  resetPaginator(): void {
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
-    }
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
   formatDate(dateString: string): string {
@@ -380,5 +391,17 @@ export class SettleChecksPanelComponent implements OnInit, AfterViewInit {
       this.settleCheckFilterIssuer ||
       this.settleCheckFilterBeneficiary
     );
+  }
+
+  clearFilterProperty(prop: 'beneficiary' | 'date') {
+    switch (prop) {
+      case 'beneficiary':
+        this.settleCheckFilterBeneficiary = '';
+        break;
+      case 'date':
+        this.settleCheckFilterDate = null;
+        break;
+    }
+    this.applySettleCheckFilter();
   }
 }

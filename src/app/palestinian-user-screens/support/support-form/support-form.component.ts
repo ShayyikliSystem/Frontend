@@ -68,10 +68,8 @@ export class SupportFormComponent {
     this.submitted = true;
     this.loadingService.loadingOn();
     if (this.supportForm.invalid) {
-      // mark every control in the form (and sub-controls) as touched
       this.supportForm.markAllAsTouched();
 
-      // optional, if you want them to look “dirty” too:
       this.supportForm.markAsDirty();
 
       setTimeout(() => this.loadingService.loadingOff(), 400);

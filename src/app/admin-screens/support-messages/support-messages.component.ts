@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SupportMessagesFilterComponent } from './support-messages-filter/support-messages-filter.component';
 import { LoadingService } from '../../services/loading.service';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-support-messages',
@@ -28,6 +29,7 @@ import { LoadingService } from '../../services/loading.service';
     AlertComponent,
     MatTooltipModule,
     MatIconModule,
+    MatChipsModule,
   ],
   templateUrl: './support-messages.component.html',
   styleUrl: './support-messages.component.scss',
@@ -93,7 +95,6 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
     this.adminService.getAllSupportRequests().subscribe({
       next: (data: Support[]) => {
         this.loadingService.loadingOn();
-        console.log(data);
         data.sort(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -194,7 +195,6 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
   }
 
   onReply(x: Support) {
-    console.log(x);
     this.currentId = x.id;
     this.currentDesc = x.supportDescription;
     this.showResponse = true;
@@ -210,5 +210,29 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
 
   onClosed() {
     this.showResponse = false;
+  }
+
+  clearFilterProperty(prop: 'supportArea' | 'status' | 'date') {
+    switch (prop) {
+      case 'supportArea':
+        this.filterValues.supportArea = '';
+        break;
+      case 'status':
+        this.filterValues.status = '';
+        break;
+      case 'date':
+        this.filterValues.date = null;
+        break;
+    }
+
+    // re-serialize and re-apply
+    const serialized = {
+      supportArea: this.filterValues.supportArea,
+      status: this.filterValues.status,
+      date: this.filterValues.date
+        ? this.filterValues.date.toISOString()
+        : null,
+    };
+    this.dataSource.filter = JSON.stringify(serialized);
   }
 }

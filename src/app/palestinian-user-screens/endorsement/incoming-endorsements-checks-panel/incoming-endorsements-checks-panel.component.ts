@@ -20,6 +20,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IncomingEndorsementsChecksFilterComponent } from '../incoming-endorsements-checks-filter/incoming-endorsements-checks-filter.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-incoming-endorsements-checks-panel',
@@ -38,6 +40,8 @@ import { IncomingEndorsementsChecksFilterComponent } from '../incoming-endorseme
     MatAutocompleteModule,
     IncomingEndorsementsChecksFilterComponent,
     MatTooltipModule,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './incoming-endorsements-checks-panel.component.html',
   styleUrl: './incoming-endorsements-checks-panel.component.scss',
@@ -106,7 +110,6 @@ export class IncomingEndorsementsChecksPanelComponent
         issuerMatch = true,
         endorserMatch = true;
 
-      // date
       if (s.date && data.rawTransferDate) {
         const fd = new Date(s.date),
           dd = new Date(data.rawTransferDate);
@@ -116,17 +119,14 @@ export class IncomingEndorsementsChecksPanelComponent
           fd.getDate() === dd.getDate();
       }
 
-      // status
       if (s.status) {
         statusMatch = data.status === s.status;
       }
 
-      // amount
       if (s.amount) {
         amountMatch = data.amount === s.amount;
       }
 
-      // issuer
       if (s.issuer) {
         issuerMatch =
           data.issuerName?.toLowerCase().includes(s.issuer.toLowerCase()) ??
@@ -211,7 +211,10 @@ export class IncomingEndorsementsChecksPanelComponent
     }
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.incomingEndorsementsCheckDataSource.paginator = mp;
   }
 
@@ -340,27 +343,31 @@ export class IncomingEndorsementsChecksPanelComponent
   updatePageSizeOptions(): void {
     const count = this.incomingEndorsementsCheckDataSource.filteredData.length;
 
-    if (count < 5) {
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
 
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 
-  resetPaginator(): void {
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
-    }
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
   formatDate(dateString: string): string {
@@ -383,5 +390,23 @@ export class IncomingEndorsementsChecksPanelComponent
       this.incomingEndorsementsCheckFilterBeneficiary ||
       this.incomingEndorsementsCheckFilterEndorser
     );
+  }
+
+  clearFilterProperty(prop: 'status' | 'issuer' | 'endorser' | 'date') {
+    switch (prop) {
+      case 'status':
+        this.incomingEndorsementsCheckFilterStatus = '';
+        break;
+      case 'issuer':
+        this.incomingEndorsementsCheckFilterIssuer = '';
+        break;
+      case 'endorser':
+        this.incomingEndorsementsCheckFilterEndorser = '';
+        break;
+      case 'date':
+        this.incomingEndorsementsCheckFilterDate = null;
+        break;
+    }
+    this.applyIncomingEndorsementsCheckFilter();
   }
 }

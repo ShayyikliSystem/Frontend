@@ -107,16 +107,13 @@ export class LoginScreenComponent {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
 
-          console.log(`Latitude: ${latitude}`);
-          console.log(`Longitude: ${longitude}`);
-
           fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           )
             .then((response) => response.json())
             .then((data) => {
               const address = data.address;
-              const countryCode = (address.country_code || '').toUpperCase(); // → "PS"
+              const countryCode = (address.country_code || '').toUpperCase();
               const region = address.region || address.state || '';
               const area =
                 address.city ||
@@ -126,31 +123,22 @@ export class LoginScreenComponent {
                 '';
 
               const a = address;
-              // Join the parts, filter out empty strings
               const locationName = [countryCode, region, area]
                 .filter((part) => part)
                 .join(', ');
 
-              console.log('✅ User Location Area:');
-              console.log(address);
-              console.log(`Location: ${locationName}`);
-              console.log(`Country: ${address.country}`);
-
-              // 👉 NOW BUILD THE LOGIN REQUEST OBJECT
               const loginRequest = {
                 ...this.loginData,
                 latitude,
                 longitude,
-                locationName, // 👈 add locationName from reverse geocoding
+                locationName,
               };
 
-              // 👉 NOW submit login
               this.submitLogin(loginRequest);
             })
             .catch((error) => {
               console.error('❌ Error fetching location details:', error);
 
-              // If reverse geocoding fails, proceed with basic lat/lon
               const loginRequest = {
                 ...this.loginData,
                 latitude,
@@ -161,7 +149,6 @@ export class LoginScreenComponent {
         },
         (error) => {
           console.error('Error getting location:', error);
-          // If user blocks location, login without location info
           this.submitLogin(this.loginData);
         }
       );
@@ -175,7 +162,7 @@ export class LoginScreenComponent {
     this.authService.login(loginRequest).subscribe({
       next: (response: JwtResponse) => {
         if (response.roles.includes('ROLE_ADMIN')) {
-          this.router.navigate(['/admin/palestinian']);
+          this.router.navigate(['/admin']);
           this.loadingService.loadingOff();
           return;
         }

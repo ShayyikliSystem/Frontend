@@ -20,6 +20,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IssuedCheckFilterComponent } from '../issued-check-filter/issued-check-filter.component';
 import { CheckRefreshService } from '../../../services/check-refresh.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-issued-checks-panel',
@@ -38,6 +40,8 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
     MatAutocompleteModule,
     IssuedCheckFilterComponent,
     MatTooltipModule,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './issued-checks-panel.component.html',
   styleUrl: './issued-checks-panel.component.scss',
@@ -209,8 +213,7 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
   shayyikliAccountNumber: string | null = null;
 
   issuedCheckFilterDate: Date | null = null;
-  dynamicPageSizeOptions: number[] = [5, 10, 15, 20, 25];
-
+  dynamicPageSizeOptions: number[] = [];
   @ViewChild(MatSort) set sort(ms: MatSort) {
     this.issuedCheckDataSource.sort = ms;
     if (this.issuedCheckDataSource.paginator) {
@@ -218,7 +221,10 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.issuedCheckDataSource.paginator = mp;
   }
 
@@ -231,7 +237,6 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
     this.loadingService.loadingOn();
     this.digitalCheckService.getIssuedChecksForUser().subscribe({
       next: (data: DigitalCheck[]) => {
-        console.log('Fetched issued checks:', data);
         const issuedChecks: DigitalCheckExtended[] = data.map(
           (tx: DigitalCheck) => ({
             ...tx,
@@ -341,30 +346,34 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
   updatePageSizeOptions(): void {
     const count = this.issuedCheckDataSource.filteredData.length;
 
-    if (count < 5) {
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
 
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 
-  resetPaginator(): void {
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
-    }
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
-  private formatDate(dateString: string): string {
+  formatDate(dateString: string): string {
     if (!dateString) return 'Invalid Date';
     const date = new Date(dateString);
 
@@ -383,5 +392,23 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
       this.issuedCheckFilterIssuer ||
       this.issuedCheckFilterBeneficiary
     );
+  }
+
+  clearFilterProperty(prop: 'status' | 'beneficiary' | 'date' | 'amount') {
+    switch (prop) {
+      case 'status':
+        this.issuedCheckFilterStatus = '';
+        break;
+      case 'beneficiary':
+        this.issuedCheckFilterBeneficiary = '';
+        break;
+      case 'date':
+        this.issuedCheckFilterDate = null;
+        break;
+      case 'amount':
+        this.issuedCheckFilterAmount = null;
+        break;
+    }
+    this.applyIssuedCheckFilter();
   }
 }

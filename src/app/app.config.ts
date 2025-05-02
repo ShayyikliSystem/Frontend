@@ -30,8 +30,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeModule } from 'primeng/tree';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MY_FORMATS } from './formats/my-date-formats';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -59,7 +60,9 @@ export const appConfig: ApplicationConfig = {
       FormsModule,
       TreeModule,
       ReactiveFormsModule,
-      MatSnackBarModule
+      MatSnackBarModule,
+      MatChipsModule,
+      MatIconModule
     ),
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],

@@ -50,7 +50,7 @@ export class CurrentSettlementFilterComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.getAllUsersExcludingSelf().subscribe({
+    this.userService.getAllUsers().subscribe({
       next: (data: User[]) => {
         this.allUsers = data;
         this.filteredBeneficiaries = data;

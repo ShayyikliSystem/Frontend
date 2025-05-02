@@ -37,7 +37,6 @@
       </span>
     </div>
 
-    <!-- filter panel -->
     <app-support-messages-filter
       *ngIf="showFilter"
       [supportAreas]="supportAreaOptions"
@@ -47,7 +46,49 @@
       (cancelFilter)="toggleFilter()"
     ></app-support-messages-filter>
 
-    <!-- filtered table -->
+    <div *ngIf="hasActiveFilter()" class="active-filter-chips">
+      <mat-chip-listbox>
+        <mat-chip *ngIf="filterValues.supportArea" selectable="false">
+          Area: {{ transformEnumValue(filterValues.supportArea) }}
+          <button
+            mat-icon-button
+            matSuffix
+            class="clear-btn"
+            (click)="clearFilterProperty('supportArea')"
+            aria-label="Remove area filter"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </mat-chip>
+
+        <mat-chip *ngIf="filterValues.status" selectable="false">
+          Status: {{ transformEnumValue(filterValues.status) }}
+          <button
+            mat-icon-button
+            matSuffix
+            class="clear-btn"
+            (click)="clearFilterProperty('status')"
+            aria-label="Remove status filter"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </mat-chip>
+
+        <mat-chip *ngIf="filterValues.date" selectable="false">
+          On: {{ formatDate(filterValues.date.toISOString()) }}
+          <button
+            mat-icon-button
+            matSuffix
+            class="clear-btn"
+            (click)="clearFilterProperty('date')"
+            aria-label="Remove date filter"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </mat-chip>
+      </mat-chip-listbox>
+    </div>
+
     <div
       *ngIf="dataSource.filteredData.length; else noFilterResults"
       class="table-container"
@@ -59,25 +100,21 @@
         matSort
         class="mat-elevation-z8"
       >
-        <!-- ID -->
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
           <td mat-cell *matCellDef="let x">{{ x.id }}</td>
         </ng-container>
 
-        <!-- Account Number -->
         <ng-container matColumnDef="accountNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Account #</th>
           <td mat-cell *matCellDef="let x">{{ x.accountNumber }}</td>
         </ng-container>
 
-        <!-- User Name -->
         <ng-container matColumnDef="userName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>User Name</th>
           <td mat-cell *matCellDef="let x">{{ x.userName }}</td>
         </ng-container>
 
-        <!-- Support Area -->
         <ng-container matColumnDef="supportArea">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Area</th>
           <td mat-cell *matCellDef="let x">
@@ -85,13 +122,11 @@
           </td>
         </ng-container>
 
-        <!-- Description -->
         <ng-container matColumnDef="supportDescription">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
           <td mat-cell *matCellDef="let x">{{ x.supportDescription }}</td>
         </ng-container>
 
-        <!-- Status -->
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
           <td mat-cell *matCellDef="let x">
@@ -99,13 +134,11 @@
           </td>
         </ng-container>
 
-        <!-- Sent At -->
         <ng-container matColumnDef="createdAt">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Sent At</th>
           <td mat-cell *matCellDef="let x">{{ formatDate(x.createdAt) }}</td>
         </ng-container>
 
-        <!-- Actions -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let x">

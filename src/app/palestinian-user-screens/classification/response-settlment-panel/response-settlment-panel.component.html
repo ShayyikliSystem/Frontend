@@ -1,5 +1,3 @@
-
-
 <app-alert
   *ngIf="alertMessage"
   [message]="alertMessage"
@@ -49,6 +47,49 @@
         (applyFilter)="onFilterApply($event)"
         (cancelFilter)="showFilter = false"
       ></app-requested-settlement-filter>
+
+      <div *ngIf="hasActiveFilter()" class="active-filter-chips">
+        <mat-chip-listbox>
+          <mat-chip *ngIf="currentFilter.status" selectable="false">
+            Status: {{ currentFilter.status }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('status')"
+              aria-label="Remove status filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip *ngIf="currentFilter.initiator" selectable="false">
+            From: {{ currentFilter.initiator }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('initiator')"
+              aria-label="Remove initiator filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip *ngIf="currentFilter.date" selectable="false">
+            On: {{ formatDate(currentFilter.date) }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('date')"
+              aria-label="Remove date filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+        </mat-chip-listbox>
+      </div>
 
       <ng-container
         *ngIf="

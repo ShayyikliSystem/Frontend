@@ -168,46 +168,7 @@
             </mat-error>
           </mat-form-field>
 
-          <!-- <mat-form-field appearance="outline" class="custom-form-field">
-            <mat-label>Card Number</mat-label>
-            <input
-              matInput
-              type="text"
-              name="cardNumber"
-              required
-              minlength="19"
-              maxlength="19"
-              pattern="^(\d{16}|(\d{4}\s){3}\d{4})$"
-              [(ngModel)]="signupData.cardNumber"
-              #cardField="ngModel"
-              inputmode="numeric"
-              (keypress)="allowOnlyNumbers($event)"
-              (input)="formatCardNumber($event)"
-              (ngModelChange)="onCardInput($event)"
-            />
-            <mat-error
-              *ngIf="
-                cardField.hasError('required') &&
-                (cardField.dirty || cardField.touched)
-              "
-            >
-              Card number is required
-            </mat-error>
-            <mat-error
-              *ngIf="
-                cardField.hasError('pattern') &&
-                (cardField.dirty || cardField.touched)
-              "
-            >
-              Card must be 16 digits
-            </mat-error>
-            <mat-error *ngIf="cardInUse">
-              This card is already registered.
-            </mat-error>
-          </mat-form-field>
-        </div> -->
-
-        <mat-form-field appearance="outline" class="custom-form-field">
+          <mat-form-field appearance="outline" class="custom-form-field">
             <mat-label>Card Number</mat-label>
             <input
               matInput
@@ -223,10 +184,19 @@
               (input)="formatCardNumber($event)"
               (blur)="onCardBlur()"
             />
-            <mat-error *ngIf="cardField.hasError('required') && (cardField.dirty || cardField.touched)">
+            <mat-error
+              *ngIf="
+                cardField.hasError('required') &&
+                (cardField.dirty || cardField.touched)
+              "
+            >
               Card number is required
             </mat-error>
-            <mat-error *ngIf="cardField.hasError('pattern') || cardField.hasError('minlength')">
+            <mat-error
+              *ngIf="
+                cardField.hasError('pattern') || cardField.hasError('minlength')
+              "
+            >
               Card number must be exactly 16 digits.
             </mat-error>
             <mat-error *ngIf="cardInUse">
@@ -234,7 +204,6 @@
             </mat-error>
           </mat-form-field>
         </div>
-
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="custom-form-field">

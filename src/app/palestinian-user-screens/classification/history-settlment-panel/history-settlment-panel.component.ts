@@ -112,7 +112,6 @@ export class HistorySettlmentPanelComponent implements OnInit, AfterViewInit {
       .getRequestedSettlementHistoryForInitiator()
       .subscribe({
         next: (data) => {
-          console.log('Settlement history data:', data);
           const history = Array.isArray(data) ? data : [];
           history.sort(
             (a: any, b: any) =>
@@ -135,13 +134,22 @@ export class HistorySettlmentPanelComponent implements OnInit, AfterViewInit {
 
   updatePageSizeOptions(): void {
     const count = this.settlementDataSource.filteredData.length;
-    this.dynamicPageSizeOptions =
-      count < 5
-        ? [count]
-        : [...Array(Math.ceil(count / 5)).keys()]
-            .map((i) => (i + 1) * 5)
-            .concat(count % 5 ? [count] : [])
-            .filter((v, i, a) => a.indexOf(v) === i);
+
+    if (count <= 5) {
+      this.dynamicPageSizeOptions = [count];
+      return;
+    }
+
+    const options: number[] = [];
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
+    }
+
+    if (options[options.length - 1] !== count) {
+      options.push(count);
+    }
+
+    this.dynamicPageSizeOptions = options;
   }
 
   formatDate(dateString: string): string {

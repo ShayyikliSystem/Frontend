@@ -53,6 +53,49 @@
         (cancelFilter)="closeFilter()"
       ></app-support-history-filter>
 
+      <div *ngIf="hasActiveFilter()" class="active-filter-chips">
+        <mat-chip-listbox>
+          <mat-chip *ngIf="supportFilterArea" selectable="false">
+            Area: {{ transformEnumValue(supportFilterArea) }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('area')"
+              aria-label="Remove support area"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip *ngIf="supportFilterStatus" selectable="false">
+            Status: {{ transformEnumValue(supportFilterStatus) }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('status')"
+              aria-label="Remove status"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip *ngIf="supportFilterDate" selectable="false">
+            On: {{ formatDate(supportFilterDate.toISOString()) }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('date')"
+              aria-label="Remove date"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+        </mat-chip-listbox>
+      </div>
+
       <div
         *ngIf="
           supportDataSource.filteredData &&

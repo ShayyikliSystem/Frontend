@@ -28,6 +28,8 @@ import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
 import { ConfirmDeleteComponent } from './confirm-delete/confirm-delete.component';
 import { AlertComponent } from '../../../alert/alert.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-issued-checks-per-user',
@@ -48,6 +50,8 @@ import { AlertComponent } from '../../../alert/alert.component';
     MatTooltipModule,
     ConfirmDeleteComponent,
     AlertComponent,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './issued-checks-per-user.component.html',
   styleUrl: './issued-checks-per-user.component.scss',
@@ -238,7 +242,10 @@ export class IssuedChecksPerUserComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.issuedCheckDataSource.paginator = mp;
   }
 
@@ -251,8 +258,6 @@ export class IssuedChecksPerUserComponent implements AfterViewInit, OnChanges {
     this.loadingService.loadingOn();
     this.adminService.getIssuedChecksByAccount(this.accountNumber).subscribe({
       next: (data: DigitalCheck[]) => {
-        console.log(this.accountNumber);
-        console.log('Fetched issued checks:', data);
         const issuedChecks: DigitalCheckExtended[] = data.map(
           (tx: DigitalCheck) => ({
             ...tx,
@@ -362,30 +367,34 @@ export class IssuedChecksPerUserComponent implements AfterViewInit, OnChanges {
   updatePageSizeOptions(): void {
     const count = this.issuedCheckDataSource.filteredData.length;
 
-    if (count < 5) {
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
 
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 
-  resetPaginator(): void {
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
-    }
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
-  private formatDate(dateString: string): string {
+  formatDate(dateString: string): string {
     if (!dateString) return 'Invalid Date';
     const date = new Date(dateString);
 
@@ -434,5 +443,23 @@ export class IssuedChecksPerUserComponent implements AfterViewInit, OnChanges {
 
   private showAlert(message: string, type: 'success' | 'error') {
     this.alert = { show: true, message, type };
+  }
+
+  clearFilterProperty(prop: 'status' | 'beneficiary' | 'date' | 'amount') {
+    switch (prop) {
+      case 'status':
+        this.issuedCheckFilterStatus = '';
+        break;
+      case 'beneficiary':
+        this.issuedCheckFilterBeneficiary = '';
+        break;
+      case 'date':
+        this.issuedCheckFilterDate = null;
+        break;
+      case 'amount':
+        this.issuedCheckFilterAmount = null;
+        break;
+    }
+    this.applyIssuedCheckFilter();
   }
 }

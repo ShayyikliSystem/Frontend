@@ -25,6 +25,7 @@ import { AdminLayoutComponent } from './admin-screens/admin-layout/admin-layout.
 import { ContactRequestsComponent } from './admin-screens/contact-requests/contact-requests.component';
 import { PalestinianManagementComponent } from './admin-screens/palestinian-management/palestinian-management.component';
 import { SupportMessagesComponent } from './admin-screens/support-messages/support-messages.component';
+import { WelcomingScreenComponent } from './admin-screens/welcoming-screen/welcoming-screen.component';
 
 export const routes: Routes = [
   { path: '', component: SplashScreenComponent },
@@ -65,6 +66,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['ROLE_ADMIN'] },
     children: [
+      { path: '', component: WelcomingScreenComponent },
       { path: 'palestinian', component: PalestinianManagementComponent },
       { path: 'support', component: SupportMessagesComponent },
       { path: 'contacts', component: ContactRequestsComponent },

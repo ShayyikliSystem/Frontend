@@ -13,6 +13,7 @@ import { ReplyToContactComponent } from './reply-to-contact/reply-to-contact.com
 import { ContactRequestsFilterComponent } from './contact-requests-filter/contact-requests-filter.component';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-contact-requests',
@@ -29,6 +30,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ContactRequestsFilterComponent,
     MatTooltipModule,
     MatIconModule,
+    MatChipsModule,
   ],
   templateUrl: './contact-requests.component.html',
   styleUrl: './contact-requests.component.scss',
@@ -58,14 +60,15 @@ export class ContactRequestsComponent implements OnInit {
   filterStatus = '';
   statusOptions = ['PENDING', 'RESOLVED'];
 
-  // whenever the MatSort is available, hook it up and reset page:
   @ViewChild(MatSort) set sort(ms: MatSort) {
     this.dataSource.sort = ms;
     this.resetPaginator();
   }
 
-  // whenever the MatPaginator is available, hook it up:
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.dataSource.paginator = mp;
   }
 
@@ -108,7 +111,6 @@ export class ContactRequestsComponent implements OnInit {
     this.contactService.getAllContacts().subscribe({
       next: (data) => {
         this.loadingService.loadingOn();
-        // newest first
         data.sort((a, b) => b.id - a.id);
 
         this.dataSource.data = data;
@@ -146,26 +148,34 @@ export class ContactRequestsComponent implements OnInit {
     this.showResponse = false;
   }
 
-  private updatePageSizeOptions(): void {
+  updatePageSizeOptions(): void {
     const count = this.dataSource.filteredData.length;
-    if (count < 5) {
+
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
-    const opts: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      opts.push(i);
+
+    const options: number[] = [];
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
-    if (opts[opts.length - 1] !== count) {
-      opts.push(count);
+
+    if (options[options.length - 1] !== count) {
+      options.push(count);
     }
-    this.dynamicPageSizeOptions = opts;
+
+    this.dynamicPageSizeOptions = options;
   }
 
-  private resetPaginator(): void {
-    if (!this.dataSource.paginator) return;
-    this.dataSource.paginator.pageSize = this.dynamicPageSizeOptions[0];
-    this.dataSource.paginator.firstPage();
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
   transformEnumValue(value?: string): string {
@@ -174,5 +184,12 @@ export class ContactRequestsComponent implements OnInit {
       .replace(/_/g, ' ')
       .toLowerCase()
       .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  clearFilterProperty(prop: 'status') {
+    if (prop === 'status') {
+      this.filterStatus = '';
+      this.dataSource.filter = '';
+    }
   }
 }

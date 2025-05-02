@@ -20,6 +20,8 @@ import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
 import { CheckRefreshService } from '../../../services/check-refresh.service';
 import { ReceivedChecksFilterComponent } from '../received-checks-filter/received-checks-filter.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-received-checks-panel',
@@ -38,6 +40,8 @@ import { ReceivedChecksFilterComponent } from '../received-checks-filter/receive
     MatAutocompleteModule,
     ReceivedChecksFilterComponent,
     MatTooltipModule,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './received-checks-panel.component.html',
   styleUrl: './received-checks-panel.component.scss',
@@ -216,7 +220,10 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.receivedCheckDataSource.paginator = mp;
   }
 
@@ -344,30 +351,34 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
   updatePageSizeOptions(): void {
     const count = this.receivedCheckDataSource.filteredData.length;
 
-    if (count < 5) {
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
 
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 
-  resetPaginator(): void {
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
-    }
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
-  private formatDate(dateString: string): string {
+  formatDate(dateString: string): string {
     if (!dateString) return 'Invalid Date';
     const date = new Date(dateString);
 
@@ -386,5 +397,23 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
       this.receivedCheckFilterIssuer ||
       this.receivedCheckFilterBeneficiary
     );
+  }
+
+  clearFilterProperty(prop: 'status' | 'issuer' | 'date' | 'amount') {
+    switch (prop) {
+      case 'status':
+        this.receivedCheckFilterStatus = '';
+        break;
+      case 'issuer':
+        this.receivedCheckFilterIssuer = '';
+        break;
+      case 'date':
+        this.receivedCheckFilterDate = null;
+        break;
+      case 'amount':
+        this.receivedCheckFilterAmount = null;
+        break;
+    }
+    this.applyReceivedCheckFilter();
   }
 }

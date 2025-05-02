@@ -26,6 +26,8 @@ import {
 import { CheckRefreshService } from '../../../services/check-refresh.service';
 import { LoadingService } from '../../../services/loading.service';
 import { UserService } from '../../../services/user.service';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-incoming-checks-per-user',
@@ -44,6 +46,8 @@ import { UserService } from '../../../services/user.service';
     MatAutocompleteModule,
     IncomingEndorsementsChecksFilterComponent,
     MatTooltipModule,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './incoming-checks-per-user.component.html',
   styleUrl: './incoming-checks-per-user.component.scss',
@@ -57,6 +61,7 @@ export class IncomingChecksPerUserComponent
   incomingEndorsementsCheckFilterAmount: number | null = null;
   incomingEndorsementsCheckFilterIssuer: string = '';
   incomingEndorsementsCheckFilterBeneficiary: string = '';
+  incomingEndorsementsCheckFilterEndorser = '';
   userFullName: string = 'N/A';
 
   showFilter: boolean = false;
@@ -106,65 +111,45 @@ export class IncomingChecksPerUserComponent
       data: DigitalCheckExtended,
       filter: string
     ): boolean => {
-      const searchTerms = JSON.parse(filter);
-      let dateMatch = true;
-      if (searchTerms.date && data.rawTransferDate) {
-        const filterDate = new Date(searchTerms.date);
-        const dataDate = new Date(data.rawTransferDate);
-        dateMatch =
-          filterDate.getDate() === dataDate.getDate() &&
-          filterDate.getMonth() === dataDate.getMonth() &&
-          filterDate.getFullYear() === dataDate.getFullYear();
-      }
-      return dateMatch;
-    };
-
-    this.incomingEndorsementsCheckDataSource.filterPredicate = (
-      data: DigitalCheckExtended,
-      filter: string
-    ): boolean => {
-      const searchTerms = JSON.parse(filter);
+      const s = JSON.parse(filter);
       let dateMatch = true,
         statusMatch = true,
         amountMatch = true,
         issuerMatch = true,
-        beneficiaryMatch = true;
+        endorserMatch = true;
 
-      if (searchTerms.date && data.rawTransferDate) {
-        const filterDate = new Date(searchTerms.date);
-        const dataDate = new Date(data.rawTransferDate);
+      if (s.date && data.rawTransferDate) {
+        const fd = new Date(s.date),
+          dd = new Date(data.rawTransferDate);
         dateMatch =
-          filterDate.getDate() === dataDate.getDate() &&
-          filterDate.getMonth() === dataDate.getMonth() &&
-          filterDate.getFullYear() === dataDate.getFullYear();
+          fd.getFullYear() === dd.getFullYear() &&
+          fd.getMonth() === dd.getMonth() &&
+          fd.getDate() === dd.getDate();
       }
 
-      if (searchTerms.status) {
-        statusMatch = data.status === searchTerms.status;
+      if (s.status) {
+        statusMatch = data.status === s.status;
       }
 
-      if (searchTerms.amount) {
-        amountMatch = data.amount === searchTerms.amount;
+      if (s.amount) {
+        amountMatch = data.amount === s.amount;
       }
 
-      if (searchTerms.issuer && data.issuerName) {
-        issuerMatch = data.issuerName
-          .toLowerCase()
-          .includes(searchTerms.issuer.toLowerCase());
+      if (s.issuer) {
+        issuerMatch =
+          data.issuerName?.toLowerCase().includes(s.issuer.toLowerCase()) ??
+          false;
       }
 
-      if (searchTerms.beneficiary && data.beneficiaryName) {
-        beneficiaryMatch = data.beneficiaryName
-          .toLowerCase()
-          .includes(searchTerms.beneficiary.toLowerCase());
+      if (s.endorser) {
+        endorserMatch =
+          data.endorsersNames
+            ?.toLowerCase()
+            .includes(s.endorser.toLowerCase()) ?? false;
       }
 
       return (
-        dateMatch &&
-        statusMatch &&
-        amountMatch &&
-        issuerMatch &&
-        beneficiaryMatch
+        dateMatch && statusMatch && amountMatch && issuerMatch && endorserMatch
       );
     };
   }
@@ -183,6 +168,7 @@ export class IncomingChecksPerUserComponent
     this.incomingEndorsementsCheckFilterStatus = '';
     this.incomingEndorsementsCheckFilterIssuer = '';
     this.incomingEndorsementsCheckFilterBeneficiary = '';
+    this.incomingEndorsementsCheckFilterEndorser = '';
     this.applyIncomingEndorsementsCheckFilter();
   }
 
@@ -194,6 +180,10 @@ export class IncomingChecksPerUserComponent
       typeof filter.issuer === 'object' && filter.issuer
         ? `${filter.issuer.firstName} ${filter.issuer.lastName}`
         : filter.issuer;
+    this.incomingEndorsementsCheckFilterEndorser =
+      typeof filter.endorser === 'object'
+        ? `${filter.endorser.firstName} ${filter.endorser.lastName}`
+        : filter.endorser;
     this.incomingEndorsementsCheckFilterBeneficiary = filter.beneficiary;
     this.applyIncomingEndorsementsCheckFilter();
     this.closeFilter();
@@ -229,7 +219,10 @@ export class IncomingChecksPerUserComponent
     }
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.incomingEndorsementsCheckDataSource.paginator = mp;
   }
 
@@ -343,52 +336,46 @@ export class IncomingChecksPerUserComponent
 
   applyIncomingEndorsementsCheckFilter(): void {
     const filterValue = {
-      date: this.incomingEndorsementsCheckFilterDate
-        ? this.incomingEndorsementsCheckFilterDate.toISOString()
-        : '',
-      status: this.incomingEndorsementsCheckFilterStatus
-        ? this.incomingEndorsementsCheckFilterStatus
-        : '',
-      amount: this.incomingEndorsementsCheckFilterAmount
-        ? this.incomingEndorsementsCheckFilterAmount
-        : '',
-      issuer: this.incomingEndorsementsCheckFilterIssuer
-        ? this.incomingEndorsementsCheckFilterIssuer
-        : '',
-      beneficiary: this.incomingEndorsementsCheckFilterBeneficiary
-        ? this.incomingEndorsementsCheckFilterBeneficiary
-        : '',
+      date: this.incomingEndorsementsCheckFilterDate?.toISOString() || '',
+      status: this.incomingEndorsementsCheckFilterStatus || '',
+      issuer: this.incomingEndorsementsCheckFilterIssuer || '',
+      endorser: this.incomingEndorsementsCheckFilterEndorser || '',
+      amount: this.incomingEndorsementsCheckFilterAmount || '',
     };
     this.incomingEndorsementsCheckDataSource.filter =
       JSON.stringify(filterValue);
-    this.updatePageSizeOptions();
     this.resetPaginator();
+    this.updatePageSizeOptions();
   }
 
   updatePageSizeOptions(): void {
     const count = this.incomingEndorsementsCheckDataSource.filteredData.length;
 
-    if (count < 5) {
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
 
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 
-  resetPaginator(): void {
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
-    }
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
   formatDate(dateString: string): string {
@@ -408,7 +395,26 @@ export class IncomingChecksPerUserComponent
       this.incomingEndorsementsCheckFilterAmount ||
       this.incomingEndorsementsCheckFilterStatus ||
       this.incomingEndorsementsCheckFilterIssuer ||
-      this.incomingEndorsementsCheckFilterBeneficiary
+      this.incomingEndorsementsCheckFilterBeneficiary ||
+      this.incomingEndorsementsCheckFilterEndorser
     );
+  }
+
+  clearFilterProperty(prop: 'status' | 'issuer' | 'endorser' | 'date') {
+    switch (prop) {
+      case 'status':
+        this.incomingEndorsementsCheckFilterStatus = '';
+        break;
+      case 'issuer':
+        this.incomingEndorsementsCheckFilterIssuer = '';
+        break;
+      case 'endorser':
+        this.incomingEndorsementsCheckFilterEndorser = '';
+        break;
+      case 'date':
+        this.incomingEndorsementsCheckFilterDate = null;
+        break;
+    }
+    this.applyIncomingEndorsementsCheckFilter();
   }
 }
