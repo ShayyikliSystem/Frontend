@@ -365,22 +365,26 @@ export class IssuedChecksPerUserComponent implements AfterViewInit, OnChanges {
   }
 
   updatePageSizeOptions(): void {
-    const count = this.issuedCheckDataSource.filteredData.length;
+    const totalItems = this.issuedCheckDataSource.paginator
+      ? this.issuedCheckDataSource.paginator.length
+      : this.issuedCheckDataSource.filteredData.length;
 
-    if (count <= 5) {
-      this.dynamicPageSizeOptions = [count];
+    const pageSize = this.issuedCheckDataSource.paginator
+      ? this.issuedCheckDataSource.paginator.pageSize
+      : 5;
+
+    if (totalItems <= pageSize) {
+      this.dynamicPageSizeOptions = [totalItems];
       return;
     }
 
     const options: number[] = [];
-    for (let size = 5; size <= count; size += 5) {
+    for (let size = pageSize; size <= totalItems; size += pageSize) {
       options.push(size);
     }
-
-    if (options[options.length - 1] !== count) {
-      options.push(count);
+    if (options[options.length - 1] < totalItems) {
+      options.push(totalItems);
     }
-
     this.dynamicPageSizeOptions = options;
   }
 

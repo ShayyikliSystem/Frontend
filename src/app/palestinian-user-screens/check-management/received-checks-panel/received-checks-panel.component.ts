@@ -1,3 +1,4 @@
+import { IssuedCheckFilterComponent } from './../issued-check-filter/issued-check-filter.component';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -349,22 +350,26 @@ export class ReceivedChecksPanelComponent implements OnInit, AfterViewInit {
   }
 
   updatePageSizeOptions(): void {
-    const count = this.receivedCheckDataSource.filteredData.length;
+    const totalItems = this.receivedCheckDataSource.paginator
+      ? this.receivedCheckDataSource.paginator.length
+      : this.receivedCheckDataSource.filteredData.length;
 
-    if (count <= 5) {
-      this.dynamicPageSizeOptions = [count];
+    const pageSize = this.receivedCheckDataSource.paginator
+      ? this.receivedCheckDataSource.paginator.pageSize
+      : 5;
+
+    if (totalItems <= pageSize) {
+      this.dynamicPageSizeOptions = [totalItems];
       return;
     }
 
     const options: number[] = [];
-    for (let size = 5; size <= count; size += 5) {
+    for (let size = pageSize; size <= totalItems; size += pageSize) {
       options.push(size);
     }
-
-    if (options[options.length - 1] !== count) {
-      options.push(count);
+    if (options[options.length - 1] < totalItems) {
+      options.push(totalItems);
     }
-
     this.dynamicPageSizeOptions = options;
   }
 

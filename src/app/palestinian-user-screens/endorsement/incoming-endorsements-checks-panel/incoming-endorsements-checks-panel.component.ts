@@ -341,22 +341,26 @@ export class IncomingEndorsementsChecksPanelComponent
   }
 
   updatePageSizeOptions(): void {
-    const count = this.incomingEndorsementsCheckDataSource.filteredData.length;
+    const totalItems = this.incomingEndorsementsCheckDataSource.paginator
+      ? this.incomingEndorsementsCheckDataSource.paginator.length
+      : this.incomingEndorsementsCheckDataSource.filteredData.length;
 
-    if (count <= 5) {
-      this.dynamicPageSizeOptions = [count];
+    const pageSize = this.incomingEndorsementsCheckDataSource.paginator
+      ? this.incomingEndorsementsCheckDataSource.paginator.pageSize
+      : 5;
+
+    if (totalItems <= pageSize) {
+      this.dynamicPageSizeOptions = [totalItems];
       return;
     }
 
     const options: number[] = [];
-    for (let size = 5; size <= count; size += 5) {
+    for (let size = pageSize; size <= totalItems; size += pageSize) {
       options.push(size);
     }
-
-    if (options[options.length - 1] !== count) {
-      options.push(count);
+    if (options[options.length - 1] < totalItems) {
+      options.push(totalItems);
     }
-
     this.dynamicPageSizeOptions = options;
   }
 

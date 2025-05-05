@@ -343,22 +343,26 @@ export class SettleChecksPanelComponent implements OnInit, AfterViewInit {
   }
 
   updatePageSizeOptions(): void {
-    const count = this.settleCheckDataSource.filteredData.length;
+    const totalItems = this.settleCheckDataSource.paginator
+      ? this.settleCheckDataSource.paginator.length
+      : this.settleCheckDataSource.filteredData.length;
 
-    if (count <= 5) {
-      this.dynamicPageSizeOptions = [count];
+    const pageSize = this.settleCheckDataSource.paginator
+      ? this.settleCheckDataSource.paginator.pageSize
+      : 5;
+
+    if (totalItems <= pageSize) {
+      this.dynamicPageSizeOptions = [totalItems];
       return;
     }
 
     const options: number[] = [];
-    for (let size = 5; size <= count; size += 5) {
+    for (let size = pageSize; size <= totalItems; size += pageSize) {
       options.push(size);
     }
-
-    if (options[options.length - 1] !== count) {
-      options.push(count);
+    if (options[options.length - 1] < totalItems) {
+      options.push(totalItems);
     }
-
     this.dynamicPageSizeOptions = options;
   }
 

@@ -189,22 +189,26 @@ export class SupportHistoryPanelComponent {
   }
 
   updatePageSizeOptions(): void {
-    const count = this.supportDataSource.filteredData.length;
+    const totalItems = this.supportDataSource.paginator
+      ? this.supportDataSource.paginator.length
+      : this.supportDataSource.filteredData.length;
 
-    if (count <= 5) {
-      this.dynamicPageSizeOptions = [count];
+    const pageSize = this.supportDataSource.paginator
+      ? this.supportDataSource.paginator.pageSize
+      : 5;
+
+    if (totalItems <= pageSize) {
+      this.dynamicPageSizeOptions = [totalItems];
       return;
     }
 
     const options: number[] = [];
-    for (let size = 5; size <= count; size += 5) {
+    for (let size = pageSize; size <= totalItems; size += pageSize) {
       options.push(size);
     }
-
-    if (options[options.length - 1] !== count) {
-      options.push(count);
+    if (options[options.length - 1] < totalItems) {
+      options.push(totalItems);
     }
-
     this.dynamicPageSizeOptions = options;
   }
 

@@ -362,22 +362,26 @@ export class ReturnedChecksPerUserComponent
   }
 
   updatePageSizeOptions(): void {
-    const count = this.returnedCheckDataSource.filteredData.length;
+    const totalItems = this.returnedCheckDataSource.paginator
+      ? this.returnedCheckDataSource.paginator.length
+      : this.returnedCheckDataSource.filteredData.length;
 
-    if (count <= 5) {
-      this.dynamicPageSizeOptions = [count];
+    const pageSize = this.returnedCheckDataSource.paginator
+      ? this.returnedCheckDataSource.paginator.pageSize
+      : 5;
+
+    if (totalItems <= pageSize) {
+      this.dynamicPageSizeOptions = [totalItems];
       return;
     }
 
     const options: number[] = [];
-    for (let size = 5; size <= count; size += 5) {
+    for (let size = pageSize; size <= totalItems; size += pageSize) {
       options.push(size);
     }
-
-    if (options[options.length - 1] !== count) {
-      options.push(count);
+    if (options[options.length - 1] < totalItems) {
+      options.push(totalItems);
     }
-
     this.dynamicPageSizeOptions = options;
   }
 
