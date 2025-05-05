@@ -373,26 +373,22 @@ export class OutcomingChecksPerUserComponent
   }
 
   updatePageSizeOptions(): void {
-    const totalItems = this.outcomingEndorsementsCheckDataSource.paginator
-      ? this.outcomingEndorsementsCheckDataSource.paginator.length
-      : this.outcomingEndorsementsCheckDataSource.filteredData.length;
+    const count = this.outcomingEndorsementsCheckDataSource.filteredData.length;
 
-    const pageSize = this.outcomingEndorsementsCheckDataSource.paginator
-      ? this.outcomingEndorsementsCheckDataSource.paginator.pageSize
-      : 5;
-
-    if (totalItems <= pageSize) {
-      this.dynamicPageSizeOptions = [totalItems];
+    if (count <= 5) {
+      this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let size = pageSize; size <= totalItems; size += pageSize) {
+    for (let size = 5; size <= count; size += 5) {
       options.push(size);
     }
-    if (options[options.length - 1] < totalItems) {
-      options.push(totalItems);
+
+    if (options[options.length - 1] !== count) {
+      options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 

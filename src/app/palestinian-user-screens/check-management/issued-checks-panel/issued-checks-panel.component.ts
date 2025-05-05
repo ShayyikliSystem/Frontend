@@ -22,7 +22,6 @@ import { IssuedCheckFilterComponent } from '../issued-check-filter/issued-check-
 import { CheckRefreshService } from '../../../services/check-refresh.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { merge, of } from 'rxjs';
 
 @Component({
   selector: 'app-issued-checks-panel',
@@ -238,7 +237,6 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
     this.loadingService.loadingOn();
     this.digitalCheckService.getIssuedChecksForUser().subscribe({
       next: (data: DigitalCheck[]) => {
-        console.log('Fetched issued checks:', data);
         const issuedChecks: DigitalCheckExtended[] = data.map(
           (tx: DigitalCheck) => ({
             ...tx,
@@ -346,26 +344,22 @@ export class IssuedChecksPanelComponent implements OnInit, AfterViewInit {
   }
 
   updatePageSizeOptions(): void {
-    const totalItems = this.issuedCheckDataSource.paginator
-      ? this.issuedCheckDataSource.paginator.length
-      : this.issuedCheckDataSource.filteredData.length;
+    const count = this.issuedCheckDataSource.filteredData.length;
 
-    const pageSize = this.issuedCheckDataSource.paginator
-      ? this.issuedCheckDataSource.paginator.pageSize
-      : 5;
-
-    if (totalItems <= pageSize) {
-      this.dynamicPageSizeOptions = [totalItems];
+    if (count <= 5) {
+      this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let size = pageSize; size <= totalItems; size += pageSize) {
+    for (let size = 5; size <= count; size += 5) {
       options.push(size);
     }
-    if (options[options.length - 1] < totalItems) {
-      options.push(totalItems);
+
+    if (options[options.length - 1] !== count) {
+      options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 
