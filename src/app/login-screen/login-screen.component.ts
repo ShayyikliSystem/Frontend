@@ -123,10 +123,10 @@ export class LoginScreenComponent {
                 address.town ||
                 address.county ||
                 address.village ||
-                '';
+                '-';
 
               const a = address;
-              // Join the parts, filter out empty strings
+             
               const locationName = [countryCode, region, area]
                 .filter((part) => part)
                 .join(', ');
@@ -136,21 +136,18 @@ export class LoginScreenComponent {
               console.log(`Location: ${locationName}`);
               console.log(`Country: ${address.country}`);
 
-              // 👉 NOW BUILD THE LOGIN REQUEST OBJECT
               const loginRequest = {
                 ...this.loginData,
                 latitude,
                 longitude,
-                locationName, // 👈 add locationName from reverse geocoding
+                locationName, 
               };
 
-              // 👉 NOW submit login
               this.submitLogin(loginRequest);
             })
             .catch((error) => {
               console.error('❌ Error fetching location details:', error);
 
-              // If reverse geocoding fails, proceed with basic lat/lon
               const loginRequest = {
                 ...this.loginData,
                 latitude,
@@ -161,7 +158,7 @@ export class LoginScreenComponent {
         },
         (error) => {
           console.error('Error getting location:', error);
-          // If user blocks location, login without location info
+        
           this.submitLogin(this.loginData);
         }
       );
