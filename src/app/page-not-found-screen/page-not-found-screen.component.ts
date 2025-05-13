@@ -18,7 +18,7 @@ export class PageNotFoundScreenComponent {
       const roles: string[] = rolesString ? JSON.parse(rolesString) : [];
 
       if (roles.includes('ROLE_ADMIN')) {
-        this.router.navigate(['/admin/palestinian']);
+        this.router.navigate(['/admin']);
       } else if (roles.includes('ROLE_PALESTINIAN')) {
         this.router.navigate(['/dashboard']);
       } else {

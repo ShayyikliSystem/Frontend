@@ -71,7 +71,7 @@ export class IncomingEndorsementsChecksFilterComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.getAllUsersExcludingSelf().subscribe({
+    this.userService.getAllUsers().subscribe({
       next: (data) => {
         this.allUsers = data;
         this.filteredIssuers = data;

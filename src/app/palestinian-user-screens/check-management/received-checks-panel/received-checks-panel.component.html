@@ -48,6 +48,78 @@
         (cancelFilter)="closeFilter()"
       ></app-received-checks-filter>
 
+      <div *ngIf="hasActiveFilter()" class="active-filter-chips">
+        <mat-chip-listbox>
+          <mat-chip
+            *ngIf="receivedCheckFilterStatus"
+            selectable="false"
+            removable="false"
+          >
+            Status: {{ receivedCheckFilterStatus }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('status')"
+              aria-label="Remove status filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip
+            *ngIf="receivedCheckFilterIssuer"
+            selectable="false"
+            removable="false"
+          >
+            Issuer: {{ receivedCheckFilterIssuer }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('issuer')"
+              aria-label="Remove issuer filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip
+            *ngIf="receivedCheckFilterDate"
+            selectable="false"
+            removable="false"
+          >
+            On: {{ formatDate(receivedCheckFilterDate.toISOString()) }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('date')"
+              aria-label="Remove date filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip
+            *ngIf="receivedCheckFilterAmount"
+            selectable="false"
+            removable="false"
+          >
+            Amount: {{ receivedCheckFilterAmount }}₪
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('amount')"
+              aria-label="Remove amount filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+        </mat-chip-listbox>
+      </div>
+
       <div
         *ngIf="
           receivedCheckDataSource.filteredData &&

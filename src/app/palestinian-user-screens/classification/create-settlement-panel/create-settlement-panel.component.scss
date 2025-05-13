@@ -144,3 +144,50 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+
+.active-filter-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .mat-mdc-chip-set {
+    max-width: none;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .mat-mdc-chip {
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 8px 10px;
+    font-size: 0.875rem;
+    line-height: 1;
+
+    &.mdc-evolution-chip--selected,
+    &:hover {
+      background-color: #141d3315;
+      color: #fff;
+    }
+
+    .mat-mdc-chip-trailing {
+      margin-left: 4px;
+      mat-icon {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.active-filter-chips {
+  .mat-mdc-chip {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+
+    .clear-btn {
+      flex-shrink: 0;
+      background-color: transparent;
+    }
+  }
+}

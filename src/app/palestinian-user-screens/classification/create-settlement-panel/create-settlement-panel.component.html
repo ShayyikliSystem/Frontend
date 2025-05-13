@@ -87,6 +87,49 @@
       (cancelFilter)="showFilter = false"
     ></app-current-settlement-filter>
 
+    <div *ngIf="hasActiveFilter()" class="active-filter-chips">
+      <mat-chip-listbox>
+        <mat-chip *ngIf="currentFilter.status" selectable="false">
+          Status: {{ currentFilter.status }}
+          <button
+            mat-icon-button
+            matSuffix
+            class="clear-btn"
+            (click)="clearFilterProperty('status')"
+            aria-label="Remove status filter"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </mat-chip>
+
+        <mat-chip *ngIf="currentFilter.beneficiary" selectable="false">
+          To: {{ currentFilter.beneficiary }}
+          <button
+            mat-icon-button
+            matSuffix
+            class="clear-btn"
+            (click)="clearFilterProperty('beneficiary')"
+            aria-label="Remove beneficiary filter"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </mat-chip>
+
+        <mat-chip *ngIf="currentFilter.date" selectable="false">
+          On: {{ formatDate(currentFilter.date) }}
+          <button
+            mat-icon-button
+            matSuffix
+            class="clear-btn"
+            (click)="clearFilterProperty('date')"
+            aria-label="Remove date filter"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </mat-chip>
+      </mat-chip-listbox>
+    </div>
+
     <ng-container
       *ngIf="
         (initiatorDetailsDataSource.filteredData ?? []).length > 0;
@@ -150,10 +193,6 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
       </div>
-      <mat-paginator
-        [pageSizeOptions]="dynamicPageSizeOptions"
-        showFirstLastButtons
-      ></mat-paginator>
     </ng-container>
     <ng-template #noFilteredSettlements>
       <div class="limited-info" style="text-align: center">

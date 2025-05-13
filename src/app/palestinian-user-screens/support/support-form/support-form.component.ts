@@ -68,14 +68,11 @@ export class SupportFormComponent {
     this.submitted = true;
     this.loadingService.loadingOn();
     if (this.supportForm.invalid) {
-      Object.keys(this.supportForm.controls).forEach((key) => {
-        const control = this.supportForm.get(key);
-        control?.markAsDirty();
-        control?.markAsTouched();
-      });
-      setTimeout(() => {
-        this.loadingService.loadingOff();
-      }, 400);
+      this.supportForm.markAllAsTouched();
+
+      this.supportForm.markAsDirty();
+
+      setTimeout(() => this.loadingService.loadingOff(), 400);
       return;
     }
 

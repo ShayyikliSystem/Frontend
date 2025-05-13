@@ -37,13 +37,11 @@ export class ReplyPerUserComponent {
   ) {}
 
   sendReply(form: NgForm) {
-    // if form is invalid, touch all controls and abort
     if (form.invalid) {
-      form.control.markAllAsTouched(); // marks every field as touched
+      form.control.markAllAsTouched();
       return;
     }
 
-    // clear previous errors & kick off loading
     this.error = null;
     this.loadingService.loadingOn();
     this.loading = true;

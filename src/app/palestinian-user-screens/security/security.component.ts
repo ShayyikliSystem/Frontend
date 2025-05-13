@@ -21,6 +21,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { LoadingService } from '../../services/loading.service';
 import { SecurityFilterComponent } from './security-filter/security-filter.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-security',
@@ -40,6 +42,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatExpansionModule,
     SecurityFilterComponent,
     MatTooltipModule,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './security.component.html',
   styleUrl: './security.component.scss',
@@ -65,7 +69,10 @@ export class SecurityComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = ms;
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.dataSource.paginator = mp;
   }
 
@@ -227,19 +234,20 @@ export class SecurityComponent implements OnInit, AfterViewInit {
   updatePageSizeOptions(): void {
     const count = this.dataSource.filteredData.length;
 
-    if (count < 5) {
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
 
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 
@@ -272,10 +280,25 @@ export class SecurityComponent implements OnInit, AfterViewInit {
     this.applyFilter();
   }
 
-  resetPaginator(): void {
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
+  }
+
+  clearFilterProperty(prop: 'status' | 'date') {
+    switch (prop) {
+      case 'status':
+        this.filterStatus = '';
+        break;
+      case 'date':
+        this.filterDate = null;
+        break;
     }
+    this.applyFilter();
   }
 }

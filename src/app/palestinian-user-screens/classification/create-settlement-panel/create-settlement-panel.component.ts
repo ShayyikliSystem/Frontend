@@ -17,6 +17,8 @@ import { CurrentSettlementFilterComponent } from '../current-settlement-filter/c
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AlertComponent } from '../../../alert/alert.component';
 import { SettlementRefreshService } from '../../../services/settlement-refresh.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-create-settlement-panel',
@@ -36,6 +38,8 @@ import { SettlementRefreshService } from '../../../services/settlement-refresh.s
     CurrentSettlementFilterComponent,
     MatTooltipModule,
     AlertComponent,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './create-settlement-panel.component.html',
   styleUrl: './create-settlement-panel.component.scss',
@@ -77,7 +81,10 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.initiatorDetailsDataSource.paginator = mp;
   }
 
@@ -128,7 +135,6 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
           if (this.isSettlementActive) {
             this.loadInitiatorDetails();
           }
-          console.log('Settlement active status:', res);
         },
         error: (err) => {
           console.error('Failed to fetch settlement status', err);
@@ -151,7 +157,6 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
         if (this.isSettlementActive) {
           this.loadInitiatorDetails();
         }
-        console.log('Settlement active status:', res);
       },
       error: (err) => {
         console.error('Failed to fetch settlement status', err);
@@ -167,27 +172,31 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
   updatePageSizeOptions(): void {
     const count = this.initiatorDetailsDataSource.filteredData.length;
 
-    if (count < 5) {
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
 
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
 
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 
-  resetPaginator(): void {
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
-    }
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
   openSettlementForm() {
@@ -207,7 +216,6 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
     this.loadingService.loadingOn();
     this.settlementService.getSettlementDetailsForInitiator().subscribe({
       next: (data: any[]) => {
-        console.log('RAW API DATA:', JSON.stringify(data, null, 2));
         if (data.length > 0) {
           console.log('First item details:', {
             transferDate: data[0].transferDate,
@@ -330,5 +338,20 @@ export class CreateSettlementPanelComponent implements OnInit, AfterViewInit {
   openFilter(): void {
     this.currentFilter = { ...this.defaultFilter };
     this.showFilter = true;
+  }
+
+  clearFilterProperty(field: 'status' | 'beneficiary' | 'date') {
+    switch (field) {
+      case 'status':
+        this.currentFilter.status = '';
+        break;
+      case 'beneficiary':
+        this.currentFilter.beneficiary = '';
+        break;
+      case 'date':
+        this.currentFilter.date = null;
+        break;
+    }
+    this.applyFilter();
   }
 }

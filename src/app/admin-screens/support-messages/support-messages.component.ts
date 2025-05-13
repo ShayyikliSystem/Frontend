@@ -9,6 +9,11 @@ import { AdminService } from '../../services/admin.service';
 import { Support } from '../../models/support.model';
 import { ReplyPerUserComponent } from './reply-per-user/reply-per-user.component';
 import { AlertComponent } from '../../alert/alert.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SupportMessagesFilterComponent } from './support-messages-filter/support-messages-filter.component';
+import { LoadingService } from '../../services/loading.service';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-support-messages',
@@ -18,10 +23,13 @@ import { AlertComponent } from '../../alert/alert.component';
     MatExpansionModule,
     MatTableModule,
     MatSortModule,
-    MatPaginatorModule,
     MatButtonModule,
     ReplyPerUserComponent,
+    SupportMessagesFilterComponent,
     AlertComponent,
+    MatTooltipModule,
+    MatIconModule,
+    MatChipsModule,
   ],
   templateUrl: './support-messages.component.html',
   styleUrl: './support-messages.component.scss',
@@ -46,6 +54,23 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
   alertMessage = '';
   alertType: 'success' | 'error' = 'success';
 
+  showFilter = false;
+  filterValues = {
+    supportArea: '',
+    status: '',
+    date: null as Date | null,
+  };
+
+  supportAreaOptions = [
+    'CHECKBOOK',
+    'CHECK',
+    'ENDORSMENT',
+    'SETTLEMENT',
+    'GENERAL_SETTING',
+  ];
+
+  statusOptions = ['PENDING', 'RESOLVED'];
+
   dataSource = new MatTableDataSource<Support>([]);
 
   dynamicPageSizeOptions: number[] = [5, 10, 15];
@@ -61,45 +86,94 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = mp;
   }
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
     this.adminService.getAllSupportRequests().subscribe({
       next: (data: Support[]) => {
-        console.log(data);
+        this.loadingService.loadingOn();
         data.sort(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
         this.dataSource.data = data;
 
-        this.updatePageSizeOptions();
+        this.setupFilterPredicate();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
       error: (err) => {
         console.error('Error loading support requests', err);
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
+  }
+
+  onFilterCancel() {
+    this.showFilter = false;
+  }
+
+  toggleFilter() {
+    this.showFilter = !this.showFilter;
+  }
+
+  onFilterApply(f: typeof this.filterValues) {
+    const serialized = {
+      supportArea: f.supportArea,
+      status: f.status,
+      date: f.date ? f.date.toISOString() : null,
+    };
+
+    this.filterValues = { ...f };
+    this.dataSource.filter = JSON.stringify(serialized);
+    this.showFilter = false;
+  }
+
+  clearFilter() {
+    this.filterValues = { supportArea: '', status: '', date: null };
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }
+  hasActiveFilter(): boolean {
+    const f = this.filterValues;
+    return !!(f.supportArea || f.status || f.date);
+  }
+
+  private setupFilterPredicate() {
+    this.dataSource.filterPredicate = (data: Support, filter: string) => {
+      const f = JSON.parse(filter) as {
+        supportArea: string;
+        status: string;
+        date: string | null;
+      };
+
+      const areaMatch = f.supportArea
+        ? data.supportArea === f.supportArea
+        : true;
+      const statusMatch = f.status ? data.status === f.status : true;
+
+      let dateMatch = true;
+      if (f.date) {
+        const filterDate = new Date(f.date);
+        const dataDate = new Date(data.createdAt);
+        dateMatch =
+          filterDate.getFullYear() === dataDate.getFullYear() &&
+          filterDate.getMonth() === dataDate.getMonth() &&
+          filterDate.getDate() === dataDate.getDate();
+      }
+
+      return areaMatch && statusMatch && dateMatch;
+    };
   }
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
-  }
-
-  private updatePageSizeOptions(): void {
-    const total = this.dataSource.data.length;
-    if (total < 5) {
-      this.dynamicPageSizeOptions = [total];
-      return;
-    }
-    const opts: number[] = [];
-    for (let i = 5; i <= total; i += 5) {
-      opts.push(i);
-    }
-    if (opts[opts.length - 1] !== total) {
-      opts.push(total);
-    }
-    this.dynamicPageSizeOptions = opts;
   }
 
   transformEnumValue(value: string): string {
@@ -121,7 +195,6 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
   }
 
   onReply(x: Support) {
-    console.log(x);
     this.currentId = x.id;
     this.currentDesc = x.supportDescription;
     this.showResponse = true;
@@ -131,12 +204,35 @@ export class SupportMessagesComponent implements OnInit, AfterViewInit {
     this.alertMessage = 'Reply sent successfully.';
     this.alertType = 'success';
     this.showAlert = true;
-
     this.showResponse = false;
     this.ngOnInit();
   }
 
   onClosed() {
     this.showResponse = false;
+  }
+
+  clearFilterProperty(prop: 'supportArea' | 'status' | 'date') {
+    switch (prop) {
+      case 'supportArea':
+        this.filterValues.supportArea = '';
+        break;
+      case 'status':
+        this.filterValues.status = '';
+        break;
+      case 'date':
+        this.filterValues.date = null;
+        break;
+    }
+
+    // re-serialize and re-apply
+    const serialized = {
+      supportArea: this.filterValues.supportArea,
+      status: this.filterValues.status,
+      date: this.filterValues.date
+        ? this.filterValues.date.toISOString()
+        : null,
+    };
+    this.dataSource.filter = JSON.stringify(serialized);
   }
 }

@@ -84,7 +84,6 @@ export class SignupScreenComponent {
   ) {}
 
   ngOnInit() {
-    // listen for changes, strip spaces, debounce, and only call when 16 digits
     this._cardSub = this._cardInput$
       .pipe(
         map((val) => val.replace(/\s+/g, '')),

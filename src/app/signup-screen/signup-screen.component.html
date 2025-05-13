@@ -64,7 +64,6 @@
               name="email"
               required
               email
-              pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}"
               maxlength="50"
               [(ngModel)]="signupData.email"
               #emailField="ngModel"
@@ -80,7 +79,6 @@
             <mat-error
               *ngIf="
                 emailField.hasError('email') &&
-                emailField.hasError('pattern') &&
                 (emailField.dirty || emailField.touched)
               "
             >
@@ -173,17 +171,16 @@
             <input
               matInput
               type="text"
+              id="cardNumber"
               name="cardNumber"
               required
-              minlength="19"
               maxlength="19"
-              pattern="^(\d{16}|(\d{4}\s){3}\d{4})$"
               [(ngModel)]="signupData.cardNumber"
               #cardField="ngModel"
               inputmode="numeric"
               (keypress)="allowOnlyNumbers($event)"
               (input)="formatCardNumber($event)"
-              (ngModelChange)="onCardInput($event)"
+              (blur)="onCardBlur()"
             />
             <mat-error
               *ngIf="
@@ -195,11 +192,10 @@
             </mat-error>
             <mat-error
               *ngIf="
-                cardField.hasError('pattern') &&
-                (cardField.dirty || cardField.touched)
+                cardField.hasError('pattern') || cardField.hasError('minlength')
               "
             >
-              Card must be 16 digits
+              Card number must be exactly 16 digits.
             </mat-error>
             <mat-error *ngIf="cardInUse">
               This card is already registered.

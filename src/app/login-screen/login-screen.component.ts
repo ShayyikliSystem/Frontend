@@ -107,16 +107,13 @@ export class LoginScreenComponent {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
 
-          console.log(`Latitude: ${latitude}`);
-          console.log(`Longitude: ${longitude}`);
-
           fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           )
             .then((response) => response.json())
             .then((data) => {
               const address = data.address;
-              const countryCode = (address.country_code || '').toUpperCase(); // → "PS"
+              const countryCode = (address.country_code || '').toUpperCase();
               const region = address.region || address.state || '';
               const area =
                 address.city ||
@@ -126,21 +123,31 @@ export class LoginScreenComponent {
                 '-';
 
               const a = address;
+<<<<<<< HEAD
              
+=======
+>>>>>>> ec4fff42c2794a039b86e437fb533b06f1d4b8e7
               const locationName = [countryCode, region, area]
                 .filter((part) => part)
                 .join(', ');
 
+<<<<<<< HEAD
               console.log('✅ User Location Area:');
               console.log(address);
               console.log(`Location: ${locationName}`);
               console.log(`Country: ${address.country}`);
 
+=======
+>>>>>>> ec4fff42c2794a039b86e437fb533b06f1d4b8e7
               const loginRequest = {
                 ...this.loginData,
                 latitude,
                 longitude,
+<<<<<<< HEAD
                 locationName, 
+=======
+                locationName,
+>>>>>>> ec4fff42c2794a039b86e437fb533b06f1d4b8e7
               };
 
               this.submitLogin(loginRequest);
@@ -158,7 +165,10 @@ export class LoginScreenComponent {
         },
         (error) => {
           console.error('Error getting location:', error);
+<<<<<<< HEAD
         
+=======
+>>>>>>> ec4fff42c2794a039b86e437fb533b06f1d4b8e7
           this.submitLogin(this.loginData);
         }
       );
@@ -172,7 +182,7 @@ export class LoginScreenComponent {
     this.authService.login(loginRequest).subscribe({
       next: (response: JwtResponse) => {
         if (response.roles.includes('ROLE_ADMIN')) {
-          this.router.navigate(['/admin/palestinian']);
+          this.router.navigate(['/admin']);
           this.loadingService.loadingOff();
           return;
         }

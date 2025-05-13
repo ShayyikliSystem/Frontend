@@ -49,6 +49,44 @@
         (cancelFilter)="closeFilter()"
       ></app-returned-checks-filter>
 
+      <div *ngIf="hasActiveFilter()" class="active-filter-chips">
+        <mat-chip-listbox>
+          <mat-chip
+            *ngIf="returnedCheckFilterBeneficiary"
+            selectable="false"
+            removable="false"
+          >
+            To: {{ returnedCheckFilterBeneficiary }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('beneficiary')"
+              aria-label="Remove beneficiary filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip
+            *ngIf="returnedCheckFilterDate"
+            selectable="false"
+            removable="false"
+          >
+            On: {{ formatDate(returnedCheckFilterDate.toISOString()) }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('date')"
+              aria-label="Remove date filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+        </mat-chip-listbox>
+      </div>
+
       <div
         *ngIf="
           returnedCheckDataSource.filteredData &&

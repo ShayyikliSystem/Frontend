@@ -50,6 +50,75 @@
         (cancelFilter)="closeFilter()"
       ></app-incoming-endorsements-checks-filter>
 
+      <div *ngIf="hasActiveFilter()" class="active-filter-chips">
+        <mat-chip-listbox>
+          <mat-chip
+            *ngIf="incomingEndorsementsCheckFilterStatus"
+            selectable="false"
+          >
+            Status: {{ incomingEndorsementsCheckFilterStatus }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('status')"
+              aria-label="Remove status filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip
+            *ngIf="incomingEndorsementsCheckFilterIssuer"
+            selectable="false"
+          >
+            Issuer: {{ incomingEndorsementsCheckFilterIssuer }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('issuer')"
+              aria-label="Remove issuer filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip
+            *ngIf="incomingEndorsementsCheckFilterEndorser"
+            selectable="false"
+          >
+            Endorser: {{ incomingEndorsementsCheckFilterEndorser }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('endorser')"
+              aria-label="Remove endorser filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+
+          <mat-chip
+            *ngIf="incomingEndorsementsCheckFilterDate"
+            selectable="false"
+          >
+            On:
+            {{ formatDate(incomingEndorsementsCheckFilterDate.toISOString()) }}
+            <button
+              mat-icon-button
+              matSuffix
+              class="clear-btn"
+              (click)="clearFilterProperty('date')"
+              aria-label="Remove date filter"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </mat-chip>
+        </mat-chip-listbox>
+      </div>
+
       <div
         *ngIf="
           incomingEndorsementsCheckDataSource.filteredData &&

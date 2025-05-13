@@ -22,7 +22,6 @@ export class AppComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   showTimeout = signal(false);
 
-  // list of all your private routes
   private privatePaths = [
     '/dashboard',
     '/checkbook-management',
@@ -33,6 +32,7 @@ export class AppComponent implements OnDestroy {
     '/security',
     '/support',
     '/settings',
+    '/admin',
     '/admin/palestinian',
     '/admin/support',
     '/admin/contacts',
@@ -43,20 +43,17 @@ export class AppComponent implements OnDestroy {
     const hasRoles = !!localStorage.getItem('userRoles');
 
     if (hasToken && hasRoles) {
-      // only NavigationEnd events that land on a private path
       const navigationOnPrivate$ = this.router.events.pipe(
         filter((e): e is NavigationEnd => e instanceof NavigationEnd),
         filter(() => this.isOnPrivateRoute())
       );
 
-      // only user events when we’re on a private path
       const userEventsOnPrivate$ = merge(
         fromEvent(document, 'click'),
         fromEvent(document, 'keydown'),
         fromEvent(document, 'mousemove')
       ).pipe(filter(() => this.isOnPrivateRoute()));
 
-      // validate whenever either fires
       merge(navigationOnPrivate$, userEventsOnPrivate$)
         .pipe(
           takeUntil(this.destroy$),
@@ -68,7 +65,6 @@ export class AppComponent implements OnDestroy {
             console.log('Token expired');
             localStorage.clear();
             sessionStorage.clear();
-            // only show the timeout dialog if we’re still on a private route
             if (this.isOnPrivateRoute()) {
               this.showTimeout.set(true);
             }
@@ -82,7 +78,6 @@ export class AppComponent implements OnDestroy {
     this.destroy$.complete();
   }
 
-  /** helper: checks if the current URL starts with any of your private paths */
   private isOnPrivateRoute(): boolean {
     return this.privatePaths.some((p) => this.router.url.startsWith(p));
   }

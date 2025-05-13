@@ -1,3 +1,4 @@
+import { LoadingService } from './../../services/loading.service';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +10,10 @@ import { AlertComponent } from '../../alert/alert.component';
 import { AdminService } from '../../services/admin.service';
 import { ContactService } from '../../services/contact.service';
 import { ReplyToContactComponent } from './reply-to-contact/reply-to-contact.component';
+import { ContactRequestsFilterComponent } from './contact-requests-filter/contact-requests-filter.component';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-contact-requests',
@@ -22,18 +27,22 @@ import { ReplyToContactComponent } from './reply-to-contact/reply-to-contact.com
     MatButtonModule,
     AlertComponent,
     ReplyToContactComponent,
+    ContactRequestsFilterComponent,
+    MatTooltipModule,
+    MatIconModule,
+    MatChipsModule,
   ],
   templateUrl: './contact-requests.component.html',
   styleUrl: './contact-requests.component.scss',
 })
-export class ContactRequestsComponent implements OnInit, AfterViewInit {
+export class ContactRequestsComponent implements OnInit {
   displayedColumns = [
     'id',
     'name',
     'email',
     'phoneNumber',
     'message',
-    'status', // ← added
+    'status',
     'actions',
   ];
   dataSource = new MatTableDataSource<any>([]);
@@ -47,60 +56,81 @@ export class ContactRequestsComponent implements OnInit, AfterViewInit {
   alertMessage = '';
   alertType: 'success' | 'error' = 'success';
 
+  showFilter = false;
+  filterStatus = '';
+  statusOptions = ['PENDING', 'RESOLVED'];
+
   @ViewChild(MatSort) set sort(ms: MatSort) {
     this.dataSource.sort = ms;
-    this.dataSource.paginator?.firstPage();
+    this.resetPaginator();
   }
+
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.dataSource.paginator = mp;
   }
 
-  constructor(private contactService: ContactService) {}
+  constructor(
+    private contactService: ContactService,
+    private loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
+    this.loadContacts();
+
+    this.dataSource.filterPredicate = (row: any, filter: string) =>
+      !filter || row.status === filter;
+  }
+
+  toggleFilter() {
+    this.showFilter = !this.showFilter;
+  }
+
+  onFilterApply(status: string) {
+    this.filterStatus = status;
+    this.dataSource.filter = status;
+    this.showFilter = false;
+  }
+
+  onFilterCancel() {
+    this.showFilter = false;
+  }
+
+  clearFilter() {
+    this.filterStatus = '';
+    this.dataSource.filter = '';
+  }
+
+  hasActiveFilter(): boolean {
+    return !!this.filterStatus;
+  }
+
+  private loadContacts(): void {
     this.contactService.getAllContacts().subscribe({
       next: (data) => {
-        console.log(data);
+        this.loadingService.loadingOn();
         data.sort((a, b) => b.id - a.id);
+
         this.dataSource.data = data;
         this.updatePageSizeOptions();
+        this.resetPaginator();
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
       error: (err) => {
         console.error('Error loading contacts', err);
+        setTimeout(() => {
+          this.loadingService.loadingOff();
+        }, 400);
       },
     });
   }
 
-  ngAfterViewInit(): void {}
-
-  private updatePageSizeOptions(): void {
-    const total = this.dataSource.data.length;
-    if (total < 5) {
-      this.dynamicPageSizeOptions = [total];
-      return;
-    }
-    const opts: number[] = [];
-    for (let i = 5; i <= total; i += 5) {
-      opts.push(i);
-    }
-    if (opts[opts.length - 1] !== total) {
-      opts.push(total);
-    }
-    this.dynamicPageSizeOptions = opts;
-  }
-
-  transformEnumValue(value?: string): string {
-    if (!value) return '';
-    return value
-      .replace(/_/g, ' ')
-      .toLowerCase()
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-  }
-
   onReply(row: any) {
-    if (row.status !== 'PENDING') {
-      return;
-    }
+    if (row.status !== 'PENDING') return;
     this.currentId = row.id;
     this.currentMessage = row.message;
     this.showResponse = true;
@@ -111,10 +141,55 @@ export class ContactRequestsComponent implements OnInit, AfterViewInit {
     this.alertType = 'success';
     this.showAlert = true;
     this.showResponse = false;
-    this.ngOnInit();
+    this.loadContacts();
   }
 
   onClosed() {
     this.showResponse = false;
+  }
+
+  updatePageSizeOptions(): void {
+    const count = this.dataSource.filteredData.length;
+
+    if (count <= 5) {
+      this.dynamicPageSizeOptions = [count];
+      return;
+    }
+
+    const options: number[] = [];
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
+    }
+
+    if (options[options.length - 1] !== count) {
+      options.push(count);
+    }
+
+    this.dynamicPageSizeOptions = options;
+  }
+
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
+  }
+
+  transformEnumValue(value?: string): string {
+    if (!value) return '';
+    return value
+      .replace(/_/g, ' ')
+      .toLowerCase()
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+
+  clearFilterProperty(prop: 'status') {
+    if (prop === 'status') {
+      this.filterStatus = '';
+      this.dataSource.filter = '';
+    }
   }
 }

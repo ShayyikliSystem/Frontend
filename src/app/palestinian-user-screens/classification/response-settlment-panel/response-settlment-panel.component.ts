@@ -16,6 +16,8 @@ import { SettlementService } from '../../../services/settlement.service';
 import { RequestedSettlementFilterComponent } from '../requested-settlement-filter/requested-settlement-filter.component';
 import { AlertComponent } from '../../../alert/alert.component';
 import { SettlementRefreshService } from '../../../services/settlement-refresh.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-response-settlment-panel',
@@ -35,6 +37,8 @@ import { SettlementRefreshService } from '../../../services/settlement-refresh.s
     MatTooltipModule,
     RequestedSettlementFilterComponent,
     AlertComponent,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './response-settlment-panel.component.html',
   styleUrl: './response-settlment-panel.component.scss',
@@ -67,7 +71,10 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.beneficiaryRequestsDataSource.paginator = mp;
   }
 
@@ -95,11 +102,14 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
     this.beneficiaryRequestsDataSource.paginator = this.paginator;
   }
 
-  resetPaginator(): void {
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.paginator.pageSize = this.dynamicPageSizeOptions[0];
-    }
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
   private loadRequests(): void {
@@ -137,8 +147,8 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
 
           this.handleAlert({
             message: accepted
-              ? 'Settlement request accepted successfully!'
-              : 'Settlement request rejected successfully!',
+              ? 'Settlement request accepted successfully.'
+              : 'Settlement request rejected successfully.',
             type: 'success',
           });
           setTimeout(() => this.loadingService.loadingOff(), 400);
@@ -159,13 +169,22 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
 
   updatePageSizeOptions(): void {
     const count = this.beneficiaryRequestsDataSource.filteredData.length;
-    this.dynamicPageSizeOptions =
-      count < 5
-        ? [count]
-        : [...Array(Math.ceil(count / 5)).keys()]
-            .map((i) => (i + 1) * 5)
-            .concat(count % 5 ? [count] : [])
-            .filter((v, i, a) => a.indexOf(v) === i);
+
+    if (count <= 5) {
+      this.dynamicPageSizeOptions = [count];
+      return;
+    }
+
+    const options: number[] = [];
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
+    }
+
+    if (options[options.length - 1] !== count) {
+      options.push(count);
+    }
+
+    this.dynamicPageSizeOptions = options;
   }
 
   formatDate(dateString: string): string {
@@ -229,5 +248,20 @@ export class ResponseSettlmentPanelComponent implements OnInit, AfterViewInit {
   openFilter(): void {
     this.currentFilter = { ...this.defaultFilter };
     this.showFilter = true;
+  }
+
+  clearFilterProperty(field: 'status' | 'initiator' | 'date') {
+    switch (field) {
+      case 'status':
+        this.currentFilter.status = '';
+        break;
+      case 'initiator':
+        this.currentFilter.initiator = '';
+        break;
+      case 'date':
+        this.currentFilter.date = null;
+        break;
+    }
+    this.applyFilter();
   }
 }

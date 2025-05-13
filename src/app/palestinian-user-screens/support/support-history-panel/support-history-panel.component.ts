@@ -13,6 +13,8 @@ import { LoadingService } from '../../../services/loading.service';
 import { SupportService } from '../../../services/support.service';
 import { SupportHistoryFilterComponent } from '../support-history-filter/support-history-filter.component';
 import { CheckRefreshService } from '../../../services/check-refresh.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-support-history-panel',
@@ -28,6 +30,8 @@ import { CheckRefreshService } from '../../../services/check-refresh.service';
     MatExpansionModule,
     MatTooltipModule,
     SupportHistoryFilterComponent,
+    MatChipsModule,
+    MatIconModule,
   ],
   templateUrl: './support-history-panel.component.html',
   styleUrl: './support-history-panel.component.scss',
@@ -62,7 +66,10 @@ export class SupportHistoryPanelComponent {
     }
   }
 
+  private _paginator!: MatPaginator;
+
   @ViewChild(MatPaginator) set paginator(mp: MatPaginator) {
+    this._paginator = mp;
     this.supportDataSource.paginator = mp;
   }
 
@@ -123,6 +130,7 @@ export class SupportHistoryPanelComponent {
         );
         this.supportDataSource.data = data;
         this.updatePageSizeOptions();
+        this.resetPaginator(true);
         setTimeout(() => {
           this.loadingService.loadingOff();
         }, 400);
@@ -155,6 +163,7 @@ export class SupportHistoryPanelComponent {
     };
     this.supportDataSource.filter = JSON.stringify(filterValue);
     this.updatePageSizeOptions();
+    this.resetPaginator();
     this.closeFilter();
   }
 
@@ -168,6 +177,7 @@ export class SupportHistoryPanelComponent {
       date: '',
     });
     this.updatePageSizeOptions();
+    this.resetPaginator();
   }
 
   hasActiveFilter(): boolean {
@@ -180,36 +190,69 @@ export class SupportHistoryPanelComponent {
 
   updatePageSizeOptions(): void {
     const count = this.supportDataSource.filteredData.length;
-    if (count < 5) {
+
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
+
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
+
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
+  }
+
+  resetPaginator(_useSmallest: boolean = false): void {
+    if (!this._paginator) return;
+    this._paginator.firstPage();
+
+    const opts = this.dynamicPageSizeOptions;
+    if (!opts.length) return;
+
+    this._paginator.pageSize = opts[0];
   }
 
   formatDate(dateString: string): string {
     if (!dateString) return 'Invalid Date';
     const date = new Date(dateString);
-  
+
     return new Intl.DateTimeFormat('en-GB', {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
     }).format(date);
   }
-  
 
   transformEnumValue(value: string): string {
     return value
       .replace(/_/g, ' ')
       .toLowerCase()
       .replace(/\b\w/g, (match) => match.toUpperCase());
+  }
+
+  clearFilterProperty(prop: 'area' | 'status' | 'date') {
+    switch (prop) {
+      case 'area':
+        this.supportFilterArea = '';
+        break;
+      case 'status':
+        this.supportFilterStatus = '';
+        break;
+      case 'date':
+        this.supportFilterDate = null;
+        break;
+    }
+    this.supportDataSource.filter = JSON.stringify({
+      supportArea: this.supportFilterArea,
+      status: this.supportFilterStatus,
+      date: this.supportFilterDate ? this.supportFilterDate.toISOString() : '',
+    });
+    this.updatePageSizeOptions();
   }
 }

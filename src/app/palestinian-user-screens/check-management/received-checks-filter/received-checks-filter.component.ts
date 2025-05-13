@@ -61,7 +61,7 @@ export class ReceivedChecksFilterComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.userService.getAllUsersExcludingSelf().subscribe({
+    this.userService.getAllUsers().subscribe({
       next: (data: User[]) => {
         this.allUsers = data;
         this.filteredIssuers = data;

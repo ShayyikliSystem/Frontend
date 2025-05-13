@@ -1,0 +1,77 @@
+<div class="filter-overlay">
+  <div class="filter-box">
+    <h3>Filter Support Requests</h3>
+    <div class="form-field-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Area</mat-label>
+        <mat-select [(ngModel)]="filter.supportArea">
+          <mat-option value="">All</mat-option>
+          <mat-option *ngFor="let area of supportAreas" [value]="area">
+            {{ transformEnumValue(area) }}
+          </mat-option>
+        </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.supportArea"
+          (click)="filter.supportArea = ''"
+          class="clear-btn"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="filter.status">
+          <mat-option value="">All</mat-option>
+          <mat-option *ngFor="let s of statusOptions" [value]="s">
+            {{ transformEnumValue(s) }}
+          </mat-option>
+        </mat-select>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filter.status"
+          (click)="filter.status = ''"
+          class="clear-btn"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-group">
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [(ngModel)]="filter.date"
+          readonly
+        />
+        <div matSuffix class="suffix-group">
+          <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <button
+            mat-icon-button
+            *ngIf="filter.date"
+            (click)="filter.date = null"
+            class="clear-btn"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </mat-form-field>
+    </div>
+
+    <div class="button-group">
+      <button mat-stroked-button class="btn-secondary" (click)="onCancel()">
+        Cancel
+      </button>
+      <button mat-flat-button class="btn-primary" (click)="onSubmit()">
+        Apply
+      </button>
+    </div>
+  </div>
+</div>

@@ -60,12 +60,11 @@ export class HomeScreenComponent {
       localStorage.getItem('userRoles') || '[]'
     );
     if (roles.includes('ROLE_ADMIN')) {
-      this.router.navigate(['/admin/palestinian']);
+      this.router.navigate(['/admin']);
       return;
     }
 
-    // for Palestinian users…
-    this.loadingService.loadingOn(); // optional spinner
+    this.loadingService.loadingOn();
     this.pendingRoute = '/dashboard';
 
     const acct = Number(localStorage.getItem('shayyikliAccountNumber'));
@@ -87,7 +86,7 @@ export class HomeScreenComponent {
 
   onTermsAgreed(): void {
     const acct = Number(localStorage.getItem('shayyikliAccountNumber'));
-    this.loadingService.loadingOn(); // optional
+    this.loadingService.loadingOn();
     this.userService.agreeToTerms(acct).subscribe({
       next: () => {
         this.loadingService.loadingOff();
@@ -96,7 +95,6 @@ export class HomeScreenComponent {
       },
       error: () => {
         this.loadingService.loadingOff();
-        // optionally show an error toast
       },
     });
   }

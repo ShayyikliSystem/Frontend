@@ -160,17 +160,21 @@ export class CheckbookHistoryPerUserComponent
 
   updatePageSizeOptions(): void {
     const count = this.checkbookDataSource.filteredData.length;
-    if (count < 5) {
+
+    if (count <= 5) {
       this.dynamicPageSizeOptions = [count];
       return;
     }
+
     const options: number[] = [];
-    for (let i = 5; i <= count; i += 5) {
-      options.push(i);
+    for (let size = 5; size <= count; size += 5) {
+      options.push(size);
     }
+
     if (options[options.length - 1] !== count) {
       options.push(count);
     }
+
     this.dynamicPageSizeOptions = options;
   }
 

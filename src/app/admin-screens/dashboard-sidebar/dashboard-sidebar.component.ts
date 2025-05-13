@@ -13,12 +13,17 @@ export class DashboardSidebarComponent {
   activeRoute: string = '';
 
   menuItems = [
+    { name: 'Home', route: 'admin', icon: 'dashboard1.png' },
     {
       name: 'Palestinian Management',
       route: 'admin/palestinian',
       icon: 'bank-teller.png',
     },
-    { name: 'Support Center', route: 'admin/support', icon: 'technical-support.png' },
+    {
+      name: 'Support Center',
+      route: 'admin/support',
+      icon: 'technical-support.png',
+    },
     {
       name: 'Contact Requests',
       route: 'admin/contacts',

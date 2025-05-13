@@ -134,7 +134,7 @@ export class PalestinianManagementComponent implements OnInit {
     const selectedUser = event.option.value as User;
     this.selectedUser = selectedUser;
     this.selectedAccountNumber = selectedUser.shayyikliAccountNumber;
-    this.userSearchCtrl.setValue(selectedUser); // Store User object directly
+    this.userSearchCtrl.setValue(selectedUser);
     this.selectedAccount.emit(this.selectedAccountNumber);
   }
 

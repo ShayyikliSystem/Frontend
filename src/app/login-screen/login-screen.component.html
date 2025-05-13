@@ -79,7 +79,6 @@
                 pattern="^[0-9]{6}$"
                 required
               />
-              <!-- Required -->
               <mat-error
                 *ngIf="
                   shayyikliField.errors?.['required'] &&
@@ -88,7 +87,6 @@
               >
                 Shayyikli Number is required
               </mat-error>
-              <!-- Exact‐6‐digits -->
               <mat-error
                 *ngIf="
                   (shayyikliField.errors?.['minlength'] ||
@@ -127,7 +125,6 @@
             ></i>
           </button>
 
-          <!-- Required -->
           <mat-error
             *ngIf="
               passwordField.errors?.['required'] &&
@@ -138,7 +135,6 @@
           >
             Password is required
           </mat-error>
-          <!-- Exact‐10‐chars -->
           <mat-error
             *ngIf="
               (passwordField.hasError('minlength') ||

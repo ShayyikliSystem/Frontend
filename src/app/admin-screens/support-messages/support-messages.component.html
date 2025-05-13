@@ -15,8 +15,85 @@
     </div>
   </mat-expansion-panel-header>
 
-  <div *ngIf="dataSource.data.length > 0; else noSupport">
-    <div class="table-container" style="margin-top: 10px">
+  <div style="margin-top: 10px" *ngIf="dataSource.data.length; else noSupport">
+    <div class="filter-buttons" style="margin-bottom: 10px">
+      <button
+        (click)="toggleFilter()"
+        matTooltip="Click to apply filters and update the table"
+      >
+        <i class="bi bi-filter" style="color: white"></i> Add Filter
+      </button>
+      <span
+        matTooltip="Disabled because there is no filter applied"
+        [matTooltipDisabled]="hasActiveFilter()"
+      >
+        <button
+          (click)="clearFilter()"
+          [disabled]="!hasActiveFilter()"
+          [ngStyle]="{ 'background-color': !hasActiveFilter() ? 'grey' : '' }"
+        >
+          Clear Filter
+        </button>
+      </span>
+    </div>
+
+    <app-support-messages-filter
+      *ngIf="showFilter"
+      [supportAreas]="supportAreaOptions"
+      [statusOptions]="statusOptions"
+      [currentFilter]="filterValues"
+      (applyFilter)="onFilterApply($event)"
+      (cancelFilter)="toggleFilter()"
+    ></app-support-messages-filter>
+
+    <div *ngIf="hasActiveFilter()" class="active-filter-chips">
+      <mat-chip-listbox>
+        <mat-chip *ngIf="filterValues.supportArea" selectable="false">
+          Area: {{ transformEnumValue(filterValues.supportArea) }}
+          <button
+            mat-icon-button
+            matSuffix
+            class="clear-btn"
+            (click)="clearFilterProperty('supportArea')"
+            aria-label="Remove area filter"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </mat-chip>
+
+        <mat-chip *ngIf="filterValues.status" selectable="false">
+          Status: {{ transformEnumValue(filterValues.status) }}
+          <button
+            mat-icon-button
+            matSuffix
+            class="clear-btn"
+            (click)="clearFilterProperty('status')"
+            aria-label="Remove status filter"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </mat-chip>
+
+        <mat-chip *ngIf="filterValues.date" selectable="false">
+          On: {{ formatDate(filterValues.date.toISOString()) }}
+          <button
+            mat-icon-button
+            matSuffix
+            class="clear-btn"
+            (click)="clearFilterProperty('date')"
+            aria-label="Remove date filter"
+          >
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </mat-chip>
+      </mat-chip-listbox>
+    </div>
+
+    <div
+      *ngIf="dataSource.filteredData.length; else noFilterResults"
+      class="table-container"
+      style="margin-top: 10px"
+    >
       <table
         mat-table
         [dataSource]="dataSource"
@@ -28,13 +105,11 @@
           <td mat-cell *matCellDef="let x">{{ x.id }}</td>
         </ng-container>
 
-        <!-- Account Number -->
         <ng-container matColumnDef="accountNumber">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Account #</th>
           <td mat-cell *matCellDef="let x">{{ x.accountNumber }}</td>
         </ng-container>
 
-        <!-- User Name -->
         <ng-container matColumnDef="userName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>User Name</th>
           <td mat-cell *matCellDef="let x">{{ x.userName }}</td>
@@ -61,9 +136,7 @@
 
         <ng-container matColumnDef="createdAt">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Sent At</th>
-          <td mat-cell *matCellDef="let x">
-            {{ formatDate(x.createdAt) }}
-          </td>
+          <td mat-cell *matCellDef="let x">{{ formatDate(x.createdAt) }}</td>
         </ng-container>
 
         <ng-container matColumnDef="actions">
@@ -87,10 +160,13 @@
         ></tr>
       </table>
     </div>
-    <mat-paginator
-      [pageSizeOptions]="dynamicPageSizeOptions"
-      showFirstLastButtons
-    ></mat-paginator>
+
+    <ng-template #noFilterResults>
+      <div class="limited-info" style="text-align: center">
+        <h3>No Support Requests Match Your Filter</h3>
+        <p>Your filter criteria did not return any results.</p>
+      </div>
+    </ng-template>
   </div>
 
   <ng-template #noSupport>
