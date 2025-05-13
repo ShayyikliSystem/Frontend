@@ -123,6 +123,7 @@ export class LoginScreenComponent {
                 '';
 
               const a = address;
+
               const locationName = [countryCode, region, area]
                 .filter((part) => part)
                 .join(', ');
@@ -143,12 +144,16 @@ export class LoginScreenComponent {
                 ...this.loginData,
                 latitude,
                 longitude,
+                locationName: '-',
               };
+
               this.submitLogin(loginRequest);
             });
         },
         (error) => {
           console.error('Error getting location:', error);
+
+          this.loginData.locationName = '-';
           this.submitLogin(this.loginData);
         }
       );
